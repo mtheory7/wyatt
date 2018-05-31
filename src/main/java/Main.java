@@ -37,6 +37,15 @@ public class Main {
     Double candles4hourAvg = new CalcUtils().findAveragePrice(candles4hour);
     Double candles8hourAvg = new CalcUtils().findAveragePrice(candles8hour);
 
+    System.out.println("Time  " +   + "" + candles1minuteAvg);
+    System.out.println("Candle time interval: " + candles5minuteAvg);
+    System.out.println("Candle time interval: " + candles15minuteAvg);
+    System.out.println("Candle time interval: " + candles30minuteAvg);
+    System.out.println("Candle time interval: " + candles1hourAvg);
+    System.out.println("Candle time interval: " + candles2hourAvg);
+    System.out.println("Candle time interval: " + candles4hourAvg);
+    System.out.println("Candle time interval: " + candles8hourAvg);
+
     System.out.println();
   }
 }
