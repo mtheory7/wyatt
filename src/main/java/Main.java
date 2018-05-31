@@ -2,16 +2,12 @@ import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
-import com.binance.api.client.domain.market.TickerStatistics;
 import mind.Wyatt;
 import utils.CalcUtils;
 
 import java.util.List;
 
 public class Main {
-
-
-
   public static void main(String[] args) {
 
     BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance(
@@ -54,15 +50,7 @@ public class Main {
     System.out.println("Time interval: 4 hours    =====  Number of candlesticks fetched: " + candles4hour.size() + " :: Average: $" + candles4hourAvg);
     System.out.println("Time interval: 8 hours    =====  Number of candlesticks fetched: " + candles8hour.size() + " :: Average: $" + candles8hourAvg);
     System.out.println("\nCURRENT PRICE === $" + currentPrice);
-
-
-
-
-
-
   }
-
-
 }
 
 /*String printString = tickerStatistics.getLastPrice() + "\n";

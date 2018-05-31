@@ -18,7 +18,7 @@ public class CalcUtils {
       average += Double.valueOf(stick.getClose());
     }
 
-    return average/candlesticks.size();
+    return average / candlesticks.size();
   }
 
   public void sleeper(int num) {
