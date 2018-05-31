@@ -23,17 +23,6 @@ public class MindData {
     this.candlestickData = candlestickData;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
     /*System.out.println("Time interval: 1 minute   =====  Number of candlesticks fetched: " + candles1minute.size() + " :: Average: $" + candles1minuteAvg);
     System.out.println("Time interval: 3 minutes  =====  Number of candlesticks fetched: " + candles3minute.size() + " :: Average: $" + candles3minuteAvg);
     System.out.println("Time interval: 5 minutes  =====  Number of candlesticks fetched: " + candles5minute.size() + " :: Average: $" + candles5minuteAvg);

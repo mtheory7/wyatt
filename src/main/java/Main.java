@@ -8,8 +8,3 @@ public class Main {
     MindData theCradle = dolores.gatherData();
   }
 }
-
-
-
-
-
