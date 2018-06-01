@@ -1,8 +1,9 @@
-package model;
+package model.data;
 
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerStatistics;
+import model.DataIdentifier;
 
 import java.util.HashMap;
 import java.util.List;

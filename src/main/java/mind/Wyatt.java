@@ -5,7 +5,7 @@ import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import model.DataIdentifier;
-import model.MindData;
+import model.data.MindData;
 import utils.CalcUtils;
 
 import java.util.List;
@@ -18,10 +18,10 @@ public class Wyatt {
 					CandlestickInterval.THREE_MINUTES,
 					CandlestickInterval.FIVE_MINUTES};
 	private static String[] tickers = {"BTCUSDT", "ETHUSDT"};
-	private MindData dataToReturn;
+	private MindData mindData;
 
 	public Wyatt() {
-		dataToReturn = new MindData();
+		mindData = new MindData();
 	}
 
 	public static void playSweetWater() {
@@ -54,12 +54,12 @@ public class Wyatt {
 	public MindData gatherData() {
 		for (String ticker : tickers) {
 			for (CandlestickInterval interval : intervalList) {
-				gatherIntervalData(dataToReturn, interval, ticker);
+				gatherIntervalData(mindData, interval, ticker);
 				new CalcUtils().sleeper(500);
 				System.out.println(ticker + " data fetched for interval: " + interval.getIntervalId() + " ...");
 			}
 		}
-		return dataToReturn;
+		return mindData;
 	}
 
 	private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
