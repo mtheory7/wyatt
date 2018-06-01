@@ -13,7 +13,8 @@ import java.util.List;
 public class Wyatt {
 
 	private static int MAX_TRADES_PER_24HOURS = 10;
-	private static CandlestickInterval[] intervalList = {CandlestickInterval.ONE_MINUTE,
+	private static CandlestickInterval[] intervalList = {
+					CandlestickInterval.ONE_MINUTE,
 					CandlestickInterval.THREE_MINUTES,
 					CandlestickInterval.FIVE_MINUTES};
 	private static String[] tickers = {"BTCUSDT", "ETHUSDT"};
@@ -58,7 +59,6 @@ public class Wyatt {
 				System.out.println(ticker + " data fetched for interval: " + interval.getIntervalId() + " ...");
 			}
 		}
-
 		return dataToReturn;
 	}
 
@@ -67,7 +67,6 @@ public class Wyatt {
 						"VENnsLCOxIf3TxzMrEHf4zgogZzL4lz7igd3DiJExM1X25V364t6cxjiLeTCrj9q",
 						"AiDrDX35H6yeA1WkPHj9YW9GSsRZ0iAEX6rEAwxleGjQpkDQSj7iO3kX4wqC83oE");
 		BinanceApiRestClient client = factory.newRestClient();
-
 		List<Candlestick> candlesticks = client.getCandlestickBars(ticker, interval);
 		mindData.candlestickData.put(new DataIdentifier(interval, ticker), candlesticks);
 		mindData.lastPriceData.put(new DataIdentifier(interval, ticker), client.get24HrPriceStatistics(ticker));
