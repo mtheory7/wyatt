@@ -10,37 +10,37 @@ import java.util.Map;
 
 public class MindData {
 
-	public HashMap<CandlestickInterval, List<Candlestick>> candlestickData;
-	public HashMap<CandlestickInterval, TickerStatistics> lastPriceData;
-	public HashMap<CandlestickInterval, Double> candlestickIntAvgData;
+	public HashMap<DataIdentifier, List<Candlestick>> candlestickData;
+	public HashMap<DataIdentifier, TickerStatistics> lastPriceData;
+	public HashMap<DataIdentifier, Double> candlestickIntAvgData;
 
 	public MindData() {
-		candlestickData = new HashMap<CandlestickInterval, List<Candlestick>>();
-		lastPriceData = new HashMap<CandlestickInterval, TickerStatistics>();
-		candlestickIntAvgData = new HashMap<CandlestickInterval, Double>();
+		candlestickData = new HashMap<DataIdentifier, List<Candlestick>>();
+		lastPriceData = new HashMap<DataIdentifier, TickerStatistics>();
+		candlestickIntAvgData = new HashMap<DataIdentifier, Double>();
 	}
 
-	public Map<CandlestickInterval, List<Candlestick>> getCandlestickData() {
+	public Map<DataIdentifier, List<Candlestick>> getCandlestickData() {
 		return candlestickData;
 	}
 
-	public void setCandlestickData(HashMap<CandlestickInterval, List<Candlestick>> candlestickData) {
+	public void setCandlestickData(HashMap<DataIdentifier, List<Candlestick>> candlestickData) {
 		this.candlestickData = candlestickData;
 	}
 
-	public HashMap<CandlestickInterval, TickerStatistics> getLastPriceData() {
+	public HashMap<DataIdentifier, TickerStatistics> getLastPriceData() {
 		return lastPriceData;
 	}
 
-	public void setLastPriceData(HashMap<CandlestickInterval, TickerStatistics> lastPriceData) {
+	public void setLastPriceData(HashMap<DataIdentifier, TickerStatistics> lastPriceData) {
 		this.lastPriceData = lastPriceData;
 	}
 
-	public HashMap<CandlestickInterval, Double> getCandlestickIntAvgData() {
+	public HashMap<DataIdentifier, Double> getCandlestickIntAvgData() {
 		return candlestickIntAvgData;
 	}
 
-	public void setCandlestickIntAvgData(HashMap<CandlestickInterval, Double> candlestickIntAvgData) {
+	public void setCandlestickIntAvgData(HashMap<DataIdentifier, Double> candlestickIntAvgData) {
 		this.candlestickIntAvgData = candlestickIntAvgData;
 	}
 }

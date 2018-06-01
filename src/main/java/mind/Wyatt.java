@@ -2,14 +2,21 @@ package mind;
 
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
+import model.DataIdentifier;
 import model.MindData;
 import utils.CalcUtils;
+
+import java.util.List;
 
 public class Wyatt {
 
 	private static int MAX_TRADES_PER_24HOURS = 10;
-	private static String[] tickers = { "BTCUSDT", "ETHUSDT", "LTCUSDT" };
+	private static CandlestickInterval[] intervalList = {CandlestickInterval.ONE_MINUTE,
+					CandlestickInterval.THREE_MINUTES,
+					CandlestickInterval.FIVE_MINUTES};
+	private static String[] tickers = {"BTCUSDT", "ETHUSDT"};
 	private MindData dataToReturn;
 
 	public Wyatt() {
@@ -44,11 +51,12 @@ public class Wyatt {
 	}
 
 	public MindData gatherData() {
-		for(String ticker : tickers)
-		for(CandlestickInterval interval : CandlestickInterval.values()) {
-			gatherIntervalData(dataToReturn, interval, ticker);
-			new CalcUtils().sleeper(500);
-			System.out.println("Fetched data for interval: " + interval.getIntervalId() + " ...");
+		for (String ticker : tickers) {
+			for (CandlestickInterval interval : intervalList) {
+				gatherIntervalData(dataToReturn, interval, ticker);
+				new CalcUtils().sleeper(500);
+				System.out.println(ticker + " data fetched for interval: " + interval.getIntervalId() + " ...");
+			}
 		}
 
 		return dataToReturn;
@@ -60,10 +68,11 @@ public class Wyatt {
 						"AiDrDX35H6yeA1WkPHj9YW9GSsRZ0iAEX6rEAwxleGjQpkDQSj7iO3kX4wqC83oE");
 		BinanceApiRestClient client = factory.newRestClient();
 
-		mindData.candlestickData.put(interval, client.getCandlestickBars(ticker, interval));
-		mindData.lastPriceData.put(interval, client.get24HrPriceStatistics(ticker));
-		mindData.candlestickIntAvgData.put(interval,
-						new CalcUtils().findAveragePrice(mindData.candlestickData.get(interval)));
+		List<Candlestick> candlesticks = client.getCandlestickBars(ticker, interval);
+		mindData.candlestickData.put(new DataIdentifier(interval, ticker), candlesticks);
+		mindData.lastPriceData.put(new DataIdentifier(interval, ticker), client.get24HrPriceStatistics(ticker));
+		mindData.candlestickIntAvgData.put(new DataIdentifier(interval, ticker),
+						new CalcUtils().findAveragePrice(candlesticks));
 	}
 }
 
