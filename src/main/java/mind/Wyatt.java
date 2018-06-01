@@ -8,6 +8,8 @@ import utils.CalcUtils;
 
 public class Wyatt {
 
+	private static int MAX_TRADES_PER_24HOURS = 10;
+	private static String[] tickers = { "BTCUSDT", "ETHUSDT", "LTCUSDT" };
 	private MindData dataToReturn;
 
 	public Wyatt() {
@@ -42,16 +44,12 @@ public class Wyatt {
 	}
 
 	public MindData gatherData() {
-
-		gatherIntervalData(dataToReturn, CandlestickInterval.ONE_MINUTE, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.THREE_MINUTES, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.FIVE_MINUTES, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.FIFTEEN_MINUTES, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.HALF_HOURLY, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.HOURLY, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.TWO_HOURLY, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.FOUR_HOURLY, "BTCUSDT");
-		gatherIntervalData(dataToReturn, CandlestickInterval.EIGHT_HOURLY, "BTCUSDT");
+		for(String ticker : tickers)
+		for(CandlestickInterval interval : CandlestickInterval.values()) {
+			gatherIntervalData(dataToReturn, interval, ticker);
+			new CalcUtils().sleeper(500);
+			System.out.println("Fetched data for interval: " + interval.getIntervalId() + " ...");
+		}
 
 		return dataToReturn;
 	}
