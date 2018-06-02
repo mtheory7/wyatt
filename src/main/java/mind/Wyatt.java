@@ -65,9 +65,9 @@ public class Wyatt {
 	}
 
 	public void gatherPredictionData() {
-		for (List<Can>) {
+		/*for (List<Can>) {
 
-		}
+		}*/
 	}
 
 	private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
@@ -81,7 +81,5 @@ public class Wyatt {
 		mindData.candlestickIntAvgData.put(new DataIdentifier(interval, ticker),
 						new CalcUtils().findAveragePrice(candlesticks));
 	}
-
-	public
 }
 
