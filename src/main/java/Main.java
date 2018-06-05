@@ -13,6 +13,8 @@ public class Main {
             Wyatt dolores = new Wyatt(args[0], args[1]);
             dolores.gatherMindData();
             dolores.gatherPredictionData();
+
+            new CalcUtils().sleeper(10000);
             //if (dolores.predictionData.sellConfidencePercentage > 85.0) {
             //    dolores.performSellAndBuyBack();
             //} else {

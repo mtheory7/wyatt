@@ -4,6 +4,7 @@ import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
+import com.binance.api.client.domain.market.TickerStatistics;
 import model.DataIdentifier;
 import model.data.AverageData;
 import model.data.MindData;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class Wyatt {
 
+	private static Double percentageRatio = 1.0025;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -65,7 +67,7 @@ public class Wyatt {
 			for (CandlestickInterval interval : intervalList) {
 				gatherIntervalData(mindData, interval, ticker);
 				new CalcUtils().sleeper(500);
-				System.out.println(ticker + " data fetched for interval: " + interval.getIntervalId() + " ...");
+				//System.out.println(ticker + " data fetched for interval: " + interval.getIntervalId() + " ...");
 			}
 		}
 	}
@@ -116,8 +118,28 @@ public class Wyatt {
 
 			predictionData.averageData.add(averageData);
 		}
+		Double total = 0.0;
 
-		int i = 0;
+		for (AverageData averageData : predictionData.averageData) {
+			//total += (averageData.getCloseAvg()+averageData.getHighAvg())/2*percentageRatio;
+			if(averageData.getNumberOfNodesAveraged() == 5)
+				total += (averageData.getCloseAvg()+averageData.getHighAvg())/2*percentageRatio;
+		}
+		//total = total/predictionData.averageData.size();
+		System.out.println("Target sell price: " + total + "  :::   Buy back at: " + total*predictionData.buyBackAfterThisPercentage);
+
+		TickerStatistics lastPrice = null;
+
+		for (HashMap.Entry<DataIdentifier, TickerStatistics> entry : mindData.getLastPriceData().entrySet()) {
+			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
+					&& entry.getKey().getTicker().equals("BTCUSDT")) {
+				lastPrice = entry.getValue();
+			}
+		}
+
+		if (Double.valueOf(lastPrice.getLastPrice()) > total) {
+			System.out.println("\nWould have sold yo! At: " + total + ". Current price was: " + lastPrice.getLastPrice() + "\n");
+		}
 	}
 
 	private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {

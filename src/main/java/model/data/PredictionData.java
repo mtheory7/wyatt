@@ -7,7 +7,7 @@ public class PredictionData {
 
 	public Double sellConfidencePercentage;
 	public Double sellPrice;
-	public Double buyBackAfterThisPercentage;
+	public static Double buyBackAfterThisPercentage = 0.9965;
 	public List<AverageData> averageData;
 
 	public PredictionData() {
