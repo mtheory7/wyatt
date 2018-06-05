@@ -71,17 +71,29 @@ public class Wyatt {
     }
 
     public void gatherPredictionData() {
-		for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry : mindData.getCandlestickData().entrySet()) {
-		    if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
+        List<Candlestick> oneMinuteCandles = null;
+        for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry : mindData.getCandlestickData().entrySet()) {
+            if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
                     && entry.getKey().getTicker().equals("BTCUSDT")) {
-                System.out.println();
+                oneMinuteCandles = entry.getValue();
             }
+        }
+        if(oneMinuteCandles != null) {
+            int a = 5;
+            int x = oneMinuteCandles.size()-a;
+            int y = oneMinuteCandles.size();
+            List<Candlestick> last5 = oneMinuteCandles.subList(x, y);
+            a = 25;
+            List<Candlestick> last25 = oneMinuteCandles.subList(x, y);
+            a = 100;
+            List<Candlestick> last100 = oneMinuteCandles.subList(x, y);
+            a = 250;
+            List<Candlestick> last250 = oneMinuteCandles.subList(x, y);
+            a = 5;
         }
     }
 
     private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
-
-
         List<Candlestick> candlesticks = client.getCandlestickBars(ticker, interval);
         mindData.candlestickData.put(new DataIdentifier(interval, ticker), candlesticks);
         mindData.lastPriceData.put(new DataIdentifier(interval, ticker), client.get24HrPriceStatistics(ticker));
