@@ -9,6 +9,7 @@ import model.data.MindData;
 import model.data.PredictionData;
 import utils.CalcUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -78,18 +79,21 @@ public class Wyatt {
                 oneMinuteCandles = entry.getValue();
             }
         }
+        List<List<Candlestick>> minuteData = new ArrayList<List<Candlestick>>();
         if(oneMinuteCandles != null) {
-            int a = 5;
-            int x = oneMinuteCandles.size()-a;
+            int x = oneMinuteCandles.size()-5;
             int y = oneMinuteCandles.size();
-            List<Candlestick> last5 = oneMinuteCandles.subList(x, y);
-            a = 25;
-            List<Candlestick> last25 = oneMinuteCandles.subList(x, y);
-            a = 100;
-            List<Candlestick> last100 = oneMinuteCandles.subList(x, y);
-            a = 250;
-            List<Candlestick> last250 = oneMinuteCandles.subList(x, y);
-            a = 5;
+            minuteData.add(oneMinuteCandles.subList(x, y));
+            x = oneMinuteCandles.size()-25;
+            minuteData.add(oneMinuteCandles.subList(x, y));
+            x = oneMinuteCandles.size()-100;
+            minuteData.add(oneMinuteCandles.subList(x, y));
+            x = oneMinuteCandles.size()-200;
+            minuteData.add(oneMinuteCandles.subList(x, y));
+            x = oneMinuteCandles.size()-500;
+            minuteData.add(oneMinuteCandles.subList(x, y));
+            minuteData.add(oneMinuteCandles.subList(0, y));
+            x = 0;
         }
     }
 
