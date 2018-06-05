@@ -93,7 +93,12 @@ public class Wyatt {
             x = oneMinuteCandles.size()-500;
             minuteData.add(oneMinuteCandles.subList(x, y));
             minuteData.add(oneMinuteCandles.subList(0, y));
-            x = 0;
+        }
+
+        for (List<Candlestick> list : minuteData) {
+						for (Candlestick stick : list) {
+
+						}
         }
     }
 
