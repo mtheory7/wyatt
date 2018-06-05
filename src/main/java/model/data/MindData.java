@@ -6,7 +6,6 @@ import model.DataIdentifier;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MindData {
 
@@ -20,7 +19,7 @@ public class MindData {
         candlestickIntAvgData = new HashMap<DataIdentifier, Double>();
     }
 
-    public Map<DataIdentifier, List<Candlestick>> getCandlestickData() {
+    public HashMap<DataIdentifier, List<Candlestick>> getCandlestickData() {
         return candlestickData;
     }
 

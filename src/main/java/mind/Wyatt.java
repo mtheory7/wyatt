@@ -9,6 +9,7 @@ import model.data.MindData;
 import model.data.PredictionData;
 import utils.CalcUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Wyatt {
@@ -27,7 +28,7 @@ public class Wyatt {
 
     public Wyatt(String apiKey, String secret) {
         mindData = new MindData();
-        predictionData = new PredictionData(mindData);
+        predictionData = new PredictionData();
         factory = BinanceApiClientFactory.newInstance(apiKey, secret);
         client = factory.newRestClient();
     }
@@ -70,9 +71,12 @@ public class Wyatt {
     }
 
     public void gatherPredictionData() {
-		/*for (List<Can>) {
-
-		}*/
+		for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry : mindData.getCandlestickData().entrySet()) {
+		    if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
+                    && entry.getKey().getTicker().equals("BTCUSDT")) {
+                System.out.println();
+            }
+        }
     }
 
     private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
