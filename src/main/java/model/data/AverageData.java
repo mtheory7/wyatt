@@ -1,16 +1,21 @@
 package model.data;
 
-import model.DataIdentifier;
-
 public class AverageData {
 	private Double openAvg = 0.0;
 	private Double closeAvg = 0.0;
 	private Double lowAvg = 0.0;
 	private Double highAvg = 0.0;
-	private DataIdentifier identifier = null;
+	private int numberOfNodesAveraged = 0;
 
-	public AverageData(DataIdentifier identifier) {
-		this.identifier = identifier;
+	public AverageData() {
+	}
+
+	public int getNumberOfNodesAveraged() {
+		return numberOfNodesAveraged;
+	}
+
+	public void setNumberOfNodesAveraged(int numberOfNodesAveraged) {
+		this.numberOfNodesAveraged = numberOfNodesAveraged;
 	}
 
 	public Double getOpenAvg() {
@@ -43,13 +48,5 @@ public class AverageData {
 
 	public void setHighAvg(Double highAvg) {
 		this.highAvg = highAvg;
-	}
-
-	public DataIdentifier getIdentifier() {
-		return identifier;
-	}
-
-	public void setIdentifier(DataIdentifier identifier) {
-		this.identifier = identifier;
 	}
 }
