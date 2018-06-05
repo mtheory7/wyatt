@@ -6,26 +6,26 @@ import java.util.List;
 
 public class CalcUtils {
 
-	public final static int SLEEP_NUM = 100;
+    public final static int SLEEP_NUM = 100;
 
-	public Double findAveragePrice(List<Candlestick> candlesticks) {
+    public Double findAveragePrice(List<Candlestick> candlesticks) {
 
-		if (candlesticks.size() == 0) return 0.0;
+        if (candlesticks.size() == 0) return 0.0;
 
-		Double average = 0.0;
+        Double average = 0.0;
 
-		for (Candlestick stick : candlesticks) {
-			average += Double.valueOf(stick.getClose());
-		}
+        for (Candlestick stick : candlesticks) {
+            average += Double.valueOf(stick.getClose());
+        }
 
-		return average / candlesticks.size();
-	}
+        return average / candlesticks.size();
+    }
 
-	public void sleeper(int num) {
-		try {
-			Thread.sleep(num);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+    public void sleeper(int num) {
+        try {
+            Thread.sleep(num);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
