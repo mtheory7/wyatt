@@ -2,6 +2,11 @@ package mind;
 
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.domain.TimeInForce;
+import com.binance.api.client.domain.account.Account;
+import com.binance.api.client.domain.account.NewOrderResponse;
+import com.binance.api.client.domain.account.Order;
+import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerStatistics;
@@ -14,6 +19,9 @@ import utils.CalcUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.binance.api.client.domain.account.NewOrder.limitBuy;
+import static com.binance.api.client.domain.account.NewOrder.limitSell;
 
 public class Wyatt {
 
@@ -110,10 +118,10 @@ public class Wyatt {
 			}
 
 			AverageData averageData = new AverageData();
-			averageData.setOpenAvg(openAvg/list.size());
-			averageData.setCloseAvg(closeAvg/list.size());
-			averageData.setLowAvg(lowAvg/list.size());
-			averageData.setHighAvg(highAvg/list.size());
+			averageData.setOpenAvg(openAvg / list.size());
+			averageData.setCloseAvg(closeAvg / list.size());
+			averageData.setLowAvg(lowAvg / list.size());
+			averageData.setHighAvg(highAvg / list.size());
 			averageData.setNumberOfNodesAveraged(list.size());
 
 			predictionData.averageData.add(averageData);
@@ -122,12 +130,12 @@ public class Wyatt {
 
 		for (AverageData averageData : predictionData.averageData) {
 			//total += (averageData.getCloseAvg()+averageData.getHighAvg())/2*percentageRatio;
-			if(averageData.getNumberOfNodesAveraged() == 5)
-				total += (averageData.getCloseAvg()+averageData.getHighAvg())/2*percentageRatio;
+			if (averageData.getNumberOfNodesAveraged() == 5)
+				total += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * percentageRatio;
 		}
 
-        total = Math.round(total * 100.0) / 100.0;
-		Double buyBack = Math.round(total*predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
+		total = Math.round(total * 100.0) / 100.0;
+		Double buyBack = Math.round(total * predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
 		//total = total/predictionData.averageData.size();
 		System.out.println("Target sell price: $" + total + " ::: Buy back at: $" + buyBack);
 
@@ -139,10 +147,13 @@ public class Wyatt {
 				lastPrice = entry.getValue();
 			}
 		}
+		//
 
 		if (Double.valueOf(lastPrice.getLastPrice()) > total) {
-		    Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
-			System.out.println("\nWould have sold yo! At: $" + total + ". Current price was: $" + z + "\n");
+			Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
+			//WE SHOULD SELL AND BUY!
+			System.out.println("\nDeciding to sell! Target price was: $" + total + ". Current price was: $" + z + ". Buy back price is: " + buyBack + "\n");
+			performSellAndBuyBack(z, buyBack);
 		}
 	}
 
@@ -154,8 +165,32 @@ public class Wyatt {
 				new CalcUtils().findAveragePrice(candlesticks));
 	}
 
-	public void performSellAndBuyBack() {
+	public void performSellAndBuyBack(Double sellPrice, Double buyPrice) {
+		Account account = client.getAccount();
+		Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
+		Double freeBTCRounded = Math.round(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
+		System.out.println("Amount of BTC to trade: " + freeBTCRounded);
 
+		NewOrderResponse performSell = client.newOrder(
+				limitSell("BTCUSDT", TimeInForce.GTC, freeBTCRounded.toString(), sellPrice.toString()));
+
+		System.out.println("Trade submitted: " + performSell.getTransactTime());
+
+		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+
+		while (openOrders.size() > 0) {
+			new CalcUtils().sleeper(3000);
+			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+		}
+
+		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
+		Double freeUSDTRounded = Math.round(Double.valueOf(freeUSDT) * 100.0) / 100.0;
+		System.out.println("Amount of USDT to trade: " + freeUSDTRounded);
+
+		NewOrderResponse performBuy = client.newOrder(
+				limitBuy("BTCUSDT", TimeInForce.GTC, freeBTC.toString(), buyPrice.toString()));
+
+		System.out.println("Trade submitted: " + performSell.getTransactTime());
 	}
 }
 
