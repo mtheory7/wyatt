@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Wyatt {
 
-	private static Double percentageRatio = 1.0025;
+	private static Double percentageRatio = 1.001875;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -125,8 +125,11 @@ public class Wyatt {
 			if(averageData.getNumberOfNodesAveraged() == 5)
 				total += (averageData.getCloseAvg()+averageData.getHighAvg())/2*percentageRatio;
 		}
+
+        total = Math.round(total * 100.0) / 100.0;
+		Double buyBack = Math.round(total*predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
 		//total = total/predictionData.averageData.size();
-		System.out.println("Target sell price: " + total + "  :::   Buy back at: " + total*predictionData.buyBackAfterThisPercentage);
+		System.out.println("Target sell price: $" + total + " ::: Buy back at: $" + buyBack);
 
 		TickerStatistics lastPrice = null;
 
@@ -138,7 +141,8 @@ public class Wyatt {
 		}
 
 		if (Double.valueOf(lastPrice.getLastPrice()) > total) {
-			System.out.println("\nWould have sold yo! At: " + total + ". Current price was: " + lastPrice.getLastPrice() + "\n");
+		    Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
+			System.out.println("\nWould have sold yo! At: $" + total + ". Current price was: $" + z + "\n");
 		}
 	}
 
