@@ -25,7 +25,7 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 
 public class Wyatt {
 
-	private static Double percentageRatio = 1.001875;
+	private static Double percentageRatio = 1.0014;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -147,8 +147,6 @@ public class Wyatt {
 				lastPrice = entry.getValue();
 			}
 		}
-		//
-
 		if (Double.valueOf(lastPrice.getLastPrice()) > total) {
 			Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 			//WE SHOULD SELL AND BUY!
@@ -171,26 +169,32 @@ public class Wyatt {
 		Double freeBTCRounded = Math.round(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
 		System.out.println("Amount of BTC to trade: " + freeBTCRounded);
 
-		NewOrderResponse performSell = client.newOrder(
-				limitSell("BTCUSDT", TimeInForce.GTC, freeBTCRounded.toString(), sellPrice.toString()));
+		try {
+			NewOrderResponse performSell = client.newOrder(
+					limitSell("BTCUSDT", TimeInForce.GTC, freeBTCRounded.toString(), sellPrice.toString()));
+			System.out.println("Trade submitted: " + performSell.getTransactTime());
+		} catch (Exception e) {
+			System.out.println("There was an exception thrown during the sell?: " + e.getMessage());
+		}
 
-		System.out.println("Trade submitted: " + performSell.getTransactTime());
+		new CalcUtils().sleeper(1500);
 
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
-
 		while (openOrders.size() > 0) {
 			new CalcUtils().sleeper(3000);
 			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		}
 
-		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
-		Double freeUSDTRounded = Math.round(Double.valueOf(freeUSDT) * 100.0) / 100.0;
-		System.out.println("Amount of USDT to trade: " + freeUSDTRounded);
+		try {
+			NewOrderResponse performBuy = client.newOrder(
+					limitBuy("BTCUSDT", TimeInForce.GTC, freeBTCRounded.toString(), buyPrice.toString()));
+			System.out.println("Trade submitted: " + performBuy.getTransactTime());
+		} catch (Exception e) {
+			System.out.println("There was an exception thrown during the buy?: " + e.getMessage());
+		}
 
-		NewOrderResponse performBuy = client.newOrder(
-				limitBuy("BTCUSDT", TimeInForce.GTC, freeBTC.toString(), buyPrice.toString()));
+		new CalcUtils().sleeper(1500);
 
-		System.out.println("Trade submitted: " + performSell.getTransactTime());
 	}
 }
 
