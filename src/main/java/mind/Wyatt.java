@@ -147,7 +147,17 @@ public class Wyatt {
 				lastPrice = entry.getValue();
 			}
 		}
-		if (Double.valueOf(lastPrice.getLastPrice()) > total) {
+
+		boolean trade = true;
+
+		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+		if (openOrders.size() > 0) {
+			System.out.println("Orders for BTCUSDT are not empty, waiting 30 seconds...");
+			trade = false;
+			new CalcUtils().sleeper(30000);
+		}
+
+		if (Double.valueOf(lastPrice.getLastPrice()) > total && trade) {
 			Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 			//WE SHOULD SELL AND BUY!
 			System.out.println("\nDeciding to sell! Target price was: $" + total + ". Current price was: $" + z + ". Buy back price is: " + buyBack + "\n");
@@ -202,17 +212,6 @@ public class Wyatt {
 		}
 
 		new CalcUtils().sleeper(3000);
-
-		openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
-
-		System.out.println("Number of open BTCUSDT orders: " + openOrders.size());
-
-		while (openOrders.size() > 0) {
-			System.out.println("Orders for BTCUSDT are not empty, waiting 30 seconds...");
-			new CalcUtils().sleeper(30000);
-			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
-		}
-
 	}
 }
 
