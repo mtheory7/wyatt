@@ -25,7 +25,7 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 
 public class Wyatt {
 
-	private static Double percentageRatio = 1.0014;
+	private static Double percentageRatio = 1.001;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -166,34 +166,52 @@ public class Wyatt {
 	public void performSellAndBuyBack(Double sellPrice, Double buyPrice) {
 		Account account = client.getAccount();
 		Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
-		Double freeBTCRounded = Math.round(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
-		System.out.println("Amount of BTC to trade: " + freeBTCRounded);
+		Double freeBTCFloored = Math.floor(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
+		System.out.println("Amount of BTC to trade: " + freeBTCFloored);
 
 		try {
 			NewOrderResponse performSell = client.newOrder(
-					limitSell("BTCUSDT", TimeInForce.GTC, freeBTCRounded.toString(), sellPrice.toString()));
+					limitSell("BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
 			System.out.println("Trade submitted: " + performSell.getTransactTime());
 		} catch (Exception e) {
 			System.out.println("There was an exception thrown during the sell?: " + e.getMessage());
+			e.printStackTrace();
 		}
 
-		new CalcUtils().sleeper(1500);
+		new CalcUtils().sleeper(3000);
 
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+
+		System.out.println("Number of open BTCUSDT orders: " + openOrders.size());
+
 		while (openOrders.size() > 0) {
+			System.out.println("Orders for BTCUSDT are not empty, waiting 3 seconds...");
 			new CalcUtils().sleeper(3000);
 			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		}
 
+		//TODO Make sure there is enough available Tether (USDT) in account before sumbitting buy trade
+
 		try {
 			NewOrderResponse performBuy = client.newOrder(
-					limitBuy("BTCUSDT", TimeInForce.GTC, freeBTCRounded.toString(), buyPrice.toString()));
+					limitBuy("BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), buyPrice.toString()));
 			System.out.println("Trade submitted: " + performBuy.getTransactTime());
 		} catch (Exception e) {
 			System.out.println("There was an exception thrown during the buy?: " + e.getMessage());
+			e.printStackTrace();
 		}
 
-		new CalcUtils().sleeper(1500);
+		new CalcUtils().sleeper(3000);
+
+		openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+
+		System.out.println("Number of open BTCUSDT orders: " + openOrders.size());
+
+		while (openOrders.size() > 0) {
+			System.out.println("Orders for BTCUSDT are not empty, waiting 30 seconds...");
+			new CalcUtils().sleeper(30000);
+			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+		}
 
 	}
 }
