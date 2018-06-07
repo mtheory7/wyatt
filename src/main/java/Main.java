@@ -6,6 +6,7 @@ public class Main {
 		if (args[0] == null || args[1] == null) System.exit(-1);
 		if (args[0].equals("") || args[1].equals("")) System.exit(-2);
 		//Wyatt.playSweetWater();
+		System.out.println("Starting WYATT version 1.0.2 ...");
 		for (; ; ) {
 			Wyatt dolores = new Wyatt(args[0], args[1]);
 			dolores.gatherMindData();

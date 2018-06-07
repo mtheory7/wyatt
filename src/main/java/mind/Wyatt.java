@@ -25,7 +25,7 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 
 public class Wyatt {
 
-	private static Double percentageRatio = 1.00125;
+	private static Double percentageRatio = 1.00135;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -180,6 +180,7 @@ public class Wyatt {
 		System.out.println("Amount of BTC to trade: " + freeBTCFloored);
 
 		try {
+			System.out.println("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
 			NewOrderResponse performSell = client.newOrder(
 					limitSell("BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
 			System.out.println("Trade submitted: " + performSell.getTransactTime());
@@ -199,12 +200,17 @@ public class Wyatt {
 			new CalcUtils().sleeper(3000);
 			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		}
+		new CalcUtils().sleeper(1500);
 
-		//TODO Make sure there is enough available Tether (USDT) in account before sumbitting buy trade
+		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
+		Double freeUSDTFloored = Math.floor(Double.valueOf(freeUSDT) * 100.0) / 100.0;
+		Double BTCtoBuy = freeUSDT / buyPrice;
+		Double BTCtoBuyFloored = Math.floor(Double.valueOf(BTCtoBuy) * 10000.0) / 10000.0;
 
 		try {
+			System.out.println("Executing buy with: " + freeUSDTFloored + " USDT @ $" + buyPrice + " = " + BTCtoBuyFloored + " BTC");
 			NewOrderResponse performBuy = client.newOrder(
-					limitBuy("BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), buyPrice.toString()));
+					limitBuy("BTCUSDT", TimeInForce.GTC, BTCtoBuyFloored.toString(), buyPrice.toString()));
 			System.out.println("Trade submitted: " + performBuy.getTransactTime());
 		} catch (Exception e) {
 			System.out.println("There was an exception thrown during the buy?: " + e.getMessage());
