@@ -25,7 +25,7 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 
 public class Wyatt {
 
-	private static Double percentageRatio = 1.001;
+	private static Double percentageRatio = 1.00125;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -152,9 +152,9 @@ public class Wyatt {
 
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
-			System.out.println("Orders for BTCUSDT are not empty, not trading for 30 seconds...");
+			System.out.println("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
 			trade = false;
-			new CalcUtils().sleeper(30000);
+			new CalcUtils().sleeper(120000);
 		}
 
 		if (Double.valueOf(lastPrice.getLastPrice()) > total && trade) {
