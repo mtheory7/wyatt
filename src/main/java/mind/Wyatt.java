@@ -152,7 +152,7 @@ public class Wyatt {
 
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
-			System.out.println("Orders for BTCUSDT are not empty, waiting 30 seconds...");
+			System.out.println("Orders for BTCUSDT are not empty, not trading for 30 seconds...");
 			trade = false;
 			new CalcUtils().sleeper(30000);
 		}
