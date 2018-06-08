@@ -113,19 +113,18 @@ public class Wyatt {
 			}
 		}
 		Double lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
-		//System.out.println("Current: $" + lastPriceFloored + " Sell: $" + sellPrice + " Buy: $" + buyBack);
-		logger.info("Current: $" + lastPriceFloored + " Sell: $" + sellPrice + " Buy: $" + buyBack);
+		logger.trace("Current: $" + lastPriceFloored + " Sell: $" + sellPrice + " Buy: $" + buyBack);
 		boolean trade = true;
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
-			System.out.println("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
+			logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
 			trade = false;
 			new CalcUtils().sleeper(120000);
 		}
 		if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
 			Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 			//WE SHOULD SELL AND BUY!
-			System.out.println("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: " + buyBack + "\n");
+			logger.info("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: " + buyBack + "\n");
 			performSellAndBuyBack(z, buyBack);
 		}
 	}
@@ -135,10 +134,11 @@ public class Wyatt {
 		try {
 			candlesticks = client.getCandlestickBars(ticker, interval);
 		} catch (Exception e) {
-			System.out.println("There was an exception while pulling interval data!");
-			System.out.println("Interval: " + interval + " Ticker: " + ticker);
-			System.out.println("Waiting for 120 seconds ...");
+			logger.info("There was an exception while pulling interval data!");
+			logger.trace("Interval: " + interval + " Ticker: " + ticker);
+			logger.trace("Waiting for 120 seconds ...");
 			new CalcUtils().sleeper(120000);
+			logger.error("Error: ", e);
 		}
 
 		mindData.candlestickData.put(new DataIdentifier(interval, ticker), candlesticks);
@@ -151,21 +151,21 @@ public class Wyatt {
 		Account account = client.getAccount();
 		Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
 		Double freeBTCFloored = Math.floor(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
-		System.out.println("Amount of BTC to trade: " + freeBTCFloored);
+		logger.trace("Amount of BTC to trade: " + freeBTCFloored);
 		try {
-			System.out.println("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
+			logger.info("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
 			NewOrderResponse performSell = client.newOrder(
 					limitSell("BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
-			System.out.println("Trade submitted: " + performSell.getTransactTime());
+			logger.trace("Trade submitted: " + performSell.getTransactTime());
 		} catch (Exception e) {
-			System.out.println("There was an exception thrown during the sell?: " + e.getMessage());
+			logger.error("There was an exception thrown during the sell?: " + e.getMessage());
 			e.printStackTrace();
 		}
 		new CalcUtils().sleeper(3000);
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
-		System.out.println("Number of open BTCUSDT orders: " + openOrders.size());
+		logger.info("Number of open BTCUSDT orders: " + openOrders.size());
 		while (openOrders.size() > 0) {
-			System.out.println("Orders for BTCUSDT are not empty, waiting 3 seconds...");
+			logger.info("Orders for BTCUSDT are not empty, waiting 3 seconds...");
 			new CalcUtils().sleeper(3000);
 			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		}
@@ -175,12 +175,12 @@ public class Wyatt {
 		Double BTCtoBuy = freeUSDTFloored / buyPrice;
 		Double BTCtoBuyFloored = Math.floor(Double.valueOf(BTCtoBuy) * 10000.0) / 10000.0;
 		try {
-			System.out.println("Executing buy with: " + freeUSDTFloored + " USDT @ $" + buyPrice + " = " + BTCtoBuyFloored + " BTC");
+			logger.info("Executing buy with: " + freeUSDTFloored + " USDT @ $" + buyPrice + " = " + BTCtoBuyFloored + " BTC");
 			NewOrderResponse performBuy = client.newOrder(
 					limitBuy("BTCUSDT", TimeInForce.GTC, BTCtoBuyFloored.toString(), buyPrice.toString()));
-			System.out.println("Trade submitted: " + performBuy.getTransactTime());
+			logger.trace("Trade submitted: " + performBuy.getTransactTime());
 		} catch (Exception e) {
-			System.out.println("There was an exception thrown during the buy?: " + e.getMessage());
+			logger.error("There was an exception thrown during the buy?: " + e.getMessage());
 			e.printStackTrace();
 		}
 		new CalcUtils().sleeper(3000);
