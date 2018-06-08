@@ -45,33 +45,6 @@ public class Wyatt {
 		client = factory.newRestClient();
 	}
 
-	public static void playSweetWater() {
-		logger.info("LOADING SYSTEM ... ");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println(" .----------------. .----------------. .----------------. .----------------. .----------------. ");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| .--------------. | .--------------. | .--------------. | .--------------. | .--------------. |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| | _____  _____ | | |  ____  ____  | | |      __      | | |  _________   | | |  _________   | |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| ||_   _||_   _|| | | |_  _||_  _| | | |     /  \\     | | | |  _   _  |  | | | |  _   _  |  | |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| |  | | /\\ | |  | | |   \\ \\  / /   | | |    / /\\ \\    | | | |_/ | | \\_|  | | | |_/ | | \\_|  | |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| |  | |/  \\| |  | | |    \\ \\/ /    | | |   / ____ \\   | | |     | |      | | |     | |      | |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| |  |   /\\   |  | | |    _|  |_    | | | _/ /    \\ \\_ | | |    _| |_     | | |    _| |_     | |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| |  |__/  \\__|  | | |   |______|   | | ||____|  |____|| | |   |_____|    | | |   |_____|    | |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| |              | | |              | | |              | | |              | | |              | |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println("| '--------------' | '--------------' | '--------------' | '--------------' | '--------------' |");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-		System.out.println(" '----------------' '----------------' '----------------' '----------------' '----------------' ");
-		new CalcUtils().sleeper(CalcUtils.SLEEP_NUM);
-	}
-
 	public void gatherMindData() {
 		for (String ticker : tickers) {
 			for (CandlestickInterval interval : intervalList) {

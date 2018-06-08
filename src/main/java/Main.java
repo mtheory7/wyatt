@@ -3,7 +3,7 @@ import org.apache.log4j.Logger;
 import utils.CalcUtils;
 
 public class Main {
-	final static Logger logger = Logger.getLogger(Wyatt.class);
+	final static Logger logger = Logger.getLogger(Main.class);
 
 	public static void main(String[] args) {
 		logger.info("Starting WYATT version 1.0.2 ...");
@@ -15,8 +15,6 @@ public class Main {
 			System.exit(-2);
 			logger.error("Arguments cannot be empty");
 		}
-		logger.error("Starting WYATT version 1.0.2 ...");
-		//Wyatt.playSweetWater();
 		for (; ; ) {
 			Wyatt dolores = new Wyatt(args[0], args[1]);
 			dolores.gatherMindData();
