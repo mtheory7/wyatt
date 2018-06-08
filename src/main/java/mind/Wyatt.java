@@ -139,7 +139,7 @@ public class Wyatt {
 			}
 		}
 		Double lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
-		System.out.println("Current: $" + lastPriceFloored + " Target: $" + sellPrice + " BuyBack: $" + buyBack);
+		System.out.println("Current: $" + lastPriceFloored + " Sell: $" + sellPrice + " Buy: $" + buyBack);
 		boolean trade = true;
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
@@ -150,7 +150,7 @@ public class Wyatt {
 		if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
 			Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 			//WE SHOULD SELL AND BUY!
-			System.out.println("\nDeciding to sell! Target price was: $" + sellPrice + ". Current price was: $" + z + ". Buy back price is: " + buyBack + "\n");
+			System.out.println("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: " + buyBack + "\n");
 			performSellAndBuyBack(z, buyBack);
 		}
 	}
