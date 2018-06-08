@@ -169,8 +169,14 @@ public class Wyatt {
 			new CalcUtils().sleeper(3000);
 			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		}
-		new CalcUtils().sleeper(1500);
+		new CalcUtils().sleeper(3000);
 		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
+		//Loop until above 10.0 USDT
+		while (freeUSDT < 10.0) {
+			logger.trace("Looping because we currently have less than 10 USDT. Waiting 15 seconds...");
+			new CalcUtils().sleeper(15000);
+			freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
+		}
 		Double freeUSDTFloored = Math.floor(Double.valueOf(freeUSDT) * 100.0) / 100.0;
 		Double BTCtoBuy = freeUSDTFloored / buyPrice;
 		Double BTCtoBuyFloored = Math.floor(Double.valueOf(BTCtoBuy) * 10000.0) / 10000.0;
