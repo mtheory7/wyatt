@@ -192,4 +192,3 @@ public class Wyatt {
 		new CalcUtils().sleeper(3000);
 	}
 }
-
