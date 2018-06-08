@@ -126,18 +126,18 @@ public class Wyatt {
 
 			predictionData.averageData.add(averageData);
 		}
-		Double total = 0.0;
+		Double sellPrice = 0.0;
 
 		for (AverageData averageData : predictionData.averageData) {
 			//total += (averageData.getCloseAvg()+averageData.getHighAvg())/2*percentageRatio;
 			if (averageData.getNumberOfNodesAveraged() == 5)
-				total += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * percentageRatio;
+				sellPrice += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * percentageRatio;
 		}
 
-		total = Math.round(total * 100.0) / 100.0;
-		Double buyBack = Math.round(total * predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
+		sellPrice = Math.round(sellPrice * 100.0) / 100.0;
+		Double buyBack = Math.round(sellPrice * predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
 		//total = total/predictionData.averageData.size();
-		System.out.println("Target sell price: $" + total + " ::: Buy back at: $" + buyBack);
+		//System.out.println("Target sell price: $" + total + " ::: Buy back at: $" + buyBack);
 
 		TickerStatistics lastPrice = null;
 
@@ -148,6 +148,10 @@ public class Wyatt {
 			}
 		}
 
+		Double lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
+
+		System.out.println("Current: $" + lastPriceFloored + " Target: $" + sellPrice + " BuyBack: $" + buyBack);
+
 		boolean trade = true;
 
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
@@ -157,10 +161,10 @@ public class Wyatt {
 			new CalcUtils().sleeper(120000);
 		}
 
-		if (Double.valueOf(lastPrice.getLastPrice()) > total && trade) {
+		if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
 			Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 			//WE SHOULD SELL AND BUY!
-			System.out.println("\nDeciding to sell! Target price was: $" + total + ". Current price was: $" + z + ". Buy back price is: " + buyBack + "\n");
+			System.out.println("\nDeciding to sell! Target price was: $" + sellPrice + ". Current price was: $" + z + ". Buy back price is: " + buyBack + "\n");
 			performSellAndBuyBack(z, buyBack);
 		}
 	}
@@ -204,7 +208,7 @@ public class Wyatt {
 
 		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
 		Double freeUSDTFloored = Math.floor(Double.valueOf(freeUSDT) * 100.0) / 100.0;
-		Double BTCtoBuy = freeUSDT / buyPrice;
+		Double BTCtoBuy = freeUSDTFloored / buyPrice;
 		Double BTCtoBuyFloored = Math.floor(Double.valueOf(BTCtoBuy) * 10000.0) / 10000.0;
 
 		try {
