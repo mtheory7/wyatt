@@ -12,11 +12,6 @@ public class Main {
 			dolores.gatherMindData();
 			dolores.gatherPredictionData();
 			new CalcUtils().sleeper(16000);
-			//if (dolores.predictionData.sellConfidencePercentage > 85.0) {
-			//    dolores.performSellAndBuyBack();
-			//} else {
-			//    new CalcUtils().sleeper(30000);
-			//}
 		}
 	}
 }

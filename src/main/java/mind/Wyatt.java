@@ -103,13 +103,11 @@ public class Wyatt {
 			minuteData.add(oneMinuteCandles.subList(x, y));
 			minuteData.add(oneMinuteCandles.subList(0, y));
 		}
-
 		for (List<Candlestick> list : minuteData) {
 			Double openAvg = 0.0;
 			Double closeAvg = 0.0;
 			Double lowAvg = 0.0;
 			Double highAvg = 0.0;
-
 			for (Candlestick stick : list) {
 				openAvg += Double.valueOf(stick.getOpen());
 				closeAvg += Double.valueOf(stick.getClose());
@@ -123,44 +121,32 @@ public class Wyatt {
 			averageData.setLowAvg(lowAvg / list.size());
 			averageData.setHighAvg(highAvg / list.size());
 			averageData.setNumberOfNodesAveraged(list.size());
-
 			predictionData.averageData.add(averageData);
 		}
 		Double sellPrice = 0.0;
-
 		for (AverageData averageData : predictionData.averageData) {
 			//total += (averageData.getCloseAvg()+averageData.getHighAvg())/2*percentageRatio;
 			if (averageData.getNumberOfNodesAveraged() == 5)
 				sellPrice += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * percentageRatio;
 		}
-
 		sellPrice = Math.round(sellPrice * 100.0) / 100.0;
 		Double buyBack = Math.round(sellPrice * predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
-		//total = total/predictionData.averageData.size();
-		//System.out.println("Target sell price: $" + total + " ::: Buy back at: $" + buyBack);
-
 		TickerStatistics lastPrice = null;
-
 		for (HashMap.Entry<DataIdentifier, TickerStatistics> entry : mindData.getLastPriceData().entrySet()) {
 			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
 					&& entry.getKey().getTicker().equals("BTCUSDT")) {
 				lastPrice = entry.getValue();
 			}
 		}
-
 		Double lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
-
 		System.out.println("Current: $" + lastPriceFloored + " Target: $" + sellPrice + " BuyBack: $" + buyBack);
-
 		boolean trade = true;
-
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
 			System.out.println("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
 			trade = false;
 			new CalcUtils().sleeper(120000);
 		}
-
 		if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
 			Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 			//WE SHOULD SELL AND BUY!
@@ -170,7 +156,16 @@ public class Wyatt {
 	}
 
 	private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
-		List<Candlestick> candlesticks = client.getCandlestickBars(ticker, interval);
+		List<Candlestick> candlesticks = new ArrayList<Candlestick>();
+		try {
+			candlesticks = client.getCandlestickBars(ticker, interval);
+		} catch (Exception e) {
+			System.out.println("There was an exception while pulling interval data!");
+			System.out.println("Interval: " + interval + " Ticker: " + ticker);
+			System.out.println("Waiting for 120 seconds ...");
+			new CalcUtils().sleeper(120000);
+		}
+
 		mindData.candlestickData.put(new DataIdentifier(interval, ticker), candlesticks);
 		mindData.lastPriceData.put(new DataIdentifier(interval, ticker), client.get24HrPriceStatistics(ticker));
 		mindData.candlestickIntAvgData.put(new DataIdentifier(interval, ticker),
@@ -182,7 +177,6 @@ public class Wyatt {
 		Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
 		Double freeBTCFloored = Math.floor(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
 		System.out.println("Amount of BTC to trade: " + freeBTCFloored);
-
 		try {
 			System.out.println("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
 			NewOrderResponse performSell = client.newOrder(
@@ -192,25 +186,19 @@ public class Wyatt {
 			System.out.println("There was an exception thrown during the sell?: " + e.getMessage());
 			e.printStackTrace();
 		}
-
 		new CalcUtils().sleeper(3000);
-
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
-
 		System.out.println("Number of open BTCUSDT orders: " + openOrders.size());
-
 		while (openOrders.size() > 0) {
 			System.out.println("Orders for BTCUSDT are not empty, waiting 3 seconds...");
 			new CalcUtils().sleeper(3000);
 			openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		}
 		new CalcUtils().sleeper(1500);
-
 		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
 		Double freeUSDTFloored = Math.floor(Double.valueOf(freeUSDT) * 100.0) / 100.0;
 		Double BTCtoBuy = freeUSDTFloored / buyPrice;
 		Double BTCtoBuyFloored = Math.floor(Double.valueOf(BTCtoBuy) * 10000.0) / 10000.0;
-
 		try {
 			System.out.println("Executing buy with: " + freeUSDTFloored + " USDT @ $" + buyPrice + " = " + BTCtoBuyFloored + " BTC");
 			NewOrderResponse performBuy = client.newOrder(
@@ -220,7 +208,6 @@ public class Wyatt {
 			System.out.println("There was an exception thrown during the buy?: " + e.getMessage());
 			e.printStackTrace();
 		}
-
 		new CalcUtils().sleeper(3000);
 	}
 }
