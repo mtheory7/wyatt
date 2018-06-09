@@ -19,7 +19,8 @@ public class Main {
 			Wyatt dolores = new Wyatt(args[0], args[1]);
 			dolores.gatherMindData();
 			dolores.gatherPredictionData();
-			new CalcUtils().sleeper(16000);
+			dolores.printBalances();
+			new CalcUtils().sleeper(25000);
 		}
 	}
 }

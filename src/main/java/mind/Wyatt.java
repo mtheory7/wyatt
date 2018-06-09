@@ -4,12 +4,14 @@ import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.TimeInForce;
 import com.binance.api.client.domain.account.Account;
+import com.binance.api.client.domain.account.AssetBalance;
 import com.binance.api.client.domain.account.NewOrderResponse;
 import com.binance.api.client.domain.account.Order;
 import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerStatistics;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import model.DataIdentifier;
 import model.data.AverageData;
 import model.data.MindData;
@@ -26,7 +28,7 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 
 public class Wyatt {
 
-	private static Double percentageRatio = 1.001575;
+	private static Double percentageRatio = 1.00165;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -37,6 +39,18 @@ public class Wyatt {
 	private BinanceApiRestClient client = null;
 
 	final static Logger logger = Logger.getLogger(Wyatt.class);
+
+	public void printBalances() {
+		Account account = client.getAccount();
+		List<AssetBalance> balances = account.getBalances();
+
+		for(AssetBalance balance : balances) {
+			Double amount = Double.valueOf(balance.getFree())+Double.valueOf(balance.getLocked());
+			if (amount > 0.0) {
+				logger.trace("Asset: " + balance.getAsset() + " - Balance: " + amount);
+			}
+		}
+	}
 
 	public Wyatt(String apiKey, String secret) {
 		mindData = new MindData();
