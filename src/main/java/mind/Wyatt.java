@@ -26,7 +26,7 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 
 public class Wyatt {
 
-	private static Double percentageRatio = 1.00135;
+	private static Double percentageRatio = 1.001575;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
