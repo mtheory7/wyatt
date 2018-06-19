@@ -136,7 +136,7 @@ public class Wyatt {
         if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
             Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
             //WE SHOULD SELL AND BUY!
-            logger.info("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: " + buyBack + "\n");
+            logger.info("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack + "\n");
             performSellAndBuyBack(z, buyBack);
         }
     }
@@ -163,12 +163,12 @@ public class Wyatt {
         Account account = client.getAccount();
         Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
         Double freeBTCFloored = Math.floor(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
-        logger.trace("Amount of BTC to trade: " + freeBTCFloored);
+        logger.info("Amount of BTC to trade: " + freeBTCFloored);
         try {
             logger.info("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
             NewOrderResponse performSell = client.newOrder(
                     limitSell("BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
-            logger.trace("Trade submitted: " + performSell.getTransactTime());
+            logger.info("Trade submitted: " + performSell.getTransactTime());
         } catch (Exception e) {
             logger.error("There was an exception thrown during the sell?: " + e.getMessage());
             e.printStackTrace();
@@ -177,7 +177,7 @@ public class Wyatt {
         List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
         logger.info("Number of open BTCUSDT orders: " + openOrders.size());
         while (openOrders.size() > 0) {
-            logger.info("Orders for BTCUSDT are not empty, waiting 3 seconds...");
+            logger.trace("Orders for BTCUSDT are not empty, waiting 3 seconds...");
             new CalcUtils().sleeper(3000);
             openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
         }
@@ -197,7 +197,7 @@ public class Wyatt {
             logger.info("Executing buy with: " + freeUSDTFloored + " USDT @ $" + buyPrice + " = " + BTCtoBuyFloored + " BTC");
             NewOrderResponse performBuy = client.newOrder(
                     limitBuy("BTCUSDT", TimeInForce.GTC, BTCtoBuyFloored.toString(), buyPrice.toString()));
-            logger.trace("Trade submitted: " + performBuy.getTransactTime());
+            logger.info("Trade submitted: " + performBuy.getTransactTime());
         } catch (Exception e) {
             logger.error("There was an exception thrown during the buy?: " + e.getMessage());
             e.printStackTrace();
