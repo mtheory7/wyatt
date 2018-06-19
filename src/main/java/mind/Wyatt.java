@@ -136,7 +136,7 @@ public class Wyatt {
         if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
             Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
             //WE SHOULD SELL AND BUY!
-            logger.info("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack + "\n");
+            logger.info("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack);
             performSellAndBuyBack(z, buyBack);
         }
     }
