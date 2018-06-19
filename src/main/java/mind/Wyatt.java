@@ -182,6 +182,7 @@ public class Wyatt {
             openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
         }
         new CalcUtils().sleeper(3000);
+	    account = client.getAccount();
         Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
         //Loop until above 10.0 USDT
         while (freeUSDT < 10.0) {
