@@ -28,7 +28,7 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 public class Wyatt {
 
     final static Logger logger = Logger.getLogger(Wyatt.class);
-    private static Double percentageRatio = 1.00165;
+    private static Double percentageRatio = 1.00167;
     private static int MAX_TRADES_PER_24HOURS = 10;
     private static CandlestickInterval[] intervalList = {
             CandlestickInterval.ONE_MINUTE};
@@ -136,7 +136,7 @@ public class Wyatt {
         if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
             Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
             //WE SHOULD SELL AND BUY!
-            logger.info("\nDeciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack);
+            logger.info("Deciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack);
             performSellAndBuyBack(z, buyBack);
         }
     }
