@@ -175,7 +175,7 @@ public class Wyatt {
         }
         new CalcUtils().sleeper(3000);
         List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
-        logger.info("Number of open BTCUSDT orders: " + openOrders.size());
+        logger.trace("Number of open BTCUSDT orders: " + openOrders.size());
         while (openOrders.size() > 0) {
             logger.trace("Orders for BTCUSDT are not empty, waiting 3 seconds...");
             new CalcUtils().sleeper(3000);
