@@ -22,3 +22,4 @@ To run Wyatt, execute the following
 ```$xslt
 java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <API_KEY> <SECRET_KEY>
 ```
+The API Key absolutely MUST have approval to execute trades from Binance, but does not need approval to withdraw. 
