@@ -17,7 +17,7 @@ To build Wyatt clone this repository and on the same level as pom.xml, execute
 mvn clean install
 ```
 This will build and package two .jar files in the target directory
-### Running
+### Executing
 To run Wyatt, execute the following
 ```$xslt
 java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <API_KEY> <SECRET_KEY>
