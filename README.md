@@ -1,4 +1,4 @@
-# [Wyatt](mtheory7.tk)
+# [Wyatt](http://18.218.235.32/)
 Above is a link to the log output of Wyatt (DEBUG level and higher) running connected to my personal Binance account.
 
 Another link to the full log (all levels) is available [here](http://18.218.235.32/full.php)
