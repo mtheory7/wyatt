@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PredictionData {
 
-    public static Double buyBackAfterThisPercentage = 0.9965;
+    public static Double buyBackAfterThisPercentage = 0.99725;
     public Double sellConfidencePercentage;
     public Double sellPrice;
     public List<AverageData> averageData;
