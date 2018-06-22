@@ -16,7 +16,7 @@ To build Wyatt clone this repository and on the same level as pom.xml, execute
 ```$xslt
 mvn clean install
 ```
-This will build and package two .jar files in the target directory
+This will build and package two .jar files in the target directory. One of the .jar files end with "-jar-with-dependencies.jar" and includes all the libraries needed for independent execution.
 ### Executing
 To run Wyatt, execute the following
 ```$xslt
