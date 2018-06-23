@@ -16,6 +16,10 @@ import model.data.AverageData;
 import model.data.MindData;
 import model.data.PredictionData;
 import org.apache.log4j.Logger;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import utils.CalcUtils;
 
 import java.util.ArrayList;
@@ -136,7 +140,19 @@ public class Wyatt {
         if (Double.valueOf(lastPrice.getLastPrice()) > sellPrice && trade) {
             Double z = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
             //WE SHOULD SELL AND BUY!
-            logger.info("Deciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack);
+            String message = "Deciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack;
+            logger.info(message);
+            //My bad I was sending a tweet
+            if (message.length() < 280) {
+                Twitter twitter = TwitterFactory.getSingleton();
+                try {
+                    Status status = twitter.updateStatus(message);
+                } catch (TwitterException e) {
+                    logger.error("ERROR SENDING TWEET: Reason: {}", e);
+                }
+            } else {
+                logger.error("Could not send tweet, characters too long.");
+            }
             performSellAndBuyBack(z, buyBack);
         }
     }
@@ -182,7 +198,7 @@ public class Wyatt {
             openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
         }
         new CalcUtils().sleeper(3000);
-	    account = client.getAccount();
+        account = client.getAccount();
         Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
         //Loop until above 10.0 USDT
         while (freeUSDT < 10.0) {
