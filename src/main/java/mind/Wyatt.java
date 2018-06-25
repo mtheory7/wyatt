@@ -28,11 +28,12 @@ import java.util.List;
 
 import static com.binance.api.client.domain.account.NewOrder.limitBuy;
 import static com.binance.api.client.domain.account.NewOrder.limitSell;
+import static java.lang.Math.max;
 
 public class Wyatt {
 
 	final static Logger logger = Logger.getLogger(Wyatt.class);
-	private static Double percentageRatio = 1.001;
+	private static Double percentageRatio = 1.0;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -135,6 +136,7 @@ public class Wyatt {
 		tierThr = Math.round(tierThr * 100.0) / 100.0;
 		tierFou = Math.round(tierFou * 100.0) / 100.0;
 		tierFiv = Math.round(tierFiv * 100.0) / 100.0;
+		Double target = max(tierFiv, max(tierFou, max(tierThr, max(tierOne, tierTwo))));
 		Double buyBack = Math.round(tierOne * predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
 		TickerStatistics lastPrice = null;
 		for (HashMap.Entry<DataIdentifier, TickerStatistics> entry : mindData.getLastPriceData().entrySet()) {
@@ -144,7 +146,9 @@ public class Wyatt {
 			}
 		}
 		Double lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
-		logger.trace("Current: " + lastPriceFloored);
+		Double sellConfidencePercentage = (lastPriceFloored / target * 100);
+		int sellConfidence = (int)Math.floor(sellConfidencePercentage);
+		logger.trace("Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack + " ::: Sell confidence: " + sellConfidence + "%");
 		logger.trace("Tier 1(5): " + tierOne);
 		logger.trace("Tier 2(25): " + tierTwo);
 		logger.trace("Tier 3(100): " + tierThr);
@@ -158,17 +162,12 @@ public class Wyatt {
 			trade = false;
 			new CalcUtils().sleeper(120000);
 		}
-		if (lastPriceFloored > tierOne &&
-				lastPriceFloored > tierTwo &&
-				lastPriceFloored > tierThr &&
-				lastPriceFloored > tierFou &&
-				lastPriceFloored > tierFiv &&
-				trade) {
+		if ((lastPriceFloored > target) && trade) {
 			//WE SHOULD SELL AND BUY!
 			String message = "Deciding to sell! Current price: $" + lastPriceFloored + ". Buy back price: $" + buyBack;
 			logger.info(message);
 			//My bad I was sending a tweet
-            if (message.length() < 280) {
+/*            if (message.length() < 280) {
                 Twitter twitter = TwitterFactory.getSingleton();
                 try {
                     Status status = twitter.updateStatus(message);
@@ -179,7 +178,7 @@ public class Wyatt {
             } else {
                 logger.error("Could not send tweet, characters too long.");
             }
-            performSellAndBuyBack(lastPriceFloored, buyBack);
+            performSellAndBuyBack(lastPriceFloored, buyBack);*/
 		}
 	}
 
