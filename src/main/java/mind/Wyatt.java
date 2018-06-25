@@ -167,7 +167,7 @@ public class Wyatt {
 			String message = "Deciding to sell! Current price: $" + lastPriceFloored + ". Buy back price: $" + buyBack;
 			logger.info(message);
 			//My bad I was sending a tweet
-/*            if (message.length() < 280) {
+            if (message.length() < 280) {
                 Twitter twitter = TwitterFactory.getSingleton();
                 try {
                     Status status = twitter.updateStatus(message);
@@ -178,7 +178,7 @@ public class Wyatt {
             } else {
                 logger.error("Could not send tweet, characters too long.");
             }
-            performSellAndBuyBack(lastPriceFloored, buyBack);*/
+            performSellAndBuyBack(lastPriceFloored, buyBack);
 		}
 	}
 
