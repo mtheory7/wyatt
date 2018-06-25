@@ -16,10 +16,6 @@ import model.data.AverageData;
 import model.data.MindData;
 import model.data.PredictionData;
 import org.apache.log4j.Logger;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import utils.CalcUtils;
 
 import java.util.ArrayList;
@@ -143,7 +139,7 @@ public class Wyatt {
             String message = "Deciding to sell! Target price: $" + sellPrice + ". Current price: $" + z + ". Buy back price: $" + buyBack;
             logger.info(message);
             //My bad I was sending a tweet
-            if (message.length() < 280) {
+            /*if (message.length() < 280) {
                 Twitter twitter = TwitterFactory.getSingleton();
                 try {
                     Status status = twitter.updateStatus(message);
@@ -154,7 +150,7 @@ public class Wyatt {
             } else {
                 logger.error("Could not send tweet, characters too long.");
             }
-            performSellAndBuyBack(z, buyBack);
+            performSellAndBuyBack(z, buyBack);*/
         }
     }
 
