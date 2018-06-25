@@ -137,7 +137,7 @@ public class Wyatt {
 		tierFou = Math.round(tierFou * 100.0) / 100.0;
 		tierFiv = Math.round(tierFiv * 100.0) / 100.0;
 		Double target = max(tierFiv, max(tierFou, max(tierThr, max(tierOne, tierTwo))));
-		Double buyBack = Math.round(tierOne * predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
+		Double buyBack = Math.round(target * predictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
 		TickerStatistics lastPrice = null;
 		for (HashMap.Entry<DataIdentifier, TickerStatistics> entry : mindData.getLastPriceData().entrySet()) {
 			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
