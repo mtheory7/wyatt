@@ -164,7 +164,7 @@ public class Wyatt {
 		}
 		if ((lastPriceFloored > target) && trade) {
 			//WE SHOULD SELL AND BUY!
-			String message = "Deciding to sell! Current price: $" + lastPriceFloored + ". Buy back price: $" + buyBack;
+			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
 			//My bad I was sending a tweet
             if (message.length() < 280) {
