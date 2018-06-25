@@ -147,7 +147,7 @@ public class Wyatt {
 		}
 		Double lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 		Double sellConfidencePercentage = (lastPriceFloored / target * 100);
-		int sellConfidence = (int)Math.floor(sellConfidencePercentage);
+		Double sellConfidence = Math.round(sellConfidencePercentage * 1000.0) / 1000.0;
 		logger.trace("Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack + " ::: Sell confidence: " + sellConfidence + "%");
 		logger.trace("Tier_1: " + tierOne + " Tier_2: " + tierTwo + " Tier_3: " + tierThr + " Tier_4: " + tierFou + " Tier_5: " + tierFiv);
 		//logger.trace("LEVEL ONE: Current: $" + lastPriceFloored + " Sell: $" + sellPrice + " Buy: $" + buyBackLevelOne);
