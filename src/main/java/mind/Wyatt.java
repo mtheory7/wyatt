@@ -33,7 +33,7 @@ import static java.lang.Math.max;
 public class Wyatt {
 
 	final static Logger logger = Logger.getLogger(Wyatt.class);
-	private static Double percentageRatio = 1.0;
+	private static Double percentageRatio = 1.0001;
 	private static int MAX_TRADES_PER_24HOURS = 10;
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE};
@@ -149,11 +149,7 @@ public class Wyatt {
 		Double sellConfidencePercentage = (lastPriceFloored / target * 100);
 		int sellConfidence = (int)Math.floor(sellConfidencePercentage);
 		logger.trace("Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack + " ::: Sell confidence: " + sellConfidence + "%");
-		logger.trace("Tier 1(5): " + tierOne);
-		logger.trace("Tier 2(25): " + tierTwo);
-		logger.trace("Tier 3(100): " + tierThr);
-		logger.trace("Tier 4(200): " + tierFou);
-		logger.trace("Tier 5(500): " + tierFiv);
+		logger.trace("Tier_1: " + tierOne + " Tier_2: " + tierTwo + " Tier_3: " + tierThr + " Tier_4: " + tierFou + " Tier_5: " + tierFiv);
 		//logger.trace("LEVEL ONE: Current: $" + lastPriceFloored + " Sell: $" + sellPrice + " Buy: $" + buyBackLevelOne);
 		boolean trade = true;
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));

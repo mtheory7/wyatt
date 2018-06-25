@@ -6,7 +6,7 @@ public class Main {
     final static Logger logger = Logger.getLogger(Main.class);
 
     public static void main(String[] args) {
-        logger.info("Starting WYATT version 2.2.7 ...");
+        logger.info("Starting WYATT version 2.2.8 ...");
         if (args[0] == null || args[1] == null) {
             System.exit(-1);
             logger.error("Not enough arguments have been given");
