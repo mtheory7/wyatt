@@ -16,10 +16,10 @@ import model.data.AverageData;
 import model.data.MindData;
 import model.data.PredictionData;
 import org.apache.log4j.Logger;
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 import utils.CalcUtils;
 
 import java.util.ArrayList;
@@ -31,7 +31,6 @@ import static com.binance.api.client.domain.account.NewOrder.limitSell;
 import static java.lang.Math.max;
 
 public class Wyatt {
-
 	final static Logger logger = Logger.getLogger(Wyatt.class);
 	private static Double percentageRatio = 1.00015;
 	private static int MAX_TRADES_PER_24HOURS = 10;
@@ -42,12 +41,24 @@ public class Wyatt {
 	public PredictionData predictionData;
 	private BinanceApiClientFactory factory = null;
 	private BinanceApiRestClient client = null;
+	private String consumerKey = "";
+	private String consumerSecret = "";
+	private String accessToken = "";
+	private String accessTokenSecret = "";
 
-	public Wyatt(String apiKey, String secret) {
+	public Wyatt(String binanceAPIKey, String binanceAPISecret) {
 		mindData = new MindData();
 		predictionData = new PredictionData();
-		factory = BinanceApiClientFactory.newInstance(apiKey, secret);
+		factory = BinanceApiClientFactory.newInstance(binanceAPIKey, binanceAPISecret);
 		client = factory.newRestClient();
+
+	}
+
+	public void setTwitterCreds(String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
+		this.consumerKey = consumerKey;
+		this.consumerSecret = consumerSecret;
+		this.accessToken = accessToken;
+		this.accessTokenSecret = accessTokenSecret;
 	}
 
 	public void printBalances() {
@@ -162,19 +173,9 @@ public class Wyatt {
 			//WE SHOULD SELL AND BUY!
 			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
+			sendTweet(message);
 			//My bad I was sending a tweet
-            if (message.length() < 280) {
-                Twitter twitter = TwitterFactory.getSingleton();
-                try {
-                    Status status = twitter.updateStatus(message);
-                    logger.trace("Sent tweet to @Wyatt__Dolores");
-                } catch (TwitterException e) {
-                    logger.error("ERROR SENDING TWEET: Reason: {}", e);
-                }
-            } else {
-                logger.error("Could not send tweet, characters too long.");
-            }
-            performSellAndBuyBack(lastPriceFloored, buyBack);
+			performSellAndBuyBack(lastPriceFloored, buyBack);
 		}
 	}
 
@@ -240,5 +241,26 @@ public class Wyatt {
 			e.printStackTrace();
 		}
 		new CalcUtils().sleeper(3000);
+	}
+
+	private void sendTweet(String message) {
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true)
+				.setOAuthConsumerKey(consumerKey)
+				.setOAuthConsumerSecret(consumerSecret)
+				.setOAuthAccessToken(accessToken)
+				.setOAuthAccessTokenSecret(accessTokenSecret);
+		TwitterFactory tf = new TwitterFactory(cb.build());
+		Twitter twitter = tf.getInstance();
+		if (message.length() <= 280) {
+			try {
+				twitter.updateStatus(message);
+				logger.trace("Sent tweet to @Wyatt__Dolores");
+			} catch (TwitterException e) {
+				logger.error("ERROR SENDING TWEET: Reason: {}", e);
+			}
+		} else {
+			logger.error("Tweet too long!! (That's what she said)");
+		}
 	}
 }

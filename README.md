@@ -20,6 +20,13 @@ This will build and package two .jar files in the target directory. One of the .
 ### Executing
 To run Wyatt, execute the following
 ```$xslt
-java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <API_KEY> <SECRET_KEY>
+java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <arg1> <arg2> <arg3> <arg4> <arg5> <arg6>
 ```
-The API Key absolutely MUST have approval to execute trades from Binance, but does not need approval to withdraw. 
+ * arg1 = Binance API Key
+ * arg2 = Binance Secret Key
+ * arg3 = Twitter OAUTH Consumer Key
+ * arg4 = Twitter OAUTH Consumer Secret
+ * arg5 = Twitter OAUTH Access Token
+ * arg6 = Twitter OAUTH Access Token Secret
+
+The Binance API Key absolutely MUST have approval to execute trades from Binance, but does not need approval to withdraw. 
