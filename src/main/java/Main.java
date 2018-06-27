@@ -15,7 +15,7 @@ public class Main {
 			Wyatt dolores = new Wyatt(args[0], args[1]);
 			dolores.setTwitterCreds(args[2], args[3], args[4], args[5]);
 			dolores.gatherMindData();
-			dolores.gatherPredictionData();
+			dolores.predictAndTrade();
 			dolores.printBalances();
 			new CalcUtils().sleeper(25000);
 		}
