@@ -32,7 +32,7 @@ import static java.lang.Math.max;
 
 public class Wyatt {
 	private final static Logger logger = Logger.getLogger(Wyatt.class);
-	private static CandlestickInterval[] intervalList = { CandlestickInterval.ONE_MINUTE };
+	private static CandlestickInterval[] intervalList = {CandlestickInterval.ONE_MINUTE};
 	private static String[] tickers = {"BTCUSDT"};
 	private MindData mindData;
 	private PredictionData predictionData;
@@ -46,7 +46,8 @@ public class Wyatt {
 	 * Instantiates a new instance of Wyatt's mind. It requires an API Key
 	 * and the API Key secret to pull the latest trading data, and to
 	 * execute trades.
-	 * @param binanceAPIKey The Binance API Key
+	 *
+	 * @param binanceAPIKey    The Binance API Key
 	 * @param binanceAPISecret The secret for the Binance API Key
 	 */
 	public Wyatt(String binanceAPIKey, String binanceAPISecret) {
@@ -59,9 +60,10 @@ public class Wyatt {
 	/**
 	 * Sets the credentials that are needed for tweeting alerts when
 	 * Wyatt decides to sell and buy back.
-	 * @param consumerKey Twitter Consumer Key
-	 * @param consumerSecret Twitter Consumer Secret
-	 * @param accessToken Twitter Access Token
+	 *
+	 * @param consumerKey       Twitter Consumer Key
+	 * @param consumerSecret    Twitter Consumer Secret
+	 * @param accessToken       Twitter Access Token
 	 * @param accessTokenSecret Twitter Access Token Secret
 	 */
 	public void setTwitterCreds(String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
@@ -216,9 +218,10 @@ public class Wyatt {
 	/**
 	 * Function to connect to Binance, and pull the information in candle form
 	 * used to run the bot.
+	 *
 	 * @param mindData The structure to save the data to
 	 * @param interval The interval to grab candle data for
-	 * @param ticker The ticker to grab candle data for
+	 * @param ticker   The ticker to grab candle data for
 	 */
 	private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
 		List<Candlestick> candlesticks = new ArrayList<Candlestick>();
@@ -242,8 +245,9 @@ public class Wyatt {
 	/**
 	 * Perform a sell and buy at the passed in values. Uses the Binance
 	 * configuration to execute these trades.
+	 *
 	 * @param sellPrice Price to sell at
-	 * @param buyPrice Price to buy at
+	 * @param buyPrice  Price to buy at
 	 */
 	private void performSellAndBuyBack(Double sellPrice, Double buyPrice) {
 		Account account = client.getAccount();
@@ -300,6 +304,7 @@ public class Wyatt {
 	/**
 	 * Function to send a tweet. Pass in the message to send and it will use
 	 * the preconfigured Twitter OAuth credentials.
+	 *
 	 * @param message The message to tweet
 	 */
 	private void sendTweet(String message) {
