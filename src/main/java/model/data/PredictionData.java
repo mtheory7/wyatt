@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PredictionData {
-
 	public static Double buyBackAfterThisPercentage = 0.99;
 	public Double sellConfidencePercentage;
 	public Double sellPrice;
@@ -12,9 +11,5 @@ public class PredictionData {
 
 	public PredictionData() {
 		averageData = new ArrayList<AverageData>();
-	}
-
-	public void calculatePredictionData() {
-
 	}
 }

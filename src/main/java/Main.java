@@ -3,7 +3,7 @@ import org.apache.log4j.Logger;
 import utils.CalcUtils;
 
 public class Main {
-	final static Logger logger = Logger.getLogger(Main.class);
+	private final static Logger logger = Logger.getLogger(Main.class);
 
 	public static void main(String[] args) {
 		logger.info("Starting WYATT version 2.2.14 ...");

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MindData {
-
 	public HashMap<DataIdentifier, List<Candlestick>> candlestickData;
 	public HashMap<DataIdentifier, TickerStatistics> lastPriceData;
 	public HashMap<DataIdentifier, Double> candlestickIntAvgData;
