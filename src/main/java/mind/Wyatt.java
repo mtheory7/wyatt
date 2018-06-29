@@ -32,7 +32,7 @@ import static java.lang.Math.max;
 
 public class Wyatt {
 	private final static Logger logger = Logger.getLogger(Wyatt.class);
-	private static CandlestickInterval[] intervalList = {CandlestickInterval.ONE_MINUTE};
+	private static CandlestickInterval[] intervalList = {CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES};
 	private static String[] tickers = {"BTCUSDT"};
 	private MindData mindData;
 	private PredictionData predictionData;
@@ -110,30 +110,35 @@ public class Wyatt {
 	 */
 	public void predictAndTrade() {
 		List<Candlestick> oneMinuteCandles = null;
+		List<Candlestick> thrMinuteCandles = null;
 		for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry : mindData.getCandlestickData().entrySet()) {
 			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
 					&& entry.getKey().getTicker().equals("BTCUSDT")) {
 				oneMinuteCandles = entry.getValue();
 			}
+			if (entry.getKey().getInterval() == CandlestickInterval.THREE_MINUTES
+					&& entry.getKey().getTicker().equals("BTCUSDT")) {
+				thrMinuteCandles = entry.getValue();
+			}
 		}
-		List<List<Candlestick>> minuteData = new ArrayList<List<Candlestick>>();
+		List<List<Candlestick>> candleData = new ArrayList<List<Candlestick>>();
 		//Separate out some lists of varying lengths of candles
 		if (oneMinuteCandles != null) {
 			int x = oneMinuteCandles.size() - 5;
 			int y = oneMinuteCandles.size();
-			minuteData.add(oneMinuteCandles.subList(x, y));
+			candleData.add(oneMinuteCandles.subList(x, y));
 			x = oneMinuteCandles.size() - 25;
-			minuteData.add(oneMinuteCandles.subList(x, y));
+			candleData.add(oneMinuteCandles.subList(x, y));
 			x = oneMinuteCandles.size() - 100;
-			minuteData.add(oneMinuteCandles.subList(x, y));
+			candleData.add(oneMinuteCandles.subList(x, y));
 			x = oneMinuteCandles.size() - 200;
-			minuteData.add(oneMinuteCandles.subList(x, y));
+			candleData.add(oneMinuteCandles.subList(x, y));
 			x = oneMinuteCandles.size() - 500;
-			minuteData.add(oneMinuteCandles.subList(x, y));
-			minuteData.add(oneMinuteCandles.subList(0, y));
+			candleData.add(oneMinuteCandles.subList(x, y));
+			candleData.add(oneMinuteCandles.subList(0, y));
 		}
 		//Now use the candle lists to calculate average data used for price prediction
-		for (List<Candlestick> list : minuteData) {
+		for (List<Candlestick> list : candleData) {
 			Double openAvg = 0.0;
 			Double closeAvg = 0.0;
 			Double lowAvg = 0.0;
@@ -152,6 +157,26 @@ public class Wyatt {
 			averageData.setNumberOfNodesAveraged(list.size());
 			predictionData.averageData.add(averageData);
 		}
+		//Calculate 6th tier
+		Double openAvg = 0.0;
+		Double closeAvg = 0.0;
+		Double lowAvg = 0.0;
+		Double highAvg = 0.0;
+		for (Candlestick stick : thrMinuteCandles) {
+			openAvg += Double.valueOf(stick.getOpen());
+			closeAvg += Double.valueOf(stick.getClose());
+			lowAvg += Double.valueOf(stick.getLow());
+			highAvg += Double.valueOf(stick.getHigh());
+		}
+		AverageData avgData = new AverageData();
+		avgData.setOpenAvg(openAvg / thrMinuteCandles.size());
+		avgData.setCloseAvg(closeAvg / thrMinuteCandles.size());
+		avgData.setLowAvg(lowAvg / thrMinuteCandles.size());
+		avgData.setHighAvg(highAvg / thrMinuteCandles.size());
+		avgData.setNumberOfNodesAveraged(thrMinuteCandles.size());
+		predictionData.averageData.add(avgData);
+		//Set percentage
+		Double TARGET_PERCENT_RATIO = 1.00035;
 		Double tierOne = 0.0;
 		Double tierTwo = 0.0;
 		Double tierThr = 0.0;
@@ -159,7 +184,7 @@ public class Wyatt {
 		Double tierFiv = 0.0;
 		//Calculate averages, and use those and a ratio to create tiered target prices
 		for (AverageData averageData : predictionData.averageData) {
-			Double TARGET_PERCENT_RATIO = 1.00035;
+
 			if (averageData.getNumberOfNodesAveraged() == 5)
 				tierOne += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
 			if (averageData.getNumberOfNodesAveraged() == 25)
@@ -171,12 +196,14 @@ public class Wyatt {
 			if (averageData.getNumberOfNodesAveraged() == 500)
 				tierFiv += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
 		}
+		Double tierSix = (avgData.getCloseAvg() + avgData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
 		//Round those target prices
 		tierOne = Math.round(tierOne * 100.0) / 100.0;
 		tierTwo = Math.round(tierTwo * 100.0) / 100.0;
 		tierThr = Math.round(tierThr * 100.0) / 100.0;
 		tierFou = Math.round(tierFou * 100.0) / 100.0;
 		tierFiv = Math.round(tierFiv * 100.0) / 100.0;
+		tierSix = Math.round(tierSix * 100.0) / 100.0;
 		//Find max of all the tiered target prices
 		Double target = max(tierFiv, max(tierFou, max(tierThr, max(tierOne, tierTwo))));
 		//Calculate the buy back price using a configurable buy back percentage ratio
@@ -209,9 +236,9 @@ public class Wyatt {
 			//WE SHOULD SELL AND BUY!
 			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
-			sendTweet(message);
+			//sendTweet(message);
 			//My bad I was sending a tweet
-			performSellAndBuyBack(lastPriceFloored, buyBack);
+			//performSellAndBuyBack(lastPriceFloored, buyBack);
 		}
 	}
 
