@@ -159,7 +159,7 @@ public class Wyatt {
 		Double tierFiv = 0.0;
 		//Calculate averages, and use those and a ratio to create tiered target prices
 		for (AverageData averageData : predictionData.averageData) {
-			Double TARGET_PERCENT_RATIO = 1.000225;
+			Double TARGET_PERCENT_RATIO = 1.00025;
 			if (averageData.getNumberOfNodesAveraged() == 5)
 				tierOne += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
 			if (averageData.getNumberOfNodesAveraged() == 25)
@@ -211,7 +211,7 @@ public class Wyatt {
 			logger.info(message);
 			sendTweet(message);
 			//My bad I was sending a tweet
-			performSellAndBuyBack(lastPriceFloored, buyBack);
+			//performSellAndBuyBack(lastPriceFloored, buyBack);
 		}
 	}
 
