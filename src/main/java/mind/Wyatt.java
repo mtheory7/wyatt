@@ -205,7 +205,7 @@ public class Wyatt {
 		tierFiv = Math.round(tierFiv * 100.0) / 100.0;
 		tierSix = Math.round(tierSix * 100.0) / 100.0;
 		//Find max of all the tiered target prices
-		Double target = max(tierFiv, max(tierFou, max(tierThr, max(tierOne, tierTwo))));
+		Double target = max(tierSix, max(tierFiv, max(tierFou, max(tierThr, max(tierOne, tierTwo)))));
 		//Calculate the buy back price using a configurable buy back percentage ratio
 		Double buyBack = Math.round(target * PredictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
 		TickerStatistics lastPrice = null;
@@ -224,7 +224,7 @@ public class Wyatt {
 		//Calculate and round sell confidence percentage
 		Double sellConfidence = Math.round((lastPriceFloored / target * 100) * 1000.0) / 1000.0;
 		logger.trace("Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack + " ::: " + sellConfidence + "%");
-		logger.trace("Tier_1: " + tierOne + " Tier_2: " + tierTwo + " Tier_3: " + tierThr + " Tier_4: " + tierFou + " Tier_5: " + tierFiv);
+		logger.trace("Tier_1: " + tierOne + " Tier_2: " + tierTwo + " Tier_3: " + tierThr + " Tier_4: " + tierFou + " Tier_5: " + tierFiv + " Tier_6: " + tierSix);
 		boolean trade = true;
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
