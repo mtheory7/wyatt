@@ -7,6 +7,7 @@ import com.binance.api.client.domain.account.Account;
 import com.binance.api.client.domain.account.AssetBalance;
 import com.binance.api.client.domain.account.NewOrderResponse;
 import com.binance.api.client.domain.account.Order;
+import com.binance.api.client.domain.account.request.CancelOrderRequest;
 import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import static com.binance.api.client.domain.account.NewOrder.limitBuy;
 import static com.binance.api.client.domain.account.NewOrder.limitSell;
+import static com.binance.api.client.domain.account.NewOrder.marketBuy;
 import static java.lang.Math.max;
 
 public class Wyatt {
@@ -176,7 +178,7 @@ public class Wyatt {
 		avgData.setNumberOfNodesAveraged(thrMinuteCandles.size());
 		predictionData.averageData.add(avgData);
 		//Set percentage
-		Double TARGET_PERCENT_RATIO = 1.00035;
+		Double TARGET_PERCENT_RATIO = 1.0004;
 		Double tierOne = 0.0;
 		Double tierTwo = 0.0;
 		Double tierThr = 0.0;
@@ -228,9 +230,23 @@ public class Wyatt {
 		boolean trade = true;
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
-			logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
+			logger.trace("Number of open BTCUSDT orders: " + openOrders.size());
 			trade = false;
-			new CalcUtils().sleeper(120000);
+			//See how far we are from the open order
+			Order openOrder = openOrders.get(0);
+			if (openOrder != null) {
+				Double currentMargin = lastPriceFloored / Double.valueOf(openOrder.getPrice());
+				Double currentMarginPercent = (currentMargin - 1) * 100;
+				currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
+				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
+				if (currentMarginPercent > 10) {
+					logger.trace("Executing market buy back at $" + lastPriceFloored);
+					executeMarketBuyBack();
+				} else {
+					logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
+					new CalcUtils().sleeper(120000);
+				}
+			}
 		}
 		if ((lastPriceFloored > target) && trade) {
 			//WE SHOULD SELL AND BUY!
@@ -329,6 +345,29 @@ public class Wyatt {
 	}
 
 	/**
+	 * Execute a market buy back
+	 */
+	private void executeMarketBuyBack() {
+		//Cancel all open orders
+		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+		for (Order order : openOrders) {
+			logger.trace("Cancelling order: " + order.getOrderId());
+			client.cancelOrder(new CancelOrderRequest("BTCUSDT", order.getOrderId()));
+		}
+		//Execute market buy back
+		new CalcUtils().sleeper(3000);
+		Account account = client.getAccount();
+		//Find out how much free asset there is to trade
+		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
+		Double freeUSDTFloored = Math.floor(freeUSDT * 100.0) / 100.0;
+		String message = "Executing market buy back with " + freeUSDTFloored + " USDT";
+		logger.trace(message);
+		sendTweet(message);
+		NewOrderResponse newOrderResponse = client.newOrder(marketBuy("BTCUSDT", freeUSDTFloored.toString()));
+		new CalcUtils().sleeper(15000);
+	}
+
+	/**
 	 * Function to send a tweet. Pass in the message to send and it will use
 	 * the preconfigured Twitter OAuth credentials.
 	 *
@@ -348,7 +387,7 @@ public class Wyatt {
 		if (message.length() <= 280) {
 			try {
 				twitter.updateStatus(message);
-				logger.trace("Sent tweet to @Wyatt__Dolores");
+				logger.trace("Sent tweet to @WestworldWyatt");
 			} catch (TwitterException e) {
 				logger.error("ERROR SENDING TWEET: Reason: {}", e);
 			}
