@@ -236,7 +236,7 @@ public class Wyatt {
 				Double currentMarginPercent = (currentMargin - 1) * 100;
 				currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
 				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
-				if (currentMarginPercent > 10) {
+				if (currentMarginPercent > 7.5) {
 					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
 					executeMarketBuyBack();
 				} else {
@@ -357,10 +357,17 @@ public class Wyatt {
 		//Find out how much free asset there is to trade
 		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
 		Double freeUSDTFloored = Math.floor(freeUSDT * 100.0) / 100.0;
-		String message = "Executing market buy back with " + freeUSDTFloored + " USDT";
+
+		TickerStatistics tickerStatistics = client.get24HrPriceStatistics("BTCUSDT");
+		Double lastPrice = Double.valueOf(tickerStatistics.getLastPrice());
+
+		Double BTCtoBuy = freeUSDTFloored / lastPrice;
+		Double BTCtoBuyFloored = Math.floor(BTCtoBuy * 10000.0) / 10000.0;
+
+		String message = "Executing market buy back of " + BTCtoBuyFloored + " BTC @ $" + lastPrice;
 		logger.info(message);
 		sendTweet(message);
-		NewOrderResponse newOrderResponse = client.newOrder(marketBuy("BTCUSDT", freeUSDTFloored.toString()));
+		NewOrderResponse newOrderResponse = client.newOrder(marketBuy("BTCUSDT", BTCtoBuyFloored.toString()));
 		new CalcUtils().sleeper(15000);
 	}
 
