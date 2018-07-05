@@ -27,9 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.binance.api.client.domain.account.NewOrder.limitBuy;
-import static com.binance.api.client.domain.account.NewOrder.limitSell;
-import static com.binance.api.client.domain.account.NewOrder.marketBuy;
+import static com.binance.api.client.domain.account.NewOrder.*;
 import static java.lang.Math.max;
 
 public class Wyatt {
@@ -186,7 +184,6 @@ public class Wyatt {
 		Double tierFiv = 0.0;
 		//Calculate averages, and use those and a ratio to create tiered target prices
 		for (AverageData averageData : predictionData.averageData) {
-
 			if (averageData.getNumberOfNodesAveraged() == 5)
 				tierOne += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
 			if (averageData.getNumberOfNodesAveraged() == 25)
@@ -240,7 +237,7 @@ public class Wyatt {
 				currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
 				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
 				if (currentMarginPercent > 10) {
-					logger.trace("Executing market buy back at $" + lastPriceFloored);
+					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
 					executeMarketBuyBack();
 				} else {
 					logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
@@ -351,7 +348,7 @@ public class Wyatt {
 		//Cancel all open orders
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		for (Order order : openOrders) {
-			logger.trace("Cancelling order: " + order.getOrderId());
+			logger.info("Cancelling order: " + order.getOrderId());
 			client.cancelOrder(new CancelOrderRequest("BTCUSDT", order.getOrderId()));
 		}
 		//Execute market buy back
@@ -361,7 +358,7 @@ public class Wyatt {
 		Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
 		Double freeUSDTFloored = Math.floor(freeUSDT * 100.0) / 100.0;
 		String message = "Executing market buy back with " + freeUSDTFloored + " USDT";
-		logger.trace(message);
+		logger.info(message);
 		sendTweet(message);
 		NewOrderResponse newOrderResponse = client.newOrder(marketBuy("BTCUSDT", freeUSDTFloored.toString()));
 		new CalcUtils().sleeper(15000);
