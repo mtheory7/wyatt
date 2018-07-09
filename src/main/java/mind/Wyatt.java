@@ -203,7 +203,7 @@ public class Wyatt {
 		avgData.setNumberOfNodesAveraged(thrMinuteCandles.size());
 		predictionData.averageData.add(avgData);
 		//Set percentage
-		Double TARGET_PERCENT_RATIO = 1.0004;
+		Double TARGET_PERCENT_RATIO = 1.001;
 		Double tierOne = 0.0;
 		Double tierTwo = 0.0;
 		Double tierThr = 0.0;
@@ -266,7 +266,7 @@ public class Wyatt {
 				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
 				if (currentMarginPercent > 7.5) {
 					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
-					//executeMarketBuyBack();
+					executeMarketBuyBack();
 				} else {
 					logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
 					new CalcUtils().sleeper(120000);
@@ -277,9 +277,9 @@ public class Wyatt {
 			//WE SHOULD SELL AND BUY!
 			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
-			//sendTweet(message);
+			sendTweet(message);
 			//My bad I was sending a tweet
-			//performSellAndBuyBack(lastPriceFloored, buyBack);
+			performSellAndBuyBack(lastPriceFloored, buyBack);
 		}
 	}
 
