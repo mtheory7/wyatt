@@ -81,12 +81,39 @@ public class Wyatt {
 		Account account = client.getAccount();
 		//Pull the latest account balance info from Binance
 		List<AssetBalance> balances = account.getBalances();
+		Double estimatedBalance = 0.0;
 		for (AssetBalance balance : balances) {
 			//Combine the amount of idle assets, and the amount in trade currently
 			Double amount = Double.valueOf(balance.getFree()) + Double.valueOf(balance.getLocked());
 			if (amount > 0.0) {
 				logger.trace("Asset: " + balance.getAsset() + " - Balance: " + amount);
+				if (balance.getAsset().equals("BTC")) {
+					estimatedBalance += amount;
+				} else {
+					estimatedBalance += valueInBTC(amount, balance.getAsset());
+				}
 			}
+		}
+		Double percentOnInvenstment = ((estimatedBalance / 0.0045) * 100) - 100;
+		percentOnInvenstment = Math.round(percentOnInvenstment * 100.0) / 100.0;
+		logger.trace("Estimated total account value: " + estimatedBalance);
+		logger.trace("Profit since starting (0.0045 BTC): " + percentOnInvenstment + "%");
+	}
+
+	/**
+	 * Estimate the value of a given amount/ticker in BTC
+	 *
+	 * @param amount The amount of an asset
+	 * @param ticker The ticker of the asset to estimate
+	 */
+	private Double valueInBTC(Double amount, String ticker) {
+		if (ticker.equals("USDT")) {
+			TickerStatistics tickerStatistics = client.get24HrPriceStatistics("BTCUSDT");
+			return amount / Double.valueOf(tickerStatistics.getLastPrice());
+		} else {
+			ticker = ticker + "BTC";
+			TickerStatistics tickerStatistics = client.get24HrPriceStatistics(ticker);
+			return Double.valueOf(tickerStatistics.getLastPrice()) * amount;
 		}
 	}
 
@@ -222,8 +249,9 @@ public class Wyatt {
 		}
 		//Calculate and round sell confidence percentage
 		Double sellConfidence = Math.round((lastPriceFloored / target * 100) * 1000.0) / 1000.0;
-		logger.trace("Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack + " ::: " + sellConfidence + "%");
+		logger.trace("Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
 		logger.trace("Tier_1: " + tierOne + " Tier_2: " + tierTwo + " Tier_3: " + tierThr + " Tier_4: " + tierFou + " Tier_5: " + tierFiv + " Tier_6: " + tierSix);
+		logger.trace("Sell confidence: " + sellConfidence + "%");
 		boolean trade = true;
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
@@ -238,7 +266,7 @@ public class Wyatt {
 				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
 				if (currentMarginPercent > 7.5) {
 					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
-					executeMarketBuyBack();
+					//executeMarketBuyBack();
 				} else {
 					logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
 					new CalcUtils().sleeper(120000);
@@ -249,9 +277,9 @@ public class Wyatt {
 			//WE SHOULD SELL AND BUY!
 			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
-			sendTweet(message);
+			//sendTweet(message);
 			//My bad I was sending a tweet
-			performSellAndBuyBack(lastPriceFloored, buyBack);
+			//performSellAndBuyBack(lastPriceFloored, buyBack);
 		}
 	}
 
