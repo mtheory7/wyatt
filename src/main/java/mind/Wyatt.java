@@ -96,7 +96,7 @@ public class Wyatt {
 		}
 		Double percentOnInvenstment = ((estimatedBalance / 0.0045) * 100) - 100;
 		percentOnInvenstment = Math.round(percentOnInvenstment * 100.0) / 100.0;
-		logger.trace("Estimated total account value: " + estimatedBalance);
+		logger.trace("Estimated total account value: " + estimatedBalance + " BTC");
 		logger.trace("Profit since starting (0.0045 BTC): " + percentOnInvenstment + "%");
 	}
 
