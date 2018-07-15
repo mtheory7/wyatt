@@ -94,6 +94,7 @@ public class Wyatt {
 				}
 			}
 		}
+		estimatedBalance = Math.round(estimatedBalance * 100000000.0) / 100000000.0;
 		Double percentOnInvenstment = ((estimatedBalance / 0.0045) * 100) - 100;
 		percentOnInvenstment = Math.round(percentOnInvenstment * 100.0) / 100.0;
 		logger.trace("Estimated total account value: " + estimatedBalance + " BTC");
@@ -203,7 +204,7 @@ public class Wyatt {
 		avgData.setNumberOfNodesAveraged(thrMinuteCandles.size());
 		predictionData.averageData.add(avgData);
 		//Set percentage
-		Double TARGET_PERCENT_RATIO = 1.001;
+		Double TARGET_PERCENT_RATIO = 1.0011;
 		Double tierOne = 0.0;
 		Double tierTwo = 0.0;
 		Double tierThr = 0.0;
