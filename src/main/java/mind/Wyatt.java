@@ -13,7 +13,6 @@ import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerStatistics;
 import model.DataIdentifier;
-import model.data.AverageData;
 import model.data.MindData;
 import model.data.PredictionData;
 import org.apache.log4j.Logger;
@@ -28,11 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.binance.api.client.domain.account.NewOrder.*;
-import static java.lang.Math.max;
 
 public class Wyatt {
 	private final static Logger logger = Logger.getLogger(Wyatt.class);
-	private static CandlestickInterval[] intervalList = {CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES};
+	private static CandlestickInterval[] intervalList = {
+			CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
+			CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES};
 	private static String[] tickers = {"BTCUSDT"};
 	private MindData mindData;
 	private PredictionData predictionData;
@@ -136,106 +136,10 @@ public class Wyatt {
 	 * perform a sell and a buy back to make an incremental amount of money.
 	 */
 	public void predictAndTrade() {
-		List<Candlestick> oneMinuteCandles = null;
-		List<Candlestick> thrMinuteCandles = null;
-		for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry : mindData.getCandlestickData().entrySet()) {
-			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
-					&& entry.getKey().getTicker().equals("BTCUSDT")) {
-				oneMinuteCandles = entry.getValue();
-			}
-			if (entry.getKey().getInterval() == CandlestickInterval.THREE_MINUTES
-					&& entry.getKey().getTicker().equals("BTCUSDT")) {
-				thrMinuteCandles = entry.getValue();
-			}
-		}
-		List<List<Candlestick>> candleData = new ArrayList<List<Candlestick>>();
-		//Separate out some lists of varying lengths of candles
-		if (oneMinuteCandles != null) {
-			int x = oneMinuteCandles.size() - 5;
-			int y = oneMinuteCandles.size();
-			candleData.add(oneMinuteCandles.subList(x, y));
-			x = oneMinuteCandles.size() - 25;
-			candleData.add(oneMinuteCandles.subList(x, y));
-			x = oneMinuteCandles.size() - 100;
-			candleData.add(oneMinuteCandles.subList(x, y));
-			x = oneMinuteCandles.size() - 200;
-			candleData.add(oneMinuteCandles.subList(x, y));
-			x = oneMinuteCandles.size() - 500;
-			candleData.add(oneMinuteCandles.subList(x, y));
-			candleData.add(oneMinuteCandles.subList(0, y));
-		}
-		//Now use the candle lists to calculate average data used for price prediction
-		for (List<Candlestick> list : candleData) {
-			Double openAvg = 0.0;
-			Double closeAvg = 0.0;
-			Double lowAvg = 0.0;
-			Double highAvg = 0.0;
-			for (Candlestick stick : list) {
-				openAvg += Double.valueOf(stick.getOpen());
-				closeAvg += Double.valueOf(stick.getClose());
-				lowAvg += Double.valueOf(stick.getLow());
-				highAvg += Double.valueOf(stick.getHigh());
-			}
-			AverageData averageData = new AverageData();
-			averageData.setOpenAvg(openAvg / list.size());
-			averageData.setCloseAvg(closeAvg / list.size());
-			averageData.setLowAvg(lowAvg / list.size());
-			averageData.setHighAvg(highAvg / list.size());
-			averageData.setNumberOfNodesAveraged(list.size());
-			predictionData.averageData.add(averageData);
-		}
-		//Calculate 6th tier
-		Double openAvg = 0.0;
-		Double closeAvg = 0.0;
-		Double lowAvg = 0.0;
-		Double highAvg = 0.0;
-		for (Candlestick stick : thrMinuteCandles) {
-			openAvg += Double.valueOf(stick.getOpen());
-			closeAvg += Double.valueOf(stick.getClose());
-			lowAvg += Double.valueOf(stick.getLow());
-			highAvg += Double.valueOf(stick.getHigh());
-		}
-		AverageData avgData = new AverageData();
-		avgData.setOpenAvg(openAvg / thrMinuteCandles.size());
-		avgData.setCloseAvg(closeAvg / thrMinuteCandles.size());
-		avgData.setLowAvg(lowAvg / thrMinuteCandles.size());
-		avgData.setHighAvg(highAvg / thrMinuteCandles.size());
-		avgData.setNumberOfNodesAveraged(thrMinuteCandles.size());
-		predictionData.averageData.add(avgData);
-		//Set percentage
-		Double TARGET_PERCENT_RATIO = 1.001;
-		Double tierOne = 0.0;
-		Double tierTwo = 0.0;
-		Double tierThr = 0.0;
-		Double tierFou = 0.0;
-		Double tierFiv = 0.0;
-		//Calculate averages, and use those and a ratio to create tiered target prices
-		for (AverageData averageData : predictionData.averageData) {
-			if (averageData.getNumberOfNodesAveraged() == 5)
-				tierOne += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
-			if (averageData.getNumberOfNodesAveraged() == 25)
-				tierTwo += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
-			if (averageData.getNumberOfNodesAveraged() == 100)
-				tierThr += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
-			if (averageData.getNumberOfNodesAveraged() == 200)
-				tierFou += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
-			if (averageData.getNumberOfNodesAveraged() == 500)
-				tierFiv += (averageData.getCloseAvg() + averageData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
-		}
-		Double tierSix = (avgData.getCloseAvg() + avgData.getHighAvg()) / 2 * TARGET_PERCENT_RATIO;
-		//Round those target prices
-		tierOne = Math.round(tierOne * 100.0) / 100.0;
-		tierTwo = Math.round(tierTwo * 100.0) / 100.0;
-		tierThr = Math.round(tierThr * 100.0) / 100.0;
-		tierFou = Math.round(tierFou * 100.0) / 100.0;
-		tierFiv = Math.round(tierFiv * 100.0) / 100.0;
-		tierSix = Math.round(tierSix * 100.0) / 100.0;
-		//Find max of all the tiered target prices
-		Double target = max(tierSix, max(tierFiv, max(tierFou, max(tierThr, max(tierOne, tierTwo)))));
-		//Calculate the buy back price using a configurable buy back percentage ratio
+		predictionData.executeThoughtProcess(mindData);
+		Double target = predictionData.targetPrice;
 		Double buyBack = Math.round(target * PredictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
 		TickerStatistics lastPrice = null;
-		//Pull the latest value from mindData
 		for (HashMap.Entry<DataIdentifier, TickerStatistics> entry : mindData.getLastPriceData().entrySet()) {
 			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
 					&& entry.getKey().getTicker().equals("BTCUSDT")) {
@@ -244,20 +148,16 @@ public class Wyatt {
 		}
 		Double lastPriceFloored = 0.0;
 		if (lastPrice != null && lastPrice.getLastPrice() != null) {
-			//Round the last price that was just pulled
 			lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
 		}
-		//Calculate and round sell confidence percentage
 		Double sellConfidence = Math.round((lastPriceFloored / target * 100) * 1000.0) / 1000.0;
 		logger.trace("Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
-		logger.trace("Tier_1: " + tierOne + " Tier_2: " + tierTwo + " Tier_3: " + tierThr + " Tier_4: " + tierFou + " Tier_5: " + tierFiv + " Tier_6: " + tierSix);
 		logger.trace("Sell confidence: " + sellConfidence + "%");
 		boolean trade = true;
 		List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
 		if (openOrders.size() > 0) {
 			logger.trace("Number of open BTCUSDT orders: " + openOrders.size());
 			trade = false;
-			//See how far we are from the open order
 			Order openOrder = openOrders.get(0);
 			if (openOrder != null) {
 				Double currentMargin = lastPriceFloored / Double.valueOf(openOrder.getPrice());
@@ -266,7 +166,7 @@ public class Wyatt {
 				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
 				if (currentMarginPercent > 7.5) {
 					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
-					executeMarketBuyBack();
+					//executeMarketBuyBack();
 				} else {
 					logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
 					new CalcUtils().sleeper(120000);
@@ -274,12 +174,10 @@ public class Wyatt {
 			}
 		}
 		if ((lastPriceFloored > target) && trade) {
-			//WE SHOULD SELL AND BUY!
 			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
-			sendTweet(message);
 			//My bad I was sending a tweet
-			performSellAndBuyBack(lastPriceFloored, buyBack);
+			//performSellAndBuyBack(lastPriceFloored, buyBack, message);
 		}
 	}
 
@@ -317,7 +215,8 @@ public class Wyatt {
 	 * @param sellPrice Price to sell at
 	 * @param buyPrice  Price to buy at
 	 */
-	private void performSellAndBuyBack(Double sellPrice, Double buyPrice) {
+	private void performSellAndBuyBack(Double sellPrice, Double buyPrice, String message) {
+		sendTweet(message);
 		Account account = client.getAccount();
 		//Find out how much free asset there is to trade
 		Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
