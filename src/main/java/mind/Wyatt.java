@@ -14,7 +14,7 @@ import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerStatistics;
 import model.DataIdentifier;
 import model.data.MindData;
-import model.data.PredictionData;
+import model.data.PredictionEngine;
 import org.apache.log4j.Logger;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -29,13 +29,14 @@ import java.util.List;
 import static com.binance.api.client.domain.account.NewOrder.*;
 
 public class Wyatt {
+	private final static boolean DEVELOPING = true;
 	private final static Logger logger = Logger.getLogger(Wyatt.class);
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
 			CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES};
 	private static String[] tickers = {"BTCUSDT"};
 	private MindData mindData;
-	private PredictionData predictionData;
+	private PredictionEngine predictionEngine;
 	private BinanceApiRestClient client;
 	private String consumerKey;
 	private String consumerSecret;
@@ -52,7 +53,7 @@ public class Wyatt {
 	 */
 	public Wyatt(String binanceAPIKey, String binanceAPISecret) {
 		mindData = new MindData();
-		predictionData = new PredictionData();
+		predictionEngine = new PredictionEngine();
 		BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance(binanceAPIKey, binanceAPISecret);
 		client = factory.newRestClient();
 	}
@@ -136,9 +137,9 @@ public class Wyatt {
 	 * perform a sell and a buy back to make an incremental amount of money.
 	 */
 	public void predictAndTrade() {
-		predictionData.executeThoughtProcess(mindData);
-		Double target = predictionData.targetPrice;
-		Double buyBack = Math.round(target * PredictionData.buyBackAfterThisPercentage * 100.0) / 100.0;
+		predictionEngine.executeThoughtProcess(mindData);
+		Double target = predictionEngine.targetPrice;
+		Double buyBack = Math.round(target * PredictionEngine.buyBackAfterThisPercentage * 100.0) / 100.0;
 		TickerStatistics lastPrice = null;
 		for (HashMap.Entry<DataIdentifier, TickerStatistics> entry : mindData.getLastPriceData().entrySet()) {
 			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
@@ -166,7 +167,11 @@ public class Wyatt {
 				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
 				if (currentMarginPercent > 7.5) {
 					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
-					//executeMarketBuyBack();
+					if (!DEVELOPING) {
+						executeMarketBuyBack();
+					} else {
+						reportDevMode();
+					}
 				} else {
 					logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
 					new CalcUtils().sleeper(120000);
@@ -177,7 +182,11 @@ public class Wyatt {
 			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
 			//My bad I was sending a tweet
-			//performSellAndBuyBack(lastPriceFloored, buyBack, message);
+			if (!DEVELOPING) {
+				performSellAndBuyBack(lastPriceFloored, buyBack, message);
+			} else {
+				reportDevMode();
+			}
 		}
 	}
 
@@ -325,5 +334,12 @@ public class Wyatt {
 		} else {
 			logger.error("Tweet too long!! (That's what she said)");
 		}
+	}
+
+	/**
+	 * Report that the system is in developer mode
+	 */
+	private void reportDevMode() {
+		logger.error("Wyatt is currently in development mode! Exit to perform trades");
 	}
 }

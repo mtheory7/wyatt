@@ -9,19 +9,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PredictionData {
+public class PredictionEngine {
 	public static Double buyBackAfterThisPercentage = 0.994;
 	public Double targetPrice;
 	private List<AverageData> averageData;
 	private List<Double> targetPrices;
 	private Map<CandlestickInterval, List<Candlestick>> candleMap;
 
-	public PredictionData() {
+	/**
+	 *
+	 */
+	public PredictionEngine() {
 		averageData = new ArrayList<AverageData>();
 		targetPrices = new ArrayList<Double>();
 		candleMap = new HashMap<CandlestickInterval, List<Candlestick>>();
 	}
 
+	/**
+	 * @param mindData
+	 */
 	public void executeThoughtProcess(MindData mindData) {
 		for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry : mindData.getCandlestickData().entrySet()) {
 			if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
@@ -46,6 +52,10 @@ public class PredictionData {
 		}
 	}
 
+	/**
+	 * @param entry
+	 * @return
+	 */
 	private AverageData calculateAverageData(HashMap.Entry<CandlestickInterval, List<Candlestick>> entry) {
 		AverageData averageData = new AverageData();
 
