@@ -5,17 +5,8 @@ public class AverageData {
 	private Double closeAvg = 0.0;
 	private Double lowAvg = 0.0;
 	private Double highAvg = 0.0;
-	private int numberOfNodesAveraged = 0;
 
 	public AverageData() {
-	}
-
-	public int getNumberOfNodesAveraged() {
-		return numberOfNodesAveraged;
-	}
-
-	public void setNumberOfNodesAveraged(int numberOfNodesAveraged) {
-		this.numberOfNodesAveraged = numberOfNodesAveraged;
 	}
 
 	public Double getOpenAvg() {

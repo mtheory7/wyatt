@@ -181,7 +181,6 @@ public class Wyatt {
 		if ((lastPriceFloored > target) && trade) {
 			String message = "Deciding to sell! Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack;
 			logger.info(message);
-			//My bad I was sending a tweet
 			if (!DEVELOPING) {
 				performSellAndBuyBack(lastPriceFloored, buyBack, message);
 			} else {
@@ -327,6 +326,7 @@ public class Wyatt {
 		if (message.length() <= 280) {
 			try {
 				twitter.updateStatus(message);
+				//My bad I was sending a tweet
 				logger.trace("Sent tweet to @WestworldWyatt");
 			} catch (TwitterException e) {
 				logger.error("ERROR SENDING TWEET: Reason: {}", e);

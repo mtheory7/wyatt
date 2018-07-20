@@ -3,6 +3,7 @@ package model.data;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import model.DataIdentifier;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PredictionEngine {
+	private final static Logger logger = Logger.getLogger(PredictionEngine.class);
 	public static Double buyBackAfterThisPercentage = 0.994;
 	public Double targetPrice;
 	private List<AverageData> averageData;
@@ -50,6 +52,11 @@ public class PredictionEngine {
 		for (HashMap.Entry<CandlestickInterval, List<Candlestick>> entry : candleMap.entrySet()) {
 			averageData.add(calculateAverageData(entry));
 		}
+		for (AverageData avg : averageData) {
+			Double target = Math.max(Math.max(Math.max(avg.getLowAvg(), avg.getOpenAvg()), avg.getHighAvg()), avg.getCloseAvg());
+			targetPrices.add(target);
+		}
+		targetPrice = maxTarget(targetPrices);
 	}
 
 	/**
@@ -58,7 +65,35 @@ public class PredictionEngine {
 	 */
 	private AverageData calculateAverageData(HashMap.Entry<CandlestickInterval, List<Candlestick>> entry) {
 		AverageData averageData = new AverageData();
-
+		Double low = 0.0;
+		Double open = 0.0;
+		Double close = 0.0;
+		Double high = 0.0;
+		for (Candlestick candle : entry.getValue()) {
+			low += Double.valueOf(candle.getLow());
+			open += Double.valueOf(candle.getOpen());
+			close += Double.valueOf(candle.getClose());
+			high += Double.valueOf(candle.getHigh());
+		}
+		averageData.setLowAvg(low / entry.getValue().size());
+		averageData.setOpenAvg(open / entry.getValue().size());
+		averageData.setCloseAvg(close / entry.getValue().size());
+		averageData.setHighAvg(high / entry.getValue().size());
 		return averageData;
+	}
+
+	/**
+	 * Average the list of target prices
+	 * @param list
+	 * @return
+	 */
+	private Double maxTarget(List<Double> list) {
+		Double highest = 0.0;
+		for (Double num : list) {
+			if (num > highest) {
+				highest = num;
+			}
+		}
+		return highest;
 	}
 }
