@@ -29,7 +29,7 @@ import java.util.List;
 import static com.binance.api.client.domain.account.NewOrder.*;
 
 public class Wyatt {
-	private final static boolean DEVELOPING = true;
+	private final static boolean DEVELOPING = false;
 	private final static Logger logger = Logger.getLogger(Wyatt.class);
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
@@ -138,6 +138,9 @@ public class Wyatt {
 	 * perform a sell and a buy back to make an incremental amount of money.
 	 */
 	public void predictAndTrade() {
+		if (DEVELOPING) {
+
+		}
 		predictionEngine.executeThoughtProcess(mindData);
 		Double target = predictionEngine.targetPrice;
 		Double buyBack = Math.round(target * PredictionEngine.buyBackAfterThisPercentage * 100.0) / 100.0;
@@ -303,7 +306,7 @@ public class Wyatt {
 		String message = "Executing market buy back of " + BTCtoBuyFloored + " BTC @ $" + lastPrice;
 		logger.info(message);
 		sendTweet(message);
-		NewOrderResponse newOrderResponse = client.newOrder(marketBuy("BTCUSDT", BTCtoBuyFloored.toString()));
+		client.newOrder(marketBuy("BTCUSDT", BTCtoBuyFloored.toString()));
 		new CalcUtils().sleeper(15000);
 	}
 
@@ -341,6 +344,6 @@ public class Wyatt {
 	 * Report that the system is in developer mode
 	 */
 	private void reportDevMode() {
-		logger.error("Wyatt is currently in development mode! Exit to perform trades");
+		logger.error("Wyatt is currently in development mode! Not performing trades or tweets");
 	}
 }
