@@ -1,11 +1,14 @@
-# [Wyatt](http://www.mtheory7.com/)
+[1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
+[1]: https://twitter.com/WestworldWyatt
+# [Wyatt [![alt text][1.1]][1]](http://www.mtheory7.com/) 
+
 Above is a link to the log output of Wyatt (DEBUG level and higher) running connected to my personal Binance account.
 
 Another link to the full log (all levels) is available [here](http://www.mtheory7.com/full.php)
 ### Logic
   * Gather recent data using [Binance-API](https://github.com/binance-exchange/binance-java-api)
-  * Use data to find averages for vaious time intervals
-  * Predict the next selling price using a few configured percentages
+  * Use data to find averages for various time intervals
+  * Predict the next selling price using calculated targets
   * When current price is above target sell price, execute sell
   * Then, execute buy back immediately after for a configured percentage below the targeted sell price
   * Once decided, Wyatt sells at the current price not the target sell price
