@@ -139,7 +139,7 @@ public class Wyatt {
 	 */
 	public void predictAndTrade() {
 		if (DEVELOPING) {
-
+			reportDevMode();
 		}
 		predictionEngine.executeThoughtProcess(mindData);
 		Double target = predictionEngine.targetPrice;
