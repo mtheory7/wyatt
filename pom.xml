@@ -40,8 +40,8 @@
             <groupId>com.binance.api</groupId>
             <artifactId>binance-api-client</artifactId>
             <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/binance-api-client-1.0.0.jar</systemPath>
+<!--            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/binance-api-client-1.0.0.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>

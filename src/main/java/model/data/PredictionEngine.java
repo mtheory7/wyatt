@@ -59,7 +59,7 @@ public class PredictionEngine {
             Double target = Math.max(Math.max(Math.max(avg.getLowAvg(), avg.getOpenAvg()), avg.getHighAvg()), avg.getCloseAvg());
             targetPrices.add(target);
         }
-        targetPrice = Math.floor(maxTarget(targetPrices) * 101.00) / 100.0;
+        targetPrice = Math.floor(maxTarget(targetPrices) * 100.3) / 100.0;
     }
 
     /**
