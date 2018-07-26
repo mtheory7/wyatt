@@ -29,7 +29,7 @@ import java.util.List;
 import static com.binance.api.client.domain.account.NewOrder.*;
 
 public class Wyatt {
-	private final static boolean DEVELOPING = false;
+	private final static boolean DEVELOPING = true;
 	private final static Logger logger = Logger.getLogger(Wyatt.class);
 	private static CandlestickInterval[] intervalList = {
 			CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
@@ -168,7 +168,8 @@ public class Wyatt {
 				Double currentMargin = lastPriceFloored / Double.valueOf(openOrder.getPrice());
 				Double currentMarginPercent = (currentMargin - 1) * 100;
 				currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
-				logger.trace("Current buy back margin percentage: " + currentMarginPercent + "%");
+				logger.trace("Current buy back: " + currentMarginPercent +
+						"% ($" + (lastPriceFloored - Double.valueOf(openOrder.getPrice())) + ")");
 				if (currentMarginPercent > 7.5) {
 					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
 					if (!DEVELOPING) {
