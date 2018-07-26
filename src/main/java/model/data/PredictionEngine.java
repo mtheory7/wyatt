@@ -3,7 +3,6 @@ package model.data;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import model.DataIdentifier;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PredictionEngine {
-    private final static Logger logger = Logger.getLogger(PredictionEngine.class);
-    public static Double buyBackAfterThisPercentage = 0.993;
+    //private final static Logger logger = Logger.getLogger(PredictionEngine.class);
+    public static Double buyBackAfterThisPercentage = 0.992;
     public Double targetPrice;
     private List<AverageData> averageData;
     private List<Double> targetPrices;
@@ -59,7 +58,7 @@ public class PredictionEngine {
             Double target = Math.max(Math.max(Math.max(avg.getLowAvg(), avg.getOpenAvg()), avg.getHighAvg()), avg.getCloseAvg());
             targetPrices.add(target);
         }
-        targetPrice = Math.floor(maxTarget(targetPrices) * 100.3) / 100.0;
+        targetPrice = Math.floor(maxTarget(targetPrices) * 100.4) / 100.0;
     }
 
     /**
