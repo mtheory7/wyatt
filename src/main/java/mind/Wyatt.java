@@ -168,8 +168,10 @@ public class Wyatt {
 				Double currentMargin = lastPriceFloored / Double.valueOf(openOrder.getPrice());
 				Double currentMarginPercent = (currentMargin - 1) * 100;
 				currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
+				Double buyBackDifference = (lastPriceFloored - Double.valueOf(openOrder.getPrice()));
+				buyBackDifference = Math.round(buyBackDifference * 100.0) / 100.0;
 				logger.trace("Current buy back: " + currentMarginPercent +
-						"% ($" + (lastPriceFloored - Double.valueOf(openOrder.getPrice())) + ")");
+						"% ($" + buyBackDifference + ")");
 				if (currentMarginPercent > 7.5) {
 					logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
 					if (!DEVELOPING) {
