@@ -10,16 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 public class PredictionEngine {
-  //private final static Logger logger = Logger.getLogger(PredictionEngine.class);
+  // private final static Logger logger = Logger.getLogger(PredictionEngine.class);
   public static Double buyBackAfterThisPercentage = 0.991;
   public Double targetPrice;
   private List<AverageData> averageData;
   private List<Double> targetPrices;
   private Map<CandlestickInterval, List<Candlestick>> candleMap;
 
-  /**
-   * PredictionEngine constructor
-   */
+  /** PredictionEngine constructor */
   public PredictionEngine() {
     averageData = new ArrayList<AverageData>();
     targetPrices = new ArrayList<Double>();
@@ -27,27 +25,27 @@ public class PredictionEngine {
   }
 
   /**
-   * Use mind data to find averages and then predict a target
-   * price to sell at.
+   * Use mind data to find averages and then predict a target price to sell at.
    *
    * @param mindData The data to use for target calculation
    */
   public void executeThoughtProcess(MindData mindData) {
-    for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry : mindData.getCandlestickData().entrySet()) {
+    for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry :
+        mindData.getCandlestickData().entrySet()) {
       if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
-              && entry.getKey().getTicker().equals("BTCUSDT")) {
+          && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.ONE_MINUTE, entry.getValue());
       }
       if (entry.getKey().getInterval() == CandlestickInterval.THREE_MINUTES
-              && entry.getKey().getTicker().equals("BTCUSDT")) {
+          && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.THREE_MINUTES, entry.getValue());
       }
       if (entry.getKey().getInterval() == CandlestickInterval.FIVE_MINUTES
-              && entry.getKey().getTicker().equals("BTCUSDT")) {
+          && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.FIVE_MINUTES, entry.getValue());
       }
       if (entry.getKey().getInterval() == CandlestickInterval.FIFTEEN_MINUTES
-              && entry.getKey().getTicker().equals("BTCUSDT")) {
+          && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.FIFTEEN_MINUTES, entry.getValue());
       }
     }
@@ -55,20 +53,24 @@ public class PredictionEngine {
       averageData.add(calculateAverageData(entry));
     }
     for (AverageData avg : averageData) {
-      Double target = Math.max(Math.max(Math.max(avg.getLowAvg(), avg.getOpenAvg()), avg.getHighAvg()), avg.getCloseAvg());
+      Double target =
+          Math.max(
+              Math.max(Math.max(avg.getLowAvg(), avg.getOpenAvg()), avg.getHighAvg()),
+              avg.getCloseAvg());
       targetPrices.add(target);
     }
     targetPrice = Math.floor(maxTarget(targetPrices) * 100.5) / 100.0;
   }
 
   /**
-   * Use a list of candlesticks to calculate some
-   * AverageData values to use for target price generation
+   * Use a list of candlesticks to calculate some AverageData values to use for target price
+   * generation
    *
    * @param entry The list of Candlesticks
    * @return The AverageData object
    */
-  private AverageData calculateAverageData(HashMap.Entry<CandlestickInterval, List<Candlestick>> entry) {
+  private AverageData calculateAverageData(
+      HashMap.Entry<CandlestickInterval, List<Candlestick>> entry) {
     AverageData averageData = new AverageData();
     Double low = 0.0;
     Double open = 0.0;
