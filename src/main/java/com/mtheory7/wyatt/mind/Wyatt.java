@@ -23,7 +23,6 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  private static final boolean DEVELOPING = true;
+  private static final boolean DEVELOPING = false;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
