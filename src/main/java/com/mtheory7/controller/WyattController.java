@@ -1,5 +1,6 @@
 package com.mtheory7.controller;
 
+import com.google.gson.Gson;
 import com.mtheory7.wyatt.mind.Wyatt;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ public class WyattController {
   private static final String PATH_BALANCE = "/totalBalance";
   private static final String PATH_SHUTDOWN = "/shutdown";
   private static final String PATH_STATE = "/state";
+  private static final String PATH_OPEN_ORDERS = "/getOpenOrders";
   private final Wyatt wyatt;
 
   @Autowired
@@ -40,5 +42,11 @@ public class WyattController {
     logger.trace(PATH_STATE + " endpoint hit");
     String response = "Have you ever seen anything so full of splendor?";
     return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @RequestMapping(path = PATH_OPEN_ORDERS, method = RequestMethod.GET)
+  public ResponseEntity getOpenOrders() {
+    logger.trace(PATH_OPEN_ORDERS + " endpoint hit");
+    return new ResponseEntity<>(new Gson().toJson(wyatt.getOpenOrders()), HttpStatus.OK);
   }
 }

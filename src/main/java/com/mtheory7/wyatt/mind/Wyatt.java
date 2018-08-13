@@ -23,6 +23,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,11 +41,11 @@ public class Wyatt {
   private static String[] tickers = {"BTCUSDT"};
   private MindData mindData;
   private PredictionEngine predictionEngine;
-  private BinanceApiRestClient client;
-  private String consumerKey;
-  private String consumerSecret;
-  private String accessToken;
-  private String accessTokenSecret;
+  private transient BinanceApiRestClient client;
+  private transient String consumerKey;
+  private transient String consumerSecret;
+  private transient String accessToken;
+  private transient String accessTokenSecret;
 
   public Wyatt() {}
 
@@ -79,6 +80,10 @@ public class Wyatt {
     this.consumerSecret = consumerSecret;
     this.accessToken = accessToken;
     this.accessTokenSecret = accessTokenSecret;
+  }
+
+  public List<Order> getOpenOrders() {
+    return client.getOpenOrders(new OrderRequest("BTCUSDT"));
   }
 
   public String getTotalBalance() {
