@@ -32,8 +32,8 @@ public class Wyatt {
   private static final boolean DEVELOPING = false;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static CandlestickInterval[] intervalList = {
-    CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
-    CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
+          CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
+          CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
   };
   private static String[] tickers = {"BTCUSDT"};
   private MindData mindData;
@@ -48,14 +48,14 @@ public class Wyatt {
    * Instantiates a new instance of Wyatt's mind. It requires an API Key and the API Key secret to
    * pull the latest trading data, and to execute trades.
    *
-   * @param binanceAPIKey The Binance API Key
+   * @param binanceAPIKey    The Binance API Key
    * @param binanceAPISecret The secret for the Binance API Key
    */
   public Wyatt(String binanceAPIKey, String binanceAPISecret) {
     mindData = new MindData();
     predictionEngine = new PredictionEngine();
     BinanceApiClientFactory factory =
-        BinanceApiClientFactory.newInstance(binanceAPIKey, binanceAPISecret);
+            BinanceApiClientFactory.newInstance(binanceAPIKey, binanceAPISecret);
     client = factory.newRestClient();
   }
 
@@ -74,13 +74,13 @@ public class Wyatt {
    * Sets the credentials that are needed for tweeting alerts when Wyatt decides to sell and buy
    * back.
    *
-   * @param consumerKey Twitter Consumer Key
-   * @param consumerSecret Twitter Consumer Secret
-   * @param accessToken Twitter Access Token
+   * @param consumerKey       Twitter Consumer Key
+   * @param consumerSecret    Twitter Consumer Secret
+   * @param accessToken       Twitter Access Token
    * @param accessTokenSecret Twitter Access Token Secret
    */
   public void setTwitterCreds(
-      String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
+          String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
     this.consumerKey = consumerKey;
     this.consumerSecret = consumerSecret;
     this.accessToken = accessToken;
@@ -157,12 +157,12 @@ public class Wyatt {
     predictionEngine.executeThoughtProcess(mindData);
     Double target = predictionEngine.targetPrice;
     Double buyBack =
-        Math.round(target * PredictionEngine.buyBackAfterThisPercentage * 100.0) / 100.0;
+            Math.round(target * PredictionEngine.buyBackAfterThisPercentage * 100.0) / 100.0;
     TickerStatistics lastPrice = null;
     for (HashMap.Entry<DataIdentifier, TickerStatistics> entry :
-        mindData.getLastPriceData().entrySet()) {
+            mindData.getLastPriceData().entrySet()) {
       if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
-          && entry.getKey().getTicker().equals("BTCUSDT")) {
+              && entry.getKey().getTicker().equals("BTCUSDT")) {
         lastPrice = entry.getValue();
       }
     }
@@ -172,7 +172,7 @@ public class Wyatt {
     }
     Double sellConfidence = Math.round((lastPriceFloored / target * 100) * 1000.0) / 1000.0;
     logger.trace(
-        "Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
+            "Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
     logger.trace("Sell confidence: " + sellConfidence + "%");
     boolean trade = true;
     List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
@@ -187,7 +187,7 @@ public class Wyatt {
         Double buyBackDifference = (lastPriceFloored - Double.valueOf(openOrder.getPrice()));
         buyBackDifference = Math.round(buyBackDifference * 100.0) / 100.0;
         logger.trace(
-            "Current buy back: " + currentMarginPercent + "% ($" + buyBackDifference + ")");
+                "Current buy back: " + currentMarginPercent + "% ($" + buyBackDifference + ")");
         if (currentMarginPercent > 7.5) {
           logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
           if (!DEVELOPING) {
@@ -203,12 +203,12 @@ public class Wyatt {
     }
     if ((lastPriceFloored > target) && trade) {
       String message =
-          "Deciding to sell! Current: $"
-              + lastPriceFloored
-              + " Target: $"
-              + target
-              + " Buy back: $"
-              + buyBack;
+              "Deciding to sell! Current: $"
+                      + lastPriceFloored
+                      + " Target: $"
+                      + target
+                      + " Buy back: $"
+                      + buyBack;
       logger.info(message);
       if (!DEVELOPING) {
         performSellAndBuyBack(lastPriceFloored, buyBack, message);
@@ -223,7 +223,7 @@ public class Wyatt {
    *
    * @param mindData The structure to save the data to
    * @param interval The interval to grab candle data for
-   * @param ticker The ticker to grab candle data for
+   * @param ticker   The ticker to grab candle data for
    */
   private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
     List<Candlestick> candlesticks = new ArrayList<Candlestick>();
@@ -240,9 +240,9 @@ public class Wyatt {
     // Save the pulled data to the passed in data structure
     mindData.candlestickData.put(new DataIdentifier(interval, ticker), candlesticks);
     mindData.lastPriceData.put(
-        new DataIdentifier(interval, ticker), client.get24HrPriceStatistics(ticker));
+            new DataIdentifier(interval, ticker), client.get24HrPriceStatistics(ticker));
     mindData.candlestickIntAvgData.put(
-        new DataIdentifier(interval, ticker), new CalcUtils().findAveragePrice(candlesticks));
+            new DataIdentifier(interval, ticker), new CalcUtils().findAveragePrice(candlesticks));
   }
 
   /**
@@ -250,7 +250,7 @@ public class Wyatt {
    * trades.
    *
    * @param sellPrice Price to sell at
-   * @param buyPrice Price to buy at
+   * @param buyPrice  Price to buy at
    */
   private void performSellAndBuyBack(Double sellPrice, Double buyPrice, String message) {
     sendTweet(message);
@@ -263,9 +263,9 @@ public class Wyatt {
       logger.info("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
       // Submit the binance sell
       NewOrderResponse performSell =
-          client.newOrder(
-              limitSell(
-                  "BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
+              client.newOrder(
+                      limitSell(
+                              "BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
       logger.info("Trade submitted: " + performSell.getTransactTime());
     } catch (Exception e) {
       logger.error("There was an exception thrown during the sell?: " + e.getMessage());
@@ -296,18 +296,18 @@ public class Wyatt {
     Double BTCtoBuyFloored = Math.floor(BTCtoBuy * 10000.0) / 10000.0;
     try {
       logger.info(
-          "Executing buy with: "
-              + freeUSDTFloored
-              + " USDT @ $"
-              + buyPrice
-              + " = "
-              + BTCtoBuyFloored
-              + " BTC");
+              "Executing buy with: "
+                      + freeUSDTFloored
+                      + " USDT @ $"
+                      + buyPrice
+                      + " = "
+                      + BTCtoBuyFloored
+                      + " BTC");
       // Submit the Binance buy back
       NewOrderResponse performBuy =
-          client.newOrder(
-              limitBuy(
-                  "BTCUSDT", TimeInForce.GTC, BTCtoBuyFloored.toString(), buyPrice.toString()));
+              client.newOrder(
+                      limitBuy(
+                              "BTCUSDT", TimeInForce.GTC, BTCtoBuyFloored.toString(), buyPrice.toString()));
       logger.info("Trade submitted: " + performBuy.getTransactTime());
     } catch (Exception e) {
       logger.error("There was an exception thrown during the buy?: " + e.getMessage());
@@ -316,7 +316,9 @@ public class Wyatt {
     new CalcUtils().sleeper(3000);
   }
 
-  /** Execute a market buy back */
+  /**
+   * Execute a market buy back
+   */
   private void executeMarketBuyBack() {
     // Cancel all open orders
     List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
@@ -354,10 +356,10 @@ public class Wyatt {
     // Use OAuth to pass Twitter credentials
     ConfigurationBuilder cb = new ConfigurationBuilder();
     cb.setDebugEnabled(true)
-        .setOAuthConsumerKey(consumerKey)
-        .setOAuthConsumerSecret(consumerSecret)
-        .setOAuthAccessToken(accessToken)
-        .setOAuthAccessTokenSecret(accessTokenSecret);
+            .setOAuthConsumerKey(consumerKey)
+            .setOAuthConsumerSecret(consumerSecret)
+            .setOAuthAccessToken(accessToken)
+            .setOAuthAccessTokenSecret(accessTokenSecret);
     TwitterFactory tf = new TwitterFactory(cb.build());
     Twitter twitter = tf.getInstance();
     // Tweets can only be 280 characters long error if longer
@@ -374,7 +376,9 @@ public class Wyatt {
     }
   }
 
-  /** Report that the system is in developer mode */
+  /**
+   * Report that the system is in developer mode
+   */
   private void reportDevMode() {
     logger.error("Wyatt is currently in development mode! Not performing trades or tweets");
   }

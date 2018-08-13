@@ -10,14 +10,14 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class WyattApplication {
   private final static Logger logger = Logger.getLogger(WyattApplication.class);
 
-	public static void main(String[] args) {
+  public static void main(String[] args) {
     logger.info("Starting WYATT (v5.1.7) ...");
     if (args.length < 6) {
       logger.error("Not enough arguments have been given");
       System.exit(-1);
     }
-		ConfigurableApplicationContext context = SpringApplication.run(WyattApplication.class, args);
+    ConfigurableApplicationContext context = SpringApplication.run(WyattApplication.class, args);
     Wyatt wyatt = context.getBean(Wyatt.class);
     wyatt.startTrading();
-	}
+  }
 }
