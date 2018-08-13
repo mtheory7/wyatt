@@ -3,7 +3,6 @@ package com.mtheory7;
 import com.mtheory7.wyatt.mind.Wyatt;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,7 +13,7 @@ public class WyattApplication {
 
   public static void main(String[] args) {
     ConfigurableApplicationContext context = SpringApplication.run(WyattApplication.class, args);
-    logger.info("Starting WYATT (v6.0.0) ...");
+    logger.info("Starting WYATT (v6.1.0) ...");
     if (args.length < 6) {
       logger.error("Not enough arguments have been given");
       System.exit(-1);

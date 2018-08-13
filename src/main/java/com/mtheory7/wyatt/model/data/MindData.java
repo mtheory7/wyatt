@@ -13,9 +13,9 @@ public class MindData {
   public HashMap<DataIdentifier, Double> candlestickIntAvgData;
 
   public MindData() {
-    candlestickData = new HashMap<DataIdentifier, List<Candlestick>>();
-    lastPriceData = new HashMap<DataIdentifier, TickerStatistics>();
-    candlestickIntAvgData = new HashMap<DataIdentifier, Double>();
+    candlestickData = new HashMap<>();
+    lastPriceData = new HashMap<>();
+    candlestickIntAvgData = new HashMap<>();
   }
 
   public HashMap<DataIdentifier, List<Candlestick>> getCandlestickData() {
