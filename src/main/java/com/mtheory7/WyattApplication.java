@@ -1,11 +1,10 @@
-package com.mtheory7.wyatt;
+package com.mtheory7;
 
 import com.mtheory7.wyatt.mind.Wyatt;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class WyattApplication {
