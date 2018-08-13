@@ -24,20 +24,20 @@ public class WyattController {
 
   @RequestMapping(path = PATH_BALANCE, method = RequestMethod.GET)
   public ResponseEntity getTotalBalance() {
-    logger.trace("===> \"" + PATH_BALANCE + " endpoint hit");
+    logger.trace(PATH_BALANCE + " endpoint hit");
     return new ResponseEntity<>(wyatt.getTotalBalance(), HttpStatus.OK);
   }
 
   @RequestMapping(path = PATH_SHUTDOWN, method = RequestMethod.GET)
   public void shutdown() {
-    logger.trace("===> \"" + PATH_SHUTDOWN + " endpoint hit");
+    logger.trace(PATH_SHUTDOWN + " endpoint hit");
     logger.info("Shutdown down now...");
     System.exit(-1);
   }
 
   @RequestMapping(path = PATH_STATE, method = RequestMethod.GET)
   public ResponseEntity getState() {
-    logger.trace("===> \"" + PATH_STATE + " endpoint hit");
+    logger.trace(PATH_STATE + " endpoint hit");
     String response = "Have you ever seen anything so full of splendor?";
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
