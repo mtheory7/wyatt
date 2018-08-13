@@ -18,8 +18,7 @@ import com.mtheory7.wyatt.model.data.PredictionEngine;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -31,7 +30,7 @@ import java.util.List;
 
 import static com.binance.api.client.domain.account.NewOrder.*;
 
-@Component
+@Service
 public class Wyatt {
   private static final boolean DEVELOPING = false;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
@@ -50,18 +49,15 @@ public class Wyatt {
 
   @Autowired
   public Wyatt() {
-
   }
 
   /**
-   * Instantiates a new instance of Wyatt's mind. It requires an API Key and the API Key secret to
-   * pull the latest trading data, and to execute trades.
+   * Sets the credentials that are needed for interacting with Binance
    *
-   * @param binanceAPIKey    The Binance API Key
-   * @param binanceAPISecret The secret for the Binance API Key
+   * @param binanceAPIKey    Binance API Key
+   * @param binanceAPISecret Binance API Secret
    */
-
-  public Wyatt(String binanceAPIKey, String binanceAPISecret) {
+  public void setBinanceCreds(String binanceAPIKey, String binanceAPISecret) {
     mindData = new MindData();
     predictionEngine = new PredictionEngine();
     BinanceApiClientFactory factory =
@@ -92,10 +88,8 @@ public class Wyatt {
     List<AssetBalance> balances = account.getBalances();
     Double estimatedBalance = 0.0;
     for (AssetBalance balance : balances) {
-      // Combine the amount of idle assets, and the amount in trade currently
       Double amount = Double.valueOf(balance.getFree()) + Double.valueOf(balance.getLocked());
       if (amount > 0.0) {
-        logger.trace("Asset: " + balance.getAsset() + " - Balance: " + amount);
         if (balance.getAsset().equals("BTC")) {
           estimatedBalance += amount;
         } else {
