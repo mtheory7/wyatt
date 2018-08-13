@@ -10,12 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WyattController {
+  private final Wyatt wyatt;
+
   @Autowired
-  private Wyatt dolores;
+  public WyattController(Wyatt wyatt) {
+    this.wyatt = wyatt;
+  }
 
   @RequestMapping(path = "/totalBalance", method = RequestMethod.GET)
   public ResponseEntity getTotalBalance() {
+    return new ResponseEntity(wyatt.getTotalBalance(), HttpStatus.OK);
+  }
 
-    return new ResponseEntity(dolores.getTotalBalance(), HttpStatus.OK);
+  @RequestMapping(path = "/shutdown", method = RequestMethod.GET)
+  public void shutdown() {
+    System.exit(-1);
   }
 }

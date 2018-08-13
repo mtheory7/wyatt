@@ -19,7 +19,6 @@ public class WyattApplication {
       logger.error("Not enough arguments have been given");
       System.exit(-1);
     }
-    logger.info("Starting Wyatt trading...");
     for (;;) {
       Wyatt dolores = context.getBean(Wyatt.class);
       dolores.setBinanceCreds(args[0], args[1]);
