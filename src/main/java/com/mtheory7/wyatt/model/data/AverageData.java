@@ -1,4 +1,4 @@
-package model.data;
+package com.mtheory7.wyatt.model.data;
 
 public class AverageData {
 	private Double openAvg = 0.0;

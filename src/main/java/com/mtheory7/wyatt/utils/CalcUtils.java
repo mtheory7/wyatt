@@ -1,4 +1,4 @@
-package utils;
+package com.mtheory7.wyatt.utils;
 
 import com.binance.api.client.domain.market.Candlestick;
 

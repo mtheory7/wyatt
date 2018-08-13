@@ -1,8 +1,8 @@
-package model.data;
+package com.mtheory7.wyatt.model.data;
 
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
-import model.DataIdentifier;
+import com.mtheory7.wyatt.model.DataIdentifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;

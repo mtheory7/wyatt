@@ -1,4 +1,4 @@
-package model;
+package com.mtheory7.wyatt.model;
 
 import com.binance.api.client.domain.market.CandlestickInterval;
 
