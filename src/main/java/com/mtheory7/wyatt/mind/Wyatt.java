@@ -55,6 +55,7 @@ public class Wyatt {
    * @param binanceAPISecret Binance API Secret
    */
   public void setBinanceCreds(String binanceAPIKey, String binanceAPISecret) {
+    logger.trace("Setting Binance credentials");
     mindData = new MindData();
     predictionEngine = new PredictionEngine();
     BinanceApiClientFactory factory =
@@ -73,6 +74,7 @@ public class Wyatt {
    */
   public void setTwitterCreds(
       String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) {
+    logger.trace("Setting Twitter credentials");
     this.consumerKey = consumerKey;
     this.consumerSecret = consumerSecret;
     this.accessToken = accessToken;
