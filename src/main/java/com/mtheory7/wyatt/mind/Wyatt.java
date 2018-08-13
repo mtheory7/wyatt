@@ -59,17 +59,6 @@ public class Wyatt {
     client = factory.newRestClient();
   }
 
-  public void startTrading() {
-    /*
-       mind.Wyatt dolores = new mind.Wyatt(args[0], args[1]);
-       dolores.setTwitterCreds(args[2], args[3], args[4], args[5]);
-       dolores.gatherMindData();
-       dolores.predictAndTrade();
-       dolores.printBalances();
-       new utils.CalcUtils().sleeper(25000);
-    */
-  }
-
   /**
    * Sets the credentials that are needed for tweeting alerts when Wyatt decides to sell and buy
    * back.
