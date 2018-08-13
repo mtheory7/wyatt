@@ -17,6 +17,9 @@ import com.mtheory7.wyatt.model.data.MindData;
 import com.mtheory7.wyatt.model.data.PredictionEngine;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -28,6 +31,7 @@ import java.util.List;
 
 import static com.binance.api.client.domain.account.NewOrder.*;
 
+@Component
 public class Wyatt {
   private static final boolean DEVELOPING = false;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
@@ -44,6 +48,11 @@ public class Wyatt {
   private String accessToken;
   private String accessTokenSecret;
 
+  @Autowired
+  public Wyatt() {
+
+  }
+
   /**
    * Instantiates a new instance of Wyatt's mind. It requires an API Key and the API Key secret to
    * pull the latest trading data, and to execute trades.
@@ -51,6 +60,7 @@ public class Wyatt {
    * @param binanceAPIKey    The Binance API Key
    * @param binanceAPISecret The secret for the Binance API Key
    */
+
   public Wyatt(String binanceAPIKey, String binanceAPISecret) {
     mindData = new MindData();
     predictionEngine = new PredictionEngine();
@@ -74,6 +84,27 @@ public class Wyatt {
     this.consumerSecret = consumerSecret;
     this.accessToken = accessToken;
     this.accessTokenSecret = accessTokenSecret;
+  }
+
+  public String getTotalBalance() {
+    Account account = client.getAccount();
+    // Pull the latest account balance info from Binance
+    List<AssetBalance> balances = account.getBalances();
+    Double estimatedBalance = 0.0;
+    for (AssetBalance balance : balances) {
+      // Combine the amount of idle assets, and the amount in trade currently
+      Double amount = Double.valueOf(balance.getFree()) + Double.valueOf(balance.getLocked());
+      if (amount > 0.0) {
+        logger.trace("Asset: " + balance.getAsset() + " - Balance: " + amount);
+        if (balance.getAsset().equals("BTC")) {
+          estimatedBalance += amount;
+        } else {
+          estimatedBalance += valueInBTC(amount, balance.getAsset());
+        }
+      }
+    }
+    estimatedBalance = Math.round(estimatedBalance * 100000000.0) / 100000000.0;
+    return estimatedBalance.toString();
   }
 
   /**
