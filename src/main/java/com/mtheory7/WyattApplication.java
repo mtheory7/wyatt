@@ -25,6 +25,7 @@ public class WyattApplication {
       dolores.gatherMindData();
       dolores.predictAndTrade();
       dolores.printBalances();
+      dolores.reset();
       new CalcUtils().sleeper(25000);
     }
   }

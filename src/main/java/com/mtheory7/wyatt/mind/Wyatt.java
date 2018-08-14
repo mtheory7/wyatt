@@ -31,9 +31,9 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  private static final boolean DEVELOPING = false;
+  private static final boolean DEVELOPING = true;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
-  private static CandlestickInterval[] intervalList = {
+  private static final CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
     CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
   };
@@ -47,6 +47,11 @@ public class Wyatt {
   private transient String accessTokenSecret;
 
   public Wyatt() {}
+
+  public void reset() {
+    this.mindData = new MindData();
+    this.predictionEngine = new PredictionEngine();
+  }
 
   /**
    * Sets the credentials that are needed for interacting with Binance
