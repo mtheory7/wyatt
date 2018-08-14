@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WyattController {
   private static final Logger logger = Logger.getLogger(WyattController.class);
   private static final String PATH_BALANCE = "/totalBalance";
-  private static final String PATH_SHUTDOWN = "/shutdown";
+  private static final String PATH_SHUTDOWN = "/seppuku";
   private static final String PATH_STATE = "/state";
   private static final String PATH_OPEN_ORDERS = "/getOpenOrders";
   private final Wyatt wyatt;
@@ -31,7 +31,7 @@ public class WyattController {
   }
 
   @RequestMapping(path = PATH_SHUTDOWN, method = RequestMethod.GET)
-  public void shutdown() {
+  public void seppuku() {
     logger.trace(PATH_SHUTDOWN + " endpoint hit");
     logger.info("Shutdown down now...");
     System.exit(-1);
