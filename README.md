@@ -1,11 +1,11 @@
 [1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
 [1]: https://twitter.com/WestworldWyatt
-# [Wyatt](http://www.mtheory7.com/)
+# [Wyatt](https://www.mtheory7.com/)
 [![alt text][1.1]][1]
 
 Above is a link to the log output of Wyatt (DEBUG level and higher) running connected to my personal Binance account.
 
-Another link to the full log (all levels) is available [here](http://www.mtheory7.com/full.php)
+Another link to the full log (all levels) is available [here](https://www.mtheory7.com/full.php)
 ### Logic
   * Gather recent data using [Binance-API](https://github.com/binance-exchange/binance-java-api)
   * Use data to find averages for various time intervals

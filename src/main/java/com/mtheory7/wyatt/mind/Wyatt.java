@@ -31,7 +31,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  private static final boolean DEVELOPING = false;
+  private static final boolean DEVELOPING = true;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
@@ -81,10 +81,20 @@ public class Wyatt {
     this.accessTokenSecret = accessTokenSecret;
   }
 
+  /**
+   * Returns the list of open orders. Uses the com.binance.api.client.domain.account.Order
+   *
+   * @return List of open orders
+   */
   public List<Order> getOpenOrders() {
     return client.getOpenOrders(new OrderRequest("BTCUSDT"));
   }
 
+  /**
+   * Returns the total balance of the account in current estimated BTC
+   *
+   * @return Balance in BTC
+   */
   public String getTotalBalance() {
     Account account = client.getAccount();
     // Pull the latest account balance info from Binance

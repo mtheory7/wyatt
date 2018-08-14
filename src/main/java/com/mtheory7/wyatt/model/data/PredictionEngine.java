@@ -19,9 +19,9 @@ public class PredictionEngine {
 
   /** PredictionEngine constructor */
   public PredictionEngine() {
-    averageData = new ArrayList<AverageData>();
-    targetPrices = new ArrayList<Double>();
-    candleMap = new HashMap<CandlestickInterval, List<Candlestick>>();
+    averageData = new ArrayList<>();
+    targetPrices = new ArrayList<>();
+    candleMap = new HashMap<>();
   }
 
   /**
