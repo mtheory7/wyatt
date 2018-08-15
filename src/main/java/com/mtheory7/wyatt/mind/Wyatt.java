@@ -31,7 +31,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  private static final boolean DEVELOPING = false;
+  private static final boolean DEVELOPING = true;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static final CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
@@ -48,6 +48,9 @@ public class Wyatt {
 
   public Wyatt() {}
 
+  /**
+   * Resets Wyatt's memory. This is necessary to do or memory leaks will be possible
+   */
   public void reset() {
     this.mindData = new MindData();
     this.predictionEngine = new PredictionEngine();
@@ -117,6 +120,12 @@ public class Wyatt {
     }
     estimatedBalance = Math.round(estimatedBalance * 100000000.0) / 100000000.0;
     return estimatedBalance.toString();
+  }
+
+  public String getTotalProfit() {
+    Double estimatedBalance = Double.valueOf(getTotalBalance());
+    Double percentOnInvenstment = ((estimatedBalance / 0.007) * 100) - 100;
+    return percentOnInvenstment.toString();
   }
 
   /**
