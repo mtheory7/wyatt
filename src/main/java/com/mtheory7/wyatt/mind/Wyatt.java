@@ -31,22 +31,21 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
+  private static final String BTCUSDT_TICKER = "BTCUSDT";
   private static final boolean DEVELOPING = true;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static final CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
     CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
   };
-  private static String[] tickers = {"BTCUSDT"};
+  private static final String[] tickers = {BTCUSDT_TICKER};
   private MindData mindData;
   private PredictionEngine predictionEngine;
-  private transient BinanceApiRestClient client;
-  private transient String consumerKey;
-  private transient String consumerSecret;
-  private transient String accessToken;
-  private transient String accessTokenSecret;
-
-  public Wyatt() {}
+  private BinanceApiRestClient client;
+  private String consumerKey;
+  private String consumerSecret;
+  private String accessToken;
+  private String accessTokenSecret;
 
   /**
    * Resets Wyatt's memory. This is necessary to do or memory leaks will be possible
@@ -95,7 +94,7 @@ public class Wyatt {
    * @return List of open orders
    */
   public List<Order> getOpenOrders() {
-    return client.getOpenOrders(new OrderRequest("BTCUSDT"));
+    return client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
   }
 
   /**
@@ -164,7 +163,7 @@ public class Wyatt {
    */
   private Double valueInBTC(Double amount, String ticker) {
     if (ticker.equals("USDT")) {
-      TickerStatistics tickerStatistics = client.get24HrPriceStatistics("BTCUSDT");
+      TickerStatistics tickerStatistics = client.get24HrPriceStatistics(BTCUSDT_TICKER);
       return amount / Double.valueOf(tickerStatistics.getLastPrice());
     } else {
       ticker = ticker + "BTC";
@@ -203,7 +202,7 @@ public class Wyatt {
     for (HashMap.Entry<DataIdentifier, TickerStatistics> entry :
         mindData.getLastPriceData().entrySet()) {
       if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
-          && entry.getKey().getTicker().equals("BTCUSDT")) {
+          && entry.getKey().getTicker().equals(BTCUSDT_TICKER)) {
         lastPrice = entry.getValue();
       }
     }
@@ -216,8 +215,8 @@ public class Wyatt {
         "Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
     logger.trace("Sell confidence: " + sellConfidence + "%");
     boolean trade = true;
-    List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
-    if (openOrders.size() > 0) {
+    List<Order> openOrders = client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
+    if (!openOrders.isEmpty()) {
       logger.trace("Number of open BTCUSDT orders: " + openOrders.size());
       trade = false;
       Order openOrder = openOrders.get(0);
@@ -267,7 +266,7 @@ public class Wyatt {
    * @param ticker The ticker to grab candle data for
    */
   private void gatherIntervalData(MindData mindData, CandlestickInterval interval, String ticker) {
-    List<Candlestick> candlesticks = new ArrayList<Candlestick>();
+    List<Candlestick> candlesticks = new ArrayList<>();
     try {
       // Make the GET call to Binance
       candlesticks = client.getCandlestickBars(ticker, interval);
@@ -298,7 +297,7 @@ public class Wyatt {
     Account account = client.getAccount();
     // Find out how much free asset there is to trade
     Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
-    Double freeBTCFloored = Math.floor(Double.valueOf(freeBTC) * 10000.0) / 10000.0;
+    Double freeBTCFloored = Math.floor(freeBTC * 10000.0) / 10000.0;
     logger.info("Amount of BTC to trade: " + freeBTCFloored);
     try {
       logger.info("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
@@ -306,20 +305,19 @@ public class Wyatt {
       NewOrderResponse performSell =
           client.newOrder(
               limitSell(
-                  "BTCUSDT", TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
+                  BTCUSDT_TICKER, TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
       logger.info("Trade submitted: " + performSell.getTransactTime());
     } catch (Exception e) {
       logger.error("There was an exception thrown during the sell?: " + e.getMessage());
-      e.printStackTrace();
     }
     new CalcUtils().sleeper(3000);
     // Wait and make sure that the trade executed. If not, keep waiting
-    List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+    List<Order> openOrders = client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
     logger.trace("Number of open BTCUSDT orders: " + openOrders.size());
-    while (openOrders.size() > 0) {
+    while (!openOrders.isEmpty()) {
       logger.trace("Orders for BTCUSDT are not empty, waiting 3 seconds...");
       new CalcUtils().sleeper(3000);
-      openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+      openOrders = client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
     }
     new CalcUtils().sleeper(3000);
     account = client.getAccount();
@@ -333,8 +331,8 @@ public class Wyatt {
     }
     // Calculate and round the values in preparation for buying back
     Double freeUSDTFloored = Math.floor(freeUSDT * 100.0) / 100.0;
-    Double BTCtoBuy = freeUSDTFloored / buyPrice;
-    Double BTCtoBuyFloored = Math.floor(BTCtoBuy * 10000.0) / 10000.0;
+    Double btcToBuy = freeUSDTFloored / buyPrice;
+    Double btcToBuyFloored = Math.floor(btcToBuy * 10000.0) / 10000.0;
     try {
       logger.info(
           "Executing buy with: "
@@ -342,17 +340,16 @@ public class Wyatt {
               + " USDT @ $"
               + buyPrice
               + " = "
-              + BTCtoBuyFloored
+              + btcToBuyFloored
               + " BTC");
       // Submit the Binance buy back
       NewOrderResponse performBuy =
           client.newOrder(
               limitBuy(
-                  "BTCUSDT", TimeInForce.GTC, BTCtoBuyFloored.toString(), buyPrice.toString()));
+                  BTCUSDT_TICKER, TimeInForce.GTC, btcToBuyFloored.toString(), buyPrice.toString()));
       logger.info("Trade submitted: " + performBuy.getTransactTime());
     } catch (Exception e) {
       logger.error("There was an exception thrown during the buy?: " + e.getMessage());
-      e.printStackTrace();
     }
     new CalcUtils().sleeper(3000);
   }
@@ -360,10 +357,10 @@ public class Wyatt {
   /** Execute a market buy back */
   private void executeMarketBuyBack() {
     // Cancel all open orders
-    List<Order> openOrders = client.getOpenOrders(new OrderRequest("BTCUSDT"));
+    List<Order> openOrders = client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
     for (Order order : openOrders) {
       logger.info("Cancelling order: " + order.getOrderId());
-      client.cancelOrder(new CancelOrderRequest("BTCUSDT", order.getOrderId()));
+      client.cancelOrder(new CancelOrderRequest(BTCUSDT_TICKER, order.getOrderId()));
     }
     // Execute market buy back
     new CalcUtils().sleeper(3000);
@@ -372,16 +369,16 @@ public class Wyatt {
     Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
     Double freeUSDTFloored = Math.floor(freeUSDT * 100.0) / 100.0;
 
-    TickerStatistics tickerStatistics = client.get24HrPriceStatistics("BTCUSDT");
+    TickerStatistics tickerStatistics = client.get24HrPriceStatistics(BTCUSDT_TICKER);
     Double lastPrice = Double.valueOf(tickerStatistics.getLastPrice());
 
-    Double BTCtoBuy = freeUSDTFloored / lastPrice;
-    Double BTCtoBuyFloored = Math.floor(BTCtoBuy * 10000.0) / 10000.0;
+    Double btcToBuy = freeUSDTFloored / lastPrice;
+    Double btcToBuyFloored = Math.floor(btcToBuy * 10000.0) / 10000.0;
 
-    String message = "Executing market buy back of " + BTCtoBuyFloored + " BTC @ $" + lastPrice;
+    String message = "Executing market buy back of " + btcToBuyFloored + " BTC @ $" + lastPrice;
     logger.info(message);
     sendTweet(message);
-    client.newOrder(marketBuy("BTCUSDT", BTCtoBuyFloored.toString()));
+    client.newOrder(marketBuy(BTCUSDT_TICKER, btcToBuyFloored.toString()));
     new CalcUtils().sleeper(15000);
   }
 
