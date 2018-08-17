@@ -50,10 +50,10 @@ public class WyattController {
             .hashString(pass, StandardCharsets.UTF_8)
             .toString();
     if (sha256hex.equals("bc159b2d00a17af10d15f85c0fc3050626a9de62ddada278c086b5a53c883464")) {
-      logger.info("Shutdown down now...");
+      logger.info("Shutdown received from IP-address: " + request.getRemoteUser());
       System.exit(-1);
     } else {
-      logger.info("Incorrect password provided from IP address: " + request.getRemoteAddr());
+      logger.info("Incorrect shutdown code from IP-address: " + request.getRemoteAddr());
     }
   }
 

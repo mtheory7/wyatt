@@ -32,7 +32,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 @Service
 public class Wyatt {
   private static final String BTCUSDT_TICKER = "BTCUSDT";
-  private static final boolean DEVELOPING = false;
+  private static final boolean DEVELOPMENT_MODE = false;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static final CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
@@ -191,7 +191,7 @@ public class Wyatt {
    * incremental amount of money.
    */
   public void predictAndTrade() {
-    if (DEVELOPING) {
+    if (DEVELOPMENT_MODE) {
       reportDevMode();
     }
     predictionEngine.executeThoughtProcess(mindData);
@@ -230,7 +230,7 @@ public class Wyatt {
             "Current buy back: " + currentMarginPercent + "% ($" + buyBackDifference + ")");
         if (currentMarginPercent > 7.5) {
           logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
-          if (!DEVELOPING) {
+          if (!DEVELOPMENT_MODE) {
             executeMarketBuyBack();
           } else {
             reportDevMode();
@@ -250,7 +250,7 @@ public class Wyatt {
               + " Buy back: $"
               + buyBack;
       logger.info(message);
-      if (!DEVELOPING) {
+      if (!DEVELOPMENT_MODE) {
         performSellAndBuyBack(lastPriceFloored, buyBack, message);
       } else {
         reportDevMode();
