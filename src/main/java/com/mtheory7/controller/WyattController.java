@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 
 @RestController
@@ -42,7 +43,7 @@ public class WyattController {
   }
 
   @GetMapping(path = PATH_SHUTDOWN, params = {"pass"})
-  public void seppuku(@RequestParam("pass") String pass) {
+  public void seppuku(@RequestParam("pass") String pass, HttpServletRequest request) {
     logger.trace(PATH_SHUTDOWN + RESPONSE_SUFFIX);
     //Verify the password provided...
     String sha256hex = Hashing.sha256()
@@ -52,7 +53,7 @@ public class WyattController {
       logger.info("Shutdown down now...");
       System.exit(-1);
     } else {
-      logger.info("Incorrect password provided");
+      logger.info("Incorrect password provided from IP address: " + request.getRemoteAddr());
     }
   }
 
