@@ -1,5 +1,6 @@
 package com.mtheory7.controller;
 
+import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.mtheory7.wyatt.mind.Wyatt;
 import org.apache.log4j.Logger;
@@ -7,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.nio.charset.StandardCharsets;
 
 @RestController
 public class WyattController {
@@ -37,11 +41,19 @@ public class WyattController {
     return new ResponseEntity<>(wyatt.getTotalProfit(), HttpStatus.OK);
   }
 
-  @GetMapping(path = PATH_SHUTDOWN)
-  public void seppuku() {
+  @GetMapping(path = PATH_SHUTDOWN, params = {"pass"})
+  public void seppuku(@RequestParam("pass") String pass) {
     logger.trace(PATH_SHUTDOWN + RESPONSE_SUFFIX);
-    logger.info("Shutdown down now...");
-    System.exit(-1);
+    //Verify the password provided...
+    String sha256hex = Hashing.sha256()
+            .hashString(pass, StandardCharsets.UTF_8)
+            .toString();
+    if (sha256hex.equals("bc159b2d00a17af10d15f85c0fc3050626a9de62ddada278c086b5a53c883464")) {
+      logger.info("Shutdown down now...");
+      System.exit(-1);
+    } else {
+      logger.info("Incorrect password provided");
+    }
   }
 
   @GetMapping(path = PATH_STATUS)

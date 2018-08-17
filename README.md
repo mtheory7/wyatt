@@ -6,6 +6,29 @@
 Above is a link to the log output of Wyatt (DEBUG level and higher) running connected to my personal Binance account.
 
 Another link to the full log (all levels) is available [here](https://www.mtheory7.com/full.php)
+### Architecture
+The bot itself is kicked off by a Spring Boot Application. The Spring App also exposes some endpoints that can interact and use the bot's functions. The available endpoints will be described in the API section. These endpoints will then be used for a web UI showing more informative feedback about the bot's operation and status. 
+### API
+To get the current bot's status (static response):
+```$xslt
+GET: http://host-ip:port/status
+```
+To get the current bot's BTC balance:
+```$xslt
+GET: http://host-ip:port/balance/btc
+```
+To get the current bot's profit (%):
+```$xslt
+GET: http://host-ip:port/balance/profit
+```
+To get the current bot's open orders:
+```$xslt
+GET: http://host-ip:port/orders
+```
+To shutdown the bot:
+```$xslt
+GET: http://host-ip:port/seppuku?pass={password}
+```
 ### Logic
   * Gather recent data using [Binance-API](https://github.com/binance-exchange/binance-java-api)
   * Use data to find averages for various time intervals
@@ -33,4 +56,4 @@ java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <arg1> <arg2>
  * arg5 = Twitter OAuth Access Token
  * arg6 = Twitter OAuth Access Token Secret
 
-The Binance API Key absolutely MUST have approval to execute trades from Binance, but does not need approval to withdraw. 
+The Binance API Key absolutely MUST have approval to execute trades from Binance, but does not need approval to withdraw.

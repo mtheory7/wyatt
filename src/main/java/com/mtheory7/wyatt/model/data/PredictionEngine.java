@@ -59,7 +59,7 @@ public class PredictionEngine {
               avg.getCloseAvg());
       targetPrices.add(target);
     }
-    targetPrice = Math.floor(maxTarget(targetPrices) * 100.5) / 100.0;
+    targetPrice = Math.floor(maxTarget(targetPrices) * 100.75) / 100.0;
   }
 
   /**
