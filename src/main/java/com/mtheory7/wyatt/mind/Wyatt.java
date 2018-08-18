@@ -32,8 +32,12 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 @Service
 public class Wyatt {
   private static final String BTCUSDT_TICKER = "BTCUSDT";
-  private static final boolean DEVELOPMENT_MODE = false;
+  public static final boolean DEVELOPMENT_MODE = true;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
+  public boolean currentState = true;
+  private Double lastTargetPrice = 1000000.0;
+  private Double lastBuyBackPrice = 0.0;
+  private Double openBuyBackPrice = 0.0;
   private static final CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
     CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
@@ -53,6 +57,28 @@ public class Wyatt {
   public void reset() {
     this.mindData = new MindData();
     this.predictionEngine = new PredictionEngine();
+  }
+
+  public String getCurrentStateString() {
+    if(currentState) {
+      return "Waiting for current price to be above target price";
+    } else {
+      openBuyBackPrice = Math.floor(openBuyBackPrice * 100.0) / 100.0;
+      return "Awaiting buy back...<br><br>Buy back price is currently: $" + openBuyBackPrice;
+    }
+  }
+
+  public Double getCurrentPrice() {
+    TickerStatistics tickerStatistics = client.get24HrPriceStatistics(BTCUSDT_TICKER);
+    return Double.valueOf(tickerStatistics.getLastPrice());
+  }
+
+  public Double getCurrentTargetPrice() {
+    return lastTargetPrice;
+  }
+
+  public Double getCurrentBuyBackPrice() {
+    return lastBuyBackPrice;
   }
 
   /**
@@ -211,6 +237,8 @@ public class Wyatt {
       lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
     }
     Double sellConfidence = Math.round((lastPriceFloored / target * 100) * 1000.0) / 1000.0;
+    lastBuyBackPrice = buyBack;
+    lastTargetPrice = target;
     logger.trace(
         "Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
     logger.trace("Sell confidence: " + sellConfidence + "%");
@@ -221,6 +249,7 @@ public class Wyatt {
       trade = false;
       Order openOrder = openOrders.get(0);
       if (openOrder != null) {
+        openBuyBackPrice = Double.valueOf(openOrder.getPrice());
         Double currentMargin = lastPriceFloored / Double.valueOf(openOrder.getPrice());
         Double currentMarginPercent = (currentMargin - 1) * 100;
         currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
@@ -239,6 +268,8 @@ public class Wyatt {
           logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
           new CalcUtils().sleeper(120000);
         }
+      } else {
+        currentState = true;
       }
     }
     if ((lastPriceFloored > target) && trade) {
@@ -307,6 +338,8 @@ public class Wyatt {
               limitSell(
                   BTCUSDT_TICKER, TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
       logger.info("Trade submitted: " + performSell.getTransactTime());
+      logger.trace("Switching currentState to false - Awaiting buy back");
+      currentState = false;
     } catch (Exception e) {
       logger.error("There was an exception thrown during the sell?: " + e.getMessage());
     }
@@ -414,6 +447,6 @@ public class Wyatt {
 
   /** Report that the system is in developer mode */
   private void reportDevMode() {
-    logger.error("Wyatt is currently in development mode! Not performing trades or tweets");
+    logger.trace("Wyatt is currently in development mode! Not performing trades or tweets");
   }
 }

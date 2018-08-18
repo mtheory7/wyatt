@@ -60,7 +60,13 @@ public class WyattController {
   @GetMapping(path = PATH_STATUS)
   public ResponseEntity getState() {
     logger.trace(PATH_STATUS + RESPONSE_SUFFIX);
-    String response = "Have you ever seen anything so full of splendor?";
+    String response = "=====  >>>>>  WYATT  <<<<<  =====<br>";
+    if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###<br>";
+    response += "<br>Status  :::  " + wyatt.getCurrentStateString();
+    response += "<br><br>--- Prices ---";
+    response += "<br>Current price: $" + wyatt.getCurrentPrice();
+    response += "<br>Current target: $" + wyatt.getCurrentTargetPrice();
+    if (wyatt.currentState) response += "<br>Buy back price: $" + wyatt.getCurrentBuyBackPrice();
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
