@@ -245,6 +245,7 @@ public class Wyatt {
     boolean trade = true;
     List<Order> openOrders = client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
     if (!openOrders.isEmpty()) {
+      currentState = false;
       logger.trace("Number of open BTCUSDT orders: " + openOrders.size());
       trade = false;
       Order openOrder = openOrders.get(0);
@@ -268,9 +269,9 @@ public class Wyatt {
           logger.trace("Orders for BTCUSDT are not empty, not trading for 120 seconds...");
           new CalcUtils().sleeper(120000);
         }
-      } else {
-        currentState = true;
       }
+    } else {
+      currentState = true;
     }
     if ((lastPriceFloored > target) && trade) {
       String message =
