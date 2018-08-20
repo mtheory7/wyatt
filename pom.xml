@@ -5,7 +5,7 @@
 
     <groupId>com.mtheory7</groupId>
     <artifactId>wyatt</artifactId>
-    <version>6.3.6</version>
+    <version>6.3.7</version>
     <packaging>jar</packaging>
 
     <name>wyatt</name>
