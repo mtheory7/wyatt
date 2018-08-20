@@ -68,6 +68,7 @@ public class WyattController {
     response += "<br>Target: $" + wyatt.getCurrentTargetPrice();
     response += "<br>Buy back: $" + wyatt.getCurrentBuyBackPrice();
     response += "<br><br>--- Status report ---";
+    response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
     if (!wyatt.currentState)
       response +=
           "<br>There is an open buy back order at: $"
@@ -76,8 +77,8 @@ public class WyattController {
               + wyatt.getOpenBuyBackAmt()
               + " BTC";
     response += "<br>Initial investment: " + wyatt.getInitialInvestment() + " BTC";
-    response += "<br>Current portfolio value: " + wyatt.getCurrentBalance() + " BTC";
-    response += "<br>Current profit: " + wyatt.getCurrentProfit() + "%";
+    response += "<br>Portfolio value: " + wyatt.getCurrentBalance() + " BTC";
+    response += "<br>Profit: " + wyatt.getCurrentProfit() + "%";
     return new ResponseEntity<>(
         "<html>\n"
             + "<head>\n"

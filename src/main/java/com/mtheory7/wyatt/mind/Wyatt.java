@@ -32,21 +32,22 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  private String VERSION = WyattApplication.getVersion();
-  private static final String BTCUSDT_TICKER = "BTCUSDT";
   public static final boolean DEVELOPMENT_MODE = false;
+  private static final String BTCUSDT_TICKER = "BTCUSDT";
   private static final Double INITIAL_INVESTMENT = 0.007;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
-  public boolean currentState = true;
-  private Double lastTargetPrice = 1000000.0;
-  private Double lastBuyBackPrice = 0.0;
-  private Double openBuyBackPrice = 0.0;
-  private Double openBuyBackAmt = 0.0;
   private static final CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
     CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
   };
   private static final String[] tickers = {BTCUSDT_TICKER};
+  public boolean currentState = true;
+  private String VERSION = WyattApplication.getVersion();
+  private Double lastTargetPrice = 1000000.0;
+  private Double lastBuyBackPrice = 0.0;
+  private Double lastSellConfidence = 0.0;
+  private Double openBuyBackPrice = 0.0;
+  private Double openBuyBackAmt = 0.0;
   private MindData mindData;
   private PredictionEngine predictionEngine;
   private BinanceApiRestClient client;
@@ -55,16 +56,14 @@ public class Wyatt {
   private String accessToken;
   private String accessTokenSecret;
 
-  /**
-   * Resets Wyatt's memory. This is necessary to do or memory leaks will be possible
-   */
+  /** Resets Wyatt's memory. This is necessary to do or memory leaks will be possible */
   public void reset() {
     this.mindData = new MindData();
     this.predictionEngine = new PredictionEngine();
   }
 
   public String getCurrentStateString() {
-    if(currentState) {
+    if (currentState) {
       return "Waiting for current price to be above target price";
     } else {
       return "Waiting for buy back to execute";
@@ -98,6 +97,10 @@ public class Wyatt {
 
   public Double getOpenBuyBackAmt() {
     return openBuyBackAmt;
+  }
+
+  public Double getCurrentSellConfidence() {
+    return lastSellConfidence;
   }
 
   /**
@@ -199,7 +202,8 @@ public class Wyatt {
 
     percentOnInvenstment = Math.round(percentOnInvenstment * 100.0) / 100.0;
     logger.trace("Estimated total account value: " + estimatedBalance + " BTC");
-    logger.trace("Profit since starting (" + INITIAL_INVESTMENT + " BTC): " + percentOnInvenstment + "%");
+    logger.trace(
+        "Profit since starting (" + INITIAL_INVESTMENT + " BTC): " + percentOnInvenstment + "%");
   }
 
   /**
@@ -260,6 +264,7 @@ public class Wyatt {
     Double sellConfidence = Math.round((lastPriceFloored / target * 100) * 1000.0) / 1000.0;
     lastBuyBackPrice = buyBack;
     lastTargetPrice = target;
+    lastSellConfidence = sellConfidence;
     logger.trace(
         "Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
     logger.trace("Sell confidence: " + sellConfidence + "%");
@@ -359,7 +364,10 @@ public class Wyatt {
       NewOrderResponse performSell =
           client.newOrder(
               limitSell(
-                  BTCUSDT_TICKER, TimeInForce.GTC, freeBTCFloored.toString(), sellPrice.toString()));
+                  BTCUSDT_TICKER,
+                  TimeInForce.GTC,
+                  freeBTCFloored.toString(),
+                  sellPrice.toString()));
       logger.info("Trade submitted: " + performSell.getTransactTime());
       logger.trace("Switching currentState to false - Awaiting buy back");
       currentState = false;
@@ -402,7 +410,10 @@ public class Wyatt {
       NewOrderResponse performBuy =
           client.newOrder(
               limitBuy(
-                  BTCUSDT_TICKER, TimeInForce.GTC, btcToBuyFloored.toString(), buyPrice.toString()));
+                  BTCUSDT_TICKER,
+                  TimeInForce.GTC,
+                  btcToBuyFloored.toString(),
+                  buyPrice.toString()));
       logger.info("Trade submitted: " + performBuy.getTransactTime());
     } catch (Exception e) {
       logger.error("There was an exception thrown during the buy?: " + e.getMessage());
