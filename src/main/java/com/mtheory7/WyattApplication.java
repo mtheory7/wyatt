@@ -10,10 +10,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class WyattApplication {
   private static final Logger logger = Logger.getLogger(WyattApplication.class);
-
+  private static final String VERSION = "6.3.5";
   public static void main(String[] args) {
     ConfigurableApplicationContext context = SpringApplication.run(WyattApplication.class, args);
-    logger.info("Starting WYATT (v6.3.1) ...");
+    logger.info("Starting WYATT (v" + VERSION + ") ...");
     if (args.length < 6) {
       logger.error("Not enough arguments have been given");
       System.exit(-1);
@@ -28,5 +28,9 @@ public class WyattApplication {
       dolores.reset();
       new CalcUtils().sleeper(25000);
     }
+  }
+
+  public static String getVersion() {
+    return VERSION;
   }
 }

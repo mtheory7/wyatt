@@ -12,6 +12,7 @@ import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerStatistics;
+import com.mtheory7.WyattApplication;
 import com.mtheory7.wyatt.model.DataIdentifier;
 import com.mtheory7.wyatt.model.data.MindData;
 import com.mtheory7.wyatt.model.data.PredictionEngine;
@@ -31,13 +32,16 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
+  private String VERSION = WyattApplication.getVersion();
   private static final String BTCUSDT_TICKER = "BTCUSDT";
   public static final boolean DEVELOPMENT_MODE = false;
+  private static final Double INITIAL_INVESTMENT = 0.007;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   public boolean currentState = true;
   private Double lastTargetPrice = 1000000.0;
   private Double lastBuyBackPrice = 0.0;
   private Double openBuyBackPrice = 0.0;
+  private Double openBuyBackAmt = 0.0;
   private static final CandlestickInterval[] intervalList = {
     CandlestickInterval.ONE_MINUTE, CandlestickInterval.THREE_MINUTES,
     CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
@@ -63,14 +67,21 @@ public class Wyatt {
     if(currentState) {
       return "Waiting for current price to be above target price";
     } else {
-      openBuyBackPrice = Math.floor(openBuyBackPrice * 100.0) / 100.0;
-      return "Awaiting buy back...<br><br>Buy back price is currently: $" + openBuyBackPrice;
+      return "Waiting for buy back to execute";
     }
+  }
+
+  public String getVersion() {
+    return VERSION;
   }
 
   public Double getCurrentPrice() {
     TickerStatistics tickerStatistics = client.get24HrPriceStatistics(BTCUSDT_TICKER);
     return Double.valueOf(tickerStatistics.getLastPrice());
+  }
+
+  public Double getInitialInvestment() {
+    return INITIAL_INVESTMENT;
   }
 
   public Double getCurrentTargetPrice() {
@@ -79,6 +90,14 @@ public class Wyatt {
 
   public Double getCurrentBuyBackPrice() {
     return lastBuyBackPrice;
+  }
+
+  public Double getOpenBuyBackPrice() {
+    return openBuyBackPrice;
+  }
+
+  public Double getOpenBuyBackAmt() {
+    return openBuyBackAmt;
   }
 
   /**
@@ -128,7 +147,7 @@ public class Wyatt {
    *
    * @return Balance in BTC
    */
-  public String getTotalBalance() {
+  public String getCurrentBalance() {
     Account account = client.getAccount();
     // Pull the latest account balance info from Binance
     List<AssetBalance> balances = account.getBalances();
@@ -147,9 +166,9 @@ public class Wyatt {
     return estimatedBalance.toString();
   }
 
-  public String getTotalProfit() {
-    Double estimatedBalance = Double.valueOf(getTotalBalance());
-    Double percentOnInvenstment = ((estimatedBalance / 0.007) * 100) - 100;
+  public String getCurrentProfit() {
+    Double estimatedBalance = Double.valueOf(getCurrentBalance());
+    Double percentOnInvenstment = ((estimatedBalance / INITIAL_INVESTMENT) * 100) - 100;
     return percentOnInvenstment.toString();
   }
 
@@ -175,10 +194,11 @@ public class Wyatt {
       }
     }
     estimatedBalance = Math.round(estimatedBalance * 100000000.0) / 100000000.0;
-    Double percentOnInvenstment = ((estimatedBalance / 0.007) * 100) - 100;
+    Double percentOnInvenstment = ((estimatedBalance / INITIAL_INVESTMENT) * 100) - 100;
+
     percentOnInvenstment = Math.round(percentOnInvenstment * 100.0) / 100.0;
     logger.trace("Estimated total account value: " + estimatedBalance + " BTC");
-    logger.trace("Profit since starting (0.007 BTC): " + percentOnInvenstment + "%");
+    logger.trace("Profit since starting (" + INITIAL_INVESTMENT + " BTC): " + percentOnInvenstment + "%");
   }
 
   /**
@@ -250,6 +270,7 @@ public class Wyatt {
       trade = false;
       Order openOrder = openOrders.get(0);
       if (openOrder != null) {
+        openBuyBackAmt = Double.valueOf(openOrder.getOrigQty());
         openBuyBackPrice = Double.valueOf(openOrder.getPrice());
         Double currentMargin = lastPriceFloored / Double.valueOf(openOrder.getPrice());
         Double currentMarginPercent = (currentMargin - 1) * 100;
