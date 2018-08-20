@@ -32,7 +32,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 @Service
 public class Wyatt {
   private static final String BTCUSDT_TICKER = "BTCUSDT";
-  public static final boolean DEVELOPMENT_MODE = true;
+  public static final boolean DEVELOPMENT_MODE = false;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   public boolean currentState = true;
   private Double lastTargetPrice = 1000000.0;
