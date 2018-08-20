@@ -3,13 +3,13 @@
 # [Wyatt](https://www.mtheory7.com/)
 [![alt text][1.1]][1]
 
-Above is a link to the log output of Wyatt (DEBUG level and higher) running connected to my personal Binance account.
+Above is a link to the current status of Wyatt running connected to my personal Binance account.
 
 Another link to the full log (all levels) is available [here](https://www.mtheory7.com/full.php)
 ### Architecture
 The bot itself is kicked off by a Spring Boot Application. The Spring App also exposes some endpoints that can interact and use the bot's functions. The available endpoints will be described in the API section. These endpoints will then be used for a web UI showing more informative feedback about the bot's operation and status. 
 ### API
-To get the current bot's status (static response):
+To get the current bot's status:
 ```$xslt
 GET: http://host-ip:port/status
 ```
