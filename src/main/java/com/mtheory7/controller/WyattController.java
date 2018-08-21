@@ -43,8 +43,8 @@ public class WyattController {
   }
 
   @GetMapping(
-      path = PATH_SHUTDOWN,
-      params = {"pass"})
+          path = PATH_SHUTDOWN,
+          params = {"pass"})
   public void seppuku(@RequestParam("pass") String pass, HttpServletRequest request) {
     logger.trace(PATH_SHUTDOWN + RESPONSE_SUFFIX);
     // Verify the password provided...
@@ -71,34 +71,36 @@ public class WyattController {
     response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
     if (!wyatt.currentState)
       response +=
-          "<br>There is an open buy back order at: $"
-              + wyatt.getOpenBuyBackPrice()
-              + " for "
-              + wyatt.getOpenBuyBackAmt()
-              + " BTC";
+              "<br>There is an open buy back order at: $"
+                      + wyatt.getOpenBuyBackPrice()
+                      + " for "
+                      + wyatt.getOpenBuyBackAmt()
+                      + " BTC";
     response += "<br>Initial investment: " + wyatt.getInitialInvestment() + " BTC";
     response += "<br>Portfolio value: " + wyatt.getCurrentBalance() + " BTC";
     response += "<br>Profit: " + wyatt.getCurrentProfit() + "%";
-    response += "<br><br>--- Donate ---<br>14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj";
+    response += "<br><br>--- Donate ---<br>";
+    response += "<a href=\"https://www.blockchain.com/btc/address/" +
+            "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\">14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj</a>";
     return new ResponseEntity<>(
-        "<html>\n"
-            + "<head>\n"
-            + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\">\n"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32x32.png\">\n"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/favicon-16x16.png\">\n"
-            + "<link rel=\"manifest\" href=\"/site.webmanifest\">\n"
-            + "<link rel=\"mask-icon\" href=\"/safari-pinned-tab.svg\" color=\"#5bbad5\">\n"
-            + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">\n"
-            + "<meta name=\"theme-color\" content=\"#ffffff\">\n"
-            + "</head>\n"
-            + "<title>Wyatt</title>\n"
-            + "<body bgcolor=\"#000000\">\n"
-            + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">\n"
-            + response
-            + "</font> \n"
-            + "</body>\n"
-            + "</html> ",
-        HttpStatus.OK);
+            "<html>\n"
+                    + "<head>\n"
+                    + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\">\n"
+                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32x32.png\">\n"
+                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/favicon-16x16.png\">\n"
+                    + "<link rel=\"manifest\" href=\"/site.webmanifest\">\n"
+                    + "<link rel=\"mask-icon\" href=\"/safari-pinned-tab.svg\" color=\"#5bbad5\">\n"
+                    + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">\n"
+                    + "<meta name=\"theme-color\" content=\"#ffffff\">\n"
+                    + "</head>\n"
+                    + "<title>Wyatt</title>\n"
+                    + "<body bgcolor=\"#000000\">\n"
+                    + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">\n"
+                    + response
+                    + "</font> \n"
+                    + "</body>\n"
+                    + "</html> ",
+            HttpStatus.OK);
   }
 
   @GetMapping(path = PATH_OPEN_ORDERS)
