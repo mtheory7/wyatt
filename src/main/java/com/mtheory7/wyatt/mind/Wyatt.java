@@ -48,6 +48,7 @@ public class Wyatt {
   private Double lastSellConfidence = 0.0;
   private Double openBuyBackPrice = 0.0;
   private Double openBuyBackAmt = 0.0;
+  private Double openBuyBackPercentage = 0.0;
   private MindData mindData;
   private PredictionEngine predictionEngine;
   private BinanceApiRestClient client;
@@ -97,6 +98,10 @@ public class Wyatt {
 
   public Double getOpenBuyBackAmt() {
     return openBuyBackAmt;
+  }
+
+  public Double getOpenBuyBackPercentage() {
+    return openBuyBackPercentage;
   }
 
   public Double getCurrentSellConfidence() {
@@ -283,6 +288,7 @@ public class Wyatt {
         currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
         Double buyBackDifference = (lastPriceFloored - Double.valueOf(openOrder.getPrice()));
         buyBackDifference = Math.round(buyBackDifference * 100.0) / 100.0;
+        openBuyBackPercentage = currentMarginPercent;
         logger.trace(
             "Current buy back: " + currentMarginPercent + "% ($" + buyBackDifference + ")");
         if (currentMarginPercent > 7.5) {
