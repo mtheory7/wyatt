@@ -79,6 +79,7 @@ public class WyattController {
     response += "<br>Initial investment: " + wyatt.getInitialInvestment() + " BTC";
     response += "<br>Portfolio value: " + wyatt.getCurrentBalance() + " BTC";
     response += "<br>Profit: " + wyatt.getCurrentProfit() + "%";
+    response += "<br><br>Donate:<br>14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj";
     return new ResponseEntity<>(
         "<html>\n"
             + "<head>\n"
