@@ -342,7 +342,7 @@ public class Wyatt {
         buyBackDifference = Math.round(buyBackDifference * 100.0) / 100.0;
         logger.trace(
                 "Current buy back: " + currentMarginPercent + "% ($" + buyBackDifference + ")");
-        if (currentMarginPercent > 7.5) {
+        if (currentMarginPercent > 10.0) {
           logger.trace("Deciding to submit a market buy back at $" + lastPriceFloored);
           if (!DEVELOPMENT_MODE) {
             executeMarketBuyBack();
