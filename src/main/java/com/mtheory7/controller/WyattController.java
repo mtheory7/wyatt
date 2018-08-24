@@ -92,7 +92,7 @@ public class WyattController {
         "<a href=\"https://www.blockchain.com/btc/address/"
             + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">Personal: 14X...4yj</a>";
     response +=
-        "<a href=\"https://www.blockchain.com/btc/address/"
+        "<br><a href=\"https://www.blockchain.com/btc/address/"
             + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">Wyatt: 1BW...uba</a>";
     return new ResponseEntity<>(
         "<html>\n"
