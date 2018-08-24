@@ -61,17 +61,21 @@ public class WyattController {
   public ResponseEntity getState() {
     logger.trace(PATH_STATUS + RESPONSE_SUFFIX);
     String response = "=====  >>>>>  WYATT (v" + wyatt.getVersion() + ") <<<<<  =====<br>";
-    if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###<br>";
-    response += "<br>Status  :::  " + wyatt.getCurrentStateString();
-    response += "<br><br>--- Engine data ---";
+    if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
+    response += "<br>--- Status report ---";
+    response += "<br>Status: " + wyatt.getCurrentStateString();
+    response += "<br>Profit: " + wyatt.getCurrentProfit() + "%";
+    response += "<br>Portfolio value: " + wyatt.getCurrentBalance() + " BTC";
+    response += "<br>Initial investment: " + wyatt.getInitialInvestment() + " BTC";
+    response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
+    response += "<br><br>--- Prices ---";
     response += "<br>BTC Price: $" + wyatt.getCurrentPrice();
     response += "<br>Target: $" + wyatt.getCurrentTargetPrice();
     response += "<br>Buy back: $" + wyatt.getCurrentBuyBackPrice();
-    response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
-    response += "<br><br>--- Status report ---";
-    response += "<br>Initial investment: " + wyatt.getInitialInvestment() + " BTC";
-    response += "<br>Portfolio value: " + wyatt.getCurrentBalance() + " BTC";
-    response += "<br>Profit: " + wyatt.getCurrentProfit() + "%";
+    response += "<br><br>--- Links ---";
+    response += "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:#F7931A\">Source Code</a>";
+    response += "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Wyatt's Twitter</a>";
+    response += "<br><a href=\"https://www.mtheory7.com/full.php\" style=\"color:#F7931A\">Wyatt's full log</a>";
     if (!wyatt.currentState) {
       Double diff = wyatt.getCurrentPrice() - wyatt.getOpenBuyBackPrice();
       diff = Math.round(diff * 1000.0) / 1000.0;
@@ -88,7 +92,7 @@ public class WyattController {
     response += "<br><br>--- Donate ---<br>";
     response +=
         "<a href=\"https://www.blockchain.com/btc/address/"
-            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\">14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj</a>";
+            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj</a>";
     return new ResponseEntity<>(
         "<html>\n"
             + "<head>\n"

@@ -65,9 +65,9 @@ public class Wyatt {
 
   public String getCurrentStateString() {
     if (currentState) {
-      return "Waiting for current price to be above target price";
+      return "Waiting to sell";
     } else {
-      return "Waiting for buy back to execute";
+      return "Waiting for buy back";
     }
   }
 
