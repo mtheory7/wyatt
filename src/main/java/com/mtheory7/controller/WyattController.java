@@ -43,8 +43,8 @@ public class WyattController {
   }
 
   @GetMapping(
-      path = PATH_SHUTDOWN,
-      params = {"pass"})
+          path = PATH_SHUTDOWN,
+          params = {"pass"})
   public void seppuku(@RequestParam("pass") String pass, HttpServletRequest request) {
     logger.trace(PATH_SHUTDOWN + RESPONSE_SUFFIX);
     // Verify the password provided...
@@ -72,46 +72,46 @@ public class WyattController {
     response += "<br>BTC Price: $" + wyatt.getCurrentPrice();
     response += "<br>Target: $" + wyatt.getCurrentTargetPrice();
     response += "<br>Buy back: $" + wyatt.getCurrentBuyBackPrice();
-    response += "<br><br>--- Links ---";
-    response += "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:#F7931A\">Source Code</a>";
-    response += "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Wyatt's Twitter</a>";
-    response += "<br><a href=\"https://www.mtheory7.com/full.php\" style=\"color:#F7931A\">Wyatt's full log</a>";
     if (!wyatt.currentState) {
       Double diff = wyatt.getCurrentPrice() - wyatt.getOpenBuyBackPrice();
       diff = Math.round(diff * 1000.0) / 1000.0;
       response += "<br><br>--- Open buy back ---";
       response +=
-          "<br>Amount: " + wyatt.getOpenBuyBackAmt() + " BTC @ $" + wyatt.getOpenBuyBackPrice();
+              "<br>Amount: " + wyatt.getOpenBuyBackAmt() + " BTC @ $" + wyatt.getOpenBuyBackPrice();
       response +=
-          "<br>Difference: $"
-              + diff
-              + " ("
-              + wyatt.getOpenBuyBackPercentage()
-              + "%)";
+              "<br>Difference: $"
+                      + diff
+                      + " ("
+                      + wyatt.getOpenBuyBackPercentage()
+                      + "%)";
     }
+    response += "<br><br>--- Links ---";
+    response += "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:#F7931A\">Source Code</a>";
+    response += "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Wyatt's Twitter</a>";
+    response += "<br><a href=\"https://www.mtheory7.com/full.php\" style=\"color:#F7931A\">Wyatt's full log</a>";
     response += "<br><br>--- Donate ---<br>";
     response +=
-        "<a href=\"https://www.blockchain.com/btc/address/"
-            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj</a>";
+            "<a href=\"https://www.blockchain.com/btc/address/"
+                    + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj</a>";
     return new ResponseEntity<>(
-        "<html>\n"
-            + "<head>\n"
-            + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\">\n"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\">\n"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\">\n"
-            + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">\n"
-            + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">\n"
-            + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">\n"
-            + "<meta name=\"theme-color\" content=\"#ffffff\">\n"
-            + "</head>\n"
-            + "<title>Wyatt</title>\n"
-            + "<body bgcolor=\"#000000\">\n"
-            + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">\n"
-            + response
-            + "</font> \n"
-            + "</body>\n"
-            + "</html> ",
-        HttpStatus.OK);
+            "<html>\n"
+                    + "<head>\n"
+                    + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\">\n"
+                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\">\n"
+                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\">\n"
+                    + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">\n"
+                    + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">\n"
+                    + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">\n"
+                    + "<meta name=\"theme-color\" content=\"#ffffff\">\n"
+                    + "</head>\n"
+                    + "<title>Wyatt</title>\n"
+                    + "<body bgcolor=\"#000000\">\n"
+                    + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">\n"
+                    + response
+                    + "</font> \n"
+                    + "</body>\n"
+                    + "</html> ",
+            HttpStatus.OK);
   }
 
   @GetMapping(path = PATH_OPEN_ORDERS)
