@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class PredictionEngine {
   // private final static Logger logger = Logger.getLogger(PredictionEngine.class);
-  public static Double buyBackAfterThisPercentage = 0.991;
+  public static Double buyBackAfterThisPercentage = 0.989;
   public Double targetPrice;
   private List<AverageData> averageData;
   private List<Double> targetPrices;
@@ -59,7 +59,7 @@ public class PredictionEngine {
               avg.getCloseAvg());
       targetPrices.add(target);
     }
-    targetPrice = Math.floor(maxTarget(targetPrices) * 100.75) / 100.0;
+    targetPrice = Math.floor(maxTarget(targetPrices) * 100.9) / 100.0;
   }
 
   /**
