@@ -87,13 +87,13 @@ public class WyattController {
         "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Wyatt's Twitter</a>";
     response +=
         "<br><a href=\"https://www.mtheory7.com/full.php\" style=\"color:#F7931A\">Wyatt's full log</a>";
-    response += "<br><br>--- Donate ---<br>";
+    response += "<br><br>--- Donate ---";
     response +=
-        "<a href=\"https://www.blockchain.com/btc/address/"
-            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">Personal: 14X...4yj</a>";
+        "<br>Personal: <a href=\"https://www.blockchain.com/btc/address/"
+            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">14X...4yj</a>";
     response +=
-        "<br><a href=\"https://www.blockchain.com/btc/address/"
-            + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">Wyatt: 1BW...uba</a>";
+        "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
+            + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
     return new ResponseEntity<>(
         "<html>\n"
             + "<head>\n"
