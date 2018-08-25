@@ -64,14 +64,15 @@ public class WyattController {
     if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
     response += "<br>--- Status report ---";
     response += "<br>Status: " + wyatt.getCurrentStateString();
+    response += "<br>Investment: " + wyatt.getInitialInvestment() + " BTC";
+    response += "<br>Portfolio  ≈ " + wyatt.getCurrentBalance() + " BTC";
+    response += wyatt.getBalances();
     response += "<br>Profit: " + wyatt.getCurrentProfit() + "%";
-    response += "<br>Portfolio value: " + wyatt.getCurrentBalance() + " BTC";
-    response += "<br>Initial investment: " + wyatt.getInitialInvestment() + " BTC";
-    response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
-    response += "<br><br>--- Prices ---";
+    response += "<br><br>--- Market ---";
     response += "<br>BTC Price: $" + wyatt.getCurrentPrice();
     response += "<br>Target: $" + wyatt.getCurrentTargetPrice();
     response += "<br>Buy back: $" + wyatt.getCurrentBuyBackPrice();
+    response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
     if (!wyatt.currentState) {
       Double diff = wyatt.getCurrentPrice() - wyatt.getOpenBuyBackPrice();
       diff = Math.round(diff * 1000.0) / 1000.0;
@@ -104,7 +105,7 @@ public class WyattController {
             + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">\n"
             + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">\n"
             + "<meta name=\"theme-color\" content=\"#ffffff\">\n"
-            + "<meta http-equiv=\"refresh\" content=\"30\" />"
+            + "<meta http-equiv=\"refresh\" content=\"25\" />"
             + "</head>\n"
             + "<title>Wyatt</title>\n"
             + "<body bgcolor=\"#000000\">\n"

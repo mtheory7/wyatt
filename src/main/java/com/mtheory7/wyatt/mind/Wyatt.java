@@ -141,6 +141,19 @@ public class Wyatt {
     return openBuyBackAmt;
   }
 
+  public String getBalances() {
+    String response = "";
+    Account account = client.getAccount();
+    List<AssetBalance> balances = account.getBalances();
+    for (AssetBalance balance : balances) {
+      Double amount = Double.valueOf(balance.getFree()) + Double.valueOf(balance.getLocked());
+      if (amount > 0.0) {
+        response += "<br>&nbsp;&nbsp;-&nbsp;" + amount + " " + balance.getAsset();
+      }
+    }
+    return response;
+  }
+
   /**
    * Returns the open buy back percentage
    *
