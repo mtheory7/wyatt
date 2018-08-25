@@ -9,7 +9,7 @@ Another link to the full log (all levels) is available [here](https://www.mtheor
 ### Architecture
 The bot itself is kicked off by a Spring Boot Application. The Spring App also exposes some endpoints that can interact and use the bot's functions. The available endpoints will be described in the API section. These endpoints will then be used for a web UI showing more informative feedback about the bot's operation and status. 
 ### API
-To get the current bot's status:
+To get the current bot's status (main UI):
 ```$xslt
 GET: http://host-ip:port/status
 ```
