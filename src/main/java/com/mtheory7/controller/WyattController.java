@@ -62,7 +62,7 @@ public class WyattController {
     logger.trace(PATH_STATUS + RESPONSE_SUFFIX);
     String response =
         "██╗&nbsp;&nbsp;&nbsp;&nbsp;██╗██╗&nbsp;&nbsp;&nbsp;██╗&nbsp;█████╗&nbsp;████████╗████████╗"
-            + "<br>██║&nbsp;&nbsp;&nbsp;&nbsp;██║╚██╗&nbsp;██╔╝██╔══██╗╚══██╔══╝╚══██╔══╝"
+            + "<br>██║&nbsp;&nbsp;&nbsp;&nbsp;██║╚██╗ ██╔╝██╔══██╗╚══██╔══╝╚══██╔══╝"
             + "<br>██║&nbsp;█╗&nbsp;██║&nbsp;╚████╔╝&nbsp;███████║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;"
             + "<br>██║███╗██║&nbsp;&nbsp;╚██╔╝&nbsp;&nbsp;██╔══██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;"
             + "<br>╚███╔███╔╝&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;"
