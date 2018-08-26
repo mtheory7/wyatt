@@ -60,7 +60,15 @@ public class WyattController {
   @GetMapping(path = PATH_STATUS)
   public ResponseEntity getState() {
     logger.trace(PATH_STATUS + RESPONSE_SUFFIX);
-    String response = "=====  >>>>>  WYATT (v" + wyatt.getVersion() + ") <<<<<  =====<br>";
+    String response =
+        "██╗&nbsp;&nbsp;&nbsp;&nbsp;██╗██╗&nbsp;&nbsp;&nbsp;██╗&nbsp;█████╗&nbsp;████████╗████████╗\n"
+            + "<br>██║&nbsp;&nbsp;&nbsp;&nbsp;██║╚██╗&nbsp;██╔╝██╔══██╗╚══██╔══╝╚══██╔══╝\n"
+            + "<br>██║&nbsp;█╗&nbsp;██║&nbsp;╚████╔╝&nbsp;███████║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;\n"
+            + "<br>██║███╗██║&nbsp;&nbsp;╚██╔╝&nbsp;&nbsp;██╔══██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;\n"
+            + "<br>╚███╔███╔╝&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;\n"
+            + "<br>&nbsp;╚══╝╚══╝&nbsp;&nbsp;&nbsp;&nbsp;╚═╝&nbsp;&nbsp;&nbsp;╚═╝&nbsp;&nbsp;╚═╝&nbsp;&nbsp;&nbsp;╚═╝&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╚═╝&nbsp;(v"
+            + wyatt.getVersion()
+            + ")";
     if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
     response += "<br>--- Status report ---";
     response += "<br>Status: " + wyatt.getCurrentStateString();
@@ -85,9 +93,9 @@ public class WyattController {
     response +=
         "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:#F7931A\">Source Code</a>";
     response +=
-        "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Wyatt's Twitter</a>";
+        "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Twitter</a>";
     response +=
-        "<br><a href=\"https://www.mtheory7.com/full.php\" style=\"color:#F7931A\">Wyatt's full log</a>";
+        "<br><a href=\"https://www.mtheory7.com/full.php\" style=\"color:#F7931A\">Full log</a>";
     response += "<br><br>--- Donate ---";
     response +=
         "<br>Personal: <a href=\"https://www.blockchain.com/btc/address/"
