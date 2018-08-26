@@ -61,12 +61,19 @@ public class WyattController {
   public ResponseEntity getState() {
     logger.trace(PATH_STATUS + RESPONSE_SUFFIX);
     String response =
-        "██╗&nbsp;&nbsp;&nbsp;&nbsp;██╗██╗&nbsp;&nbsp;&nbsp;██╗&nbsp;█████╗&nbsp;████████╗████████╗<br>"
-            + "██║&nbsp;&nbsp;&nbsp;&nbsp;██║╚██╗&nbsp;██╔╝██╔══██╗╚══██╔══╝╚══██╔══╝<br>"
-            + "██║&nbsp;█╗&nbsp;██║&nbsp;╚████╔╝&nbsp;███████║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;"
-            + "<br>██║███╗██║&nbsp;&nbsp;╚██╔╝&nbsp;&nbsp;██╔══██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;"
-            + "<br>╚███╔███╔╝&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;"
-            + "<br>&nbsp;╚══╝╚══╝&nbsp;&nbsp;&nbsp;&nbsp;╚═╝&nbsp;&nbsp;&nbsp;╚═╝&nbsp;&nbsp;╚═╝&nbsp;&nbsp;&nbsp;╚═╝&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╚═╝&nbsp;(v"
+        "`Mb(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)d'<br>"
+            + "&nbsp;YM.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,PM.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br>"
+            + "&nbsp;`Mb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d'Mb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d'&nbsp;____&nbsp;&nbsp;&nbsp;&nbsp;___&nbsp;&nbsp;&nbsp;___&nbsp;&nbsp;&nbsp;/M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/M<br>"
+            + "&nbsp;&nbsp;YM.&nbsp;&nbsp;&nbsp;,P&nbsp;YM.&nbsp;&nbsp;&nbsp;,P&nbsp;&nbsp;`MM(&nbsp;&nbsp;&nbsp;&nbsp;)M'&nbsp;6MMMMb&nbsp;/MMMMM&nbsp;/MMMMM<br>"
+            + "&nbsp;&nbsp;`Mb&nbsp;&nbsp;&nbsp;d'&nbsp;`Mb&nbsp;&nbsp;&nbsp;d'&nbsp;&nbsp;&nbsp;`Mb&nbsp;&nbsp;&nbsp;&nbsp;d'&nbsp;8M'&nbsp;&nbsp;`Mb&nbsp;MM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MM<br>"
+            + "&nbsp;&nbsp;&nbsp;YM.&nbsp;,P&nbsp;&nbsp;&nbsp;YM.&nbsp;,P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YM.&nbsp;&nbsp;,P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,oMM&nbsp;MM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MM<br>"
+            + "&nbsp;&nbsp;&nbsp;`Mb&nbsp;d'&nbsp;&nbsp;&nbsp;`Mb&nbsp;d'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MM&nbsp;&nbsp;M&nbsp;&nbsp;&nbsp;,6MM9'MM&nbsp;MM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MM<br>"
+            + "&nbsp;&nbsp;&nbsp;&nbsp;YM,P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YM,P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Mbd'&nbsp;&nbsp;&nbsp;MM'&nbsp;&nbsp;&nbsp;MM&nbsp;MM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MM<br>"
+            + "&nbsp;&nbsp;&nbsp;&nbsp;`MM'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`MM'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YMP&nbsp;&nbsp;&nbsp;&nbsp;MM.&nbsp;&nbsp;,MM&nbsp;YM.&nbsp;&nbsp;,&nbsp;YM.&nbsp;&nbsp;,<br>"
+            + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`YMMM9'Yb.YMMM9&nbsp;&nbsp;YMMM9<br>"
+            + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d'<br>"
+            + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(8),P<br>"
+            + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YMM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(v"
             + wyatt.getVersion()
             + ")<br>";
     if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
