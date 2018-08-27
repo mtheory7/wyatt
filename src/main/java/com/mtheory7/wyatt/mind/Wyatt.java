@@ -243,7 +243,7 @@ public class Wyatt {
   public String getCurrentProfit() {
     Double estimatedBalance = Double.valueOf(getCurrentBalance());
     Double percentOnInvenstment = ((estimatedBalance / INITIAL_INVESTMENT) * 100) - 100;
-    percentOnInvenstment = Math.round(percentOnInvenstment * 10000.0) / 10000.0;
+    percentOnInvenstment = Math.round(percentOnInvenstment * 1000.0) / 1000.0;
     return percentOnInvenstment.toString();
   }
 
