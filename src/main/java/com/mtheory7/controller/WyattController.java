@@ -94,7 +94,7 @@ public class WyattController {
             + wyatt.getCurrentProfit()
             + "% ("
             + String.format("%.8f", balanceDiff)
-            + " BTC | $"
+            + " BTC ≈ $"
             + String.format("%.2f", balanceDiffUSD)
             + ")";
     response += "<br><br>--- Market ---";
