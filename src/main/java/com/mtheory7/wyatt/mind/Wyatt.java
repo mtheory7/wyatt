@@ -162,7 +162,7 @@ public class Wyatt {
   public Double getOpenBuyBackPercentage() {
     Double currentMargin = getCurrentPrice() / openBuyBackPrice;
     Double currentMarginPercent = (currentMargin - 1) * 100;
-    return Math.round(currentMarginPercent * 100.0) / 100.0;
+    return Math.round(currentMarginPercent * 1000.0) / 1000.0;
   }
 
   /**
