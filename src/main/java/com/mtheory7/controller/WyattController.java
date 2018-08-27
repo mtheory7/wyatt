@@ -62,6 +62,7 @@ public class WyattController {
     Double currentPrice = wyatt.getCurrentPrice();
     Double initialInvestment = wyatt.getInitialInvestment();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
+    Double portfolioValue = currentBalance * currentPrice;
     Double balanceDiff = currentBalance - initialInvestment;
     Double balanceDiffUSD = balanceDiff * currentPrice;
     balanceDiff = Math.round(balanceDiff * 100000000.0) / 100000000.0;
@@ -87,7 +88,7 @@ public class WyattController {
     response += "<br>--- Status report ---";
     response += "<br>Status: " + wyatt.getCurrentStateString();
     response += "<br>Investment: " + initialInvestment + " BTC";
-    response += "<br>Portfolio  ≈ " + currentBalance + " BTC";
+    response += "<br>Portfolio  ≈ " + currentBalance + " BTC ($" + String.format("%.2f",portfolioValue) + ")";
     response += wyatt.getBalances();
     response +=
         "<br>Profit: "
