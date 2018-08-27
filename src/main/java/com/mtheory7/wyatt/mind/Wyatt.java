@@ -42,6 +42,7 @@ public class Wyatt {
   };
   private static final String[] tickers = {BTCUSDT_TICKER};
   public boolean currentState = true;
+  private boolean EXECUTE_TWEETS = false;
   private String VERSION = WyattApplication.getVersion();
   private Double lastTargetPrice = 1000000.0;
   private Double lastBuyBackPrice = 0.0;
@@ -141,6 +142,16 @@ public class Wyatt {
     return openBuyBackAmt;
   }
 
+  /**
+   * Returns if the bot currently has Twitter credentials set
+   *
+   * @return
+   */
+  public boolean isEXECUTE_TWEETS() {
+    return EXECUTE_TWEETS;
+  }
+
+
   public String getBalances() {
     String response = "";
     Account account = client.getAccount();
@@ -205,6 +216,8 @@ public class Wyatt {
     this.consumerSecret = consumerSecret;
     this.accessToken = accessToken;
     this.accessTokenSecret = accessTokenSecret;
+    EXECUTE_TWEETS = true;
+    logger.trace("EXECUTE_TWEETS: " + EXECUTE_TWEETS);
   }
 
   /**
@@ -540,9 +553,13 @@ public class Wyatt {
     // Tweets can only be 280 characters long error if longer
     if (message.length() <= 280) {
       try {
-        twitter.updateStatus(message);
-        // My bad I was sending a tweet
-        logger.trace("Sent tweet to @WestworldWyatt");
+        if (EXECUTE_TWEETS) {
+          twitter.updateStatus(message);
+          // My bad I was sending a tweet
+          logger.trace("Sent tweet to @WestworldWyatt");
+        } else {
+          logger.trace("No Twitter credentials have been set, not tweeting.");
+        }
       } catch (TwitterException e) {
         logger.error("ERROR SENDING TWEET: Reason: {}", e);
       }
