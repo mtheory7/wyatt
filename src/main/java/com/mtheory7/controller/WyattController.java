@@ -59,6 +59,13 @@ public class WyattController {
 
   @GetMapping(path = PATH_STATUS)
   public ResponseEntity getState() {
+    Double currentPrice = wyatt.getCurrentPrice();
+    Double initialInvestment = wyatt.getInitialInvestment();
+    Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
+    Double balanceDiff = currentBalance - initialInvestment;
+    Double balanceDiffUSD = balanceDiff * currentPrice;
+    balanceDiff = Math.round(balanceDiff * 10000000.0) / 10000000.0;
+    balanceDiffUSD = Math.round(balanceDiffUSD * 100.0) / 100.0;
     logger.trace(PATH_STATUS + RESPONSE_SUFFIX);
     String response =
         "`Mb(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)d'<br>"
@@ -72,27 +79,43 @@ public class WyattController {
             + "&nbsp;&nbsp;&nbsp;&nbsp;`MM'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`MM'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YMP&nbsp;&nbsp;&nbsp;&nbsp;MM.&nbsp;&nbsp;,MM&nbsp;YM.&nbsp;&nbsp;,&nbsp;YM.&nbsp;&nbsp;,<br>"
             + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`YMMM9'Yb.YMMM9&nbsp;&nbsp;YMMM9<br>"
             + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d'<br>"
-            + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(8),P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(v"+ wyatt.getVersion()+ ")<br>"
+            + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(8),P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(v"
+            + wyatt.getVersion()
+            + ")<br>"
             + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YMM<br>";
     if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
     response += "<br>--- Status report ---";
     response += "<br>Status: " + wyatt.getCurrentStateString();
-    response += "<br>Investment: " + wyatt.getInitialInvestment() + " BTC";
-    response += "<br>Portfolio  ≈ " + wyatt.getCurrentBalance() + " BTC";
+    response += "<br>Investment: " + initialInvestment + " BTC";
+    response += "<br>Portfolio  ≈ " + currentBalance + " BTC";
     response += wyatt.getBalances();
-    response += "<br>Profit: " + wyatt.getCurrentProfit() + "%";
+    response +=
+        "<br>Profit: "
+            + wyatt.getCurrentProfit()
+            + "% ("
+            + String.format("%.7f", balanceDiff)
+            + " BTC | $"
+            + String.format("%.2f", balanceDiffUSD)
+            + ")";
     response += "<br><br>--- Market ---";
-    response += "<br>BTC Price: $" + wyatt.getCurrentPrice();
-    response += "<br>Target: $" + wyatt.getCurrentTargetPrice();
-    response += "<br>Buy back: $" + wyatt.getCurrentBuyBackPrice();
+    response += "<br>BTC Price: $" + String.format("%.2f", currentPrice);
+    response += "<br>Target: $" + String.format("%.2f", wyatt.getCurrentTargetPrice());
+    response += "<br>Buy back: $" + String.format("%.2f", wyatt.getCurrentBuyBackPrice());
     response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
     if (!wyatt.currentState) {
       Double diff = wyatt.getCurrentPrice() - wyatt.getOpenBuyBackPrice();
-      diff = Math.round(diff * 1000.0) / 1000.0;
       response += "<br><br>--- Open buy back ---";
       response +=
-          "<br>Amount: " + wyatt.getOpenBuyBackAmt() + " BTC @ $" + wyatt.getOpenBuyBackPrice();
-      response += "<br>Difference: $" + diff + " (" + wyatt.getOpenBuyBackPercentage() + "%)";
+          "<br>Amount: "
+              + wyatt.getOpenBuyBackAmt()
+              + " BTC @ $"
+              + String.format("%.2f", wyatt.getOpenBuyBackPrice());
+      response +=
+          "<br>Difference: $"
+              + String.format("%.2f", diff)
+              + " ("
+              + wyatt.getOpenBuyBackPercentage()
+              + "%)";
     }
     response += "<br><br>--- Links ---";
     response +=
