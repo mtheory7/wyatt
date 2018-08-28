@@ -155,7 +155,7 @@ public class Wyatt {
     List<Trade> trades = client.getMyTrades(BTCUSDT_TICKER);
     for (Trade trade : trades) {
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy' 'HH:mm:ss:S");
-      response = "<br>Trade ID - " + trade.getOrderId()  + ": Date/Time: " + simpleDateFormat.format(trade.getTime()) +  ": " + trade.getQty() + " BTC @ $"
+      response = "<br>" + trade.getOrderId() + ": Date/Time: " + simpleDateFormat.format(trade.getTime()) + ": " + trade.getQty() + " BTC @ $"
               + String.format("%.2f", Double.valueOf(trade.getPrice())) + response;
     }
     return response;
