@@ -3,10 +3,7 @@ package com.mtheory7.wyatt.mind;
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.TimeInForce;
-import com.binance.api.client.domain.account.Account;
-import com.binance.api.client.domain.account.AssetBalance;
-import com.binance.api.client.domain.account.NewOrderResponse;
-import com.binance.api.client.domain.account.Order;
+import com.binance.api.client.domain.account.*;
 import com.binance.api.client.domain.account.request.CancelOrderRequest;
 import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.market.Candlestick;
@@ -24,7 +21,9 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -149,6 +148,17 @@ public class Wyatt {
    */
   public boolean isEXECUTE_TWEETS() {
     return EXECUTE_TWEETS;
+  }
+
+  public String getOrderHistory() {
+    String response = "";
+    List<Trade> trades = client.getMyTrades(BTCUSDT_TICKER);
+    for (Trade trade : trades) {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy' 'HH:mm:ss:S");
+      response = "<br>Trade ID - " + trade.getOrderId()  + ": Date/Time: " + simpleDateFormat.format(trade.getTime()) +  ": " + trade.getQty() + " BTC @ $"
+              + String.format("%.2f", Double.valueOf(trade.getPrice())) + response;
+    }
+    return response;
   }
 
 

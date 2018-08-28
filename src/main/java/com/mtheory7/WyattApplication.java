@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class WyattApplication {
   private static final Logger logger = Logger.getLogger(WyattApplication.class);
-  private static final String VERSION = "6.7.0";
+  private static final String VERSION = "6.8.1";
 
   public static void main(String[] args) {
     ConfigurableApplicationContext context = SpringApplication.run(WyattApplication.class, args);
