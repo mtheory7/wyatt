@@ -47,7 +47,7 @@ This will build and package two .jar files in the target directory. One of the .
 ### Executing
 To run Wyatt, execute the following
 ```$xslt
-java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <arg1> <arg2> <arg3> <arg4> <arg5> <arg6>
+java -jar target/wyatt-{VERSION}.jar <arg1> <arg2> <arg3> <arg4> <arg5> <arg6>
 ```
  * arg1 = Binance API Key*
  * arg2 = Binance Secret Key*
@@ -59,7 +59,7 @@ java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <arg1> <arg2>
 #### Executing without Twitter
 If you desire to not use the tweeting feature of the bot, simply pass in only the two Binance keys necessary to trade!
 ```$xslt
-java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <arg1> <arg2>
+java -jar target/wyatt-{VERSION}.jar <arg1> <arg2>
 ```
  * arg1 = Binance API Key*
  * arg2 = Binance Secret Key*
