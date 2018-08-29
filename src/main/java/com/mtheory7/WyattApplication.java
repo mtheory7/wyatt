@@ -14,6 +14,7 @@ public class WyattApplication {
   public static void main(String[] args) {
     ConfigurableApplicationContext context = SpringApplication.run(WyattApplication.class, args);
     Wyatt dolores = context.getBean(Wyatt.class);
+    dolores.setVersion();
     if (args.length < 2) {
       logger.error("Too few arguments given!");
       System.exit(-1);
