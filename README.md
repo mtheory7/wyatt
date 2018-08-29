@@ -49,11 +49,19 @@ To run Wyatt, execute the following
 ```$xslt
 java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <arg1> <arg2> <arg3> <arg4> <arg5> <arg6>
 ```
- * arg1 = Binance API Key
- * arg2 = Binance Secret Key
+ * arg1 = Binance API Key*
+ * arg2 = Binance Secret Key*
  * arg3 = Twitter OAuth Consumer Key
  * arg4 = Twitter OAuth Consumer Secret
  * arg5 = Twitter OAuth Access Token
  * arg6 = Twitter OAuth Access Token Secret
 
-The Binance API Key absolutely MUST have approval to execute trades from Binance, but does not need approval to withdraw.
+#### Executing without Twitter
+If you desire to not use the tweeting feature of the bot, simply pass in only the two Binance keys necessary to trade!
+```$xslt
+java -jar target/wyatt-<REPLACE_VERSION>-jar-with-dependencies.jar <arg1> <arg2>
+```
+ * arg1 = Binance API Key*
+ * arg2 = Binance Secret Key*
+ 
+ *The Binance API Key absolutely MUST have approval to execute trades from Binance, but does not need approval to withdraw.
