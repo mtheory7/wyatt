@@ -10,6 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class WyattApplication {
   private static final Logger logger = Logger.getLogger(WyattApplication.class);
+
   public static void main(String[] args) {
     ConfigurableApplicationContext context = SpringApplication.run(WyattApplication.class, args);
     Wyatt dolores = context.getBean(Wyatt.class);
@@ -34,7 +35,6 @@ public class WyattApplication {
   }
 
   private static void runWyatt(Wyatt dolores) {
-    dolores.setVersion();
     for (; ; ) {
       dolores.gatherMindData();
       dolores.predictAndTrade();
