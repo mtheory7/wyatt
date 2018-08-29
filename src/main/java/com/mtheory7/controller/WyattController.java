@@ -1,7 +1,6 @@
 package com.mtheory7.controller;
 
 import com.google.common.hash.Hashing;
-import com.google.gson.Gson;
 import com.mtheory7.wyatt.mind.Wyatt;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

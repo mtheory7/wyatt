@@ -9,26 +9,20 @@ import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.domain.market.TickerStatistics;
-import com.mtheory7.WyattApplication;
 import com.mtheory7.wyatt.model.DataIdentifier;
 import com.mtheory7.wyatt.model.data.MindData;
 import com.mtheory7.wyatt.model.data.PredictionEngine;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,7 +41,8 @@ public class Wyatt {
   private static final String[] tickers = {BTCUSDT_TICKER};
   public boolean currentState = true;
   private boolean EXECUTE_TWEETS = false;
-  private String VERSION = "";
+  @Value("${versionValue}")
+  private String VERSION;
   private Double lastTargetPrice = 1000000.0;
   private Double lastBuyBackPrice = 0.0;
   private Double openBuyBackPrice = 0.0;
@@ -66,19 +61,6 @@ public class Wyatt {
   public void reset() {
     this.mindData = new MindData();
     this.predictionEngine = new PredictionEngine();
-  }
-
-  /**
-   * Sets the version by pulling from pom.xml
-   */
-  public void setVersion() {
-    try {
-      MavenXpp3Reader reader = new MavenXpp3Reader();
-      Model model = reader.read(new FileReader("pom.xml"));
-      VERSION = model.getVersion();
-    } catch (IOException | XmlPullParserException e) {
-      e.printStackTrace();
-    }
   }
 
   /**
