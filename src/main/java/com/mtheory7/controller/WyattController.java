@@ -137,24 +137,24 @@ public class WyattController {
             "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
                     + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
     return new ResponseEntity<>(
-            "<html>\n"
-                    + "<head>\n"
-                    + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\">\n"
-                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\">\n"
-                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\">\n"
-                    + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">\n"
-                    + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">\n"
-                    + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">\n"
-                    + "<meta name=\"theme-color\" content=\"#ffffff\">\n"
+            "<html>"
+                    + "<head>"
+                    + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\">"
+                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\">"
+                    + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\">"
+                    + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">"
+                    + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">"
+                    + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">"
+                    + "<meta name=\"theme-color\" content=\"#ffffff\">"
                     + "<meta http-equiv=\"refresh\" content=\"25\" />"
-                    + "</head>\n"
-                    + "<title>Wyatt</title>\n"
-                    + "<body bgcolor=\"#000000\">\n"
-                    + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">\n"
+                    + "</head>"
+                    + "<title>Wyatt</title>"
+                    + "<body bgcolor=\"#000000\">"
+                    + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">"
                     + response
-                    + "</font> \n"
-                    + "</body>\n"
-                    + "</html> ",
+                    + "</font>"
+                    + "</body>"
+                    + "</html>",
             HttpStatus.OK);
   }
 
@@ -163,12 +163,12 @@ public class WyattController {
     logger.trace(PATH_ORDER_HISTORY + RESPONSE_SUFFIX);
     String response = wyatt.getOrderHistory();
     return new ResponseEntity<>(
-            "<html>\n"
-                    + "<head>\n"
+            "<html>"
+                    + "<head>"
                     + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\">"
                     + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\">"
                     + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\">"
-                    + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">\n"
+                    + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">"
                     + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">"
                     + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">"
                     + "<meta name=\"theme-color\" content=\"#ffffff\">"

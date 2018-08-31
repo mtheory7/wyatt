@@ -150,6 +150,11 @@ public class Wyatt {
     return EXECUTE_TWEETS;
   }
 
+  /**
+   * Returns the order history to the UI for displaying in the /orders endpoint
+   *
+   * @return String (HTML) of the order history
+   */
   public String getOrderHistory() {
     String response = "";
     List<Trade> trades = client.getMyTrades(BTCUSDT_TICKER);
@@ -162,6 +167,11 @@ public class Wyatt {
   }
 
 
+  /**
+   * Returns the current balances to the UI for displaying in the /status endpoint
+   *
+   * @return String (HTML) of the current balance
+   */
   public String getBalances() {
     String response = "";
     Account account = client.getAccount();

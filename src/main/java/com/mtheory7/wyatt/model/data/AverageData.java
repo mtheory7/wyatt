@@ -6,7 +6,8 @@ public class AverageData {
   private Double lowAvg = 0.0;
   private Double highAvg = 0.0;
 
-  public AverageData() {}
+  public AverageData() {
+  }
 
   public Double getOpenAvg() {
     return openAvg;

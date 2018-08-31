@@ -17,7 +17,9 @@ public class PredictionEngine {
   private List<Double> targetPrices;
   private Map<CandlestickInterval, List<Candlestick>> candleMap;
 
-  /** PredictionEngine constructor */
+  /**
+   * PredictionEngine constructor
+   */
   public PredictionEngine() {
     averageData = new ArrayList<>();
     targetPrices = new ArrayList<>();
@@ -31,21 +33,21 @@ public class PredictionEngine {
    */
   public void executeThoughtProcess(MindData mindData) {
     for (HashMap.Entry<DataIdentifier, List<Candlestick>> entry :
-        mindData.getCandlestickData().entrySet()) {
+            mindData.getCandlestickData().entrySet()) {
       if (entry.getKey().getInterval() == CandlestickInterval.ONE_MINUTE
-          && entry.getKey().getTicker().equals("BTCUSDT")) {
+              && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.ONE_MINUTE, entry.getValue());
       }
       if (entry.getKey().getInterval() == CandlestickInterval.THREE_MINUTES
-          && entry.getKey().getTicker().equals("BTCUSDT")) {
+              && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.THREE_MINUTES, entry.getValue());
       }
       if (entry.getKey().getInterval() == CandlestickInterval.FIVE_MINUTES
-          && entry.getKey().getTicker().equals("BTCUSDT")) {
+              && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.FIVE_MINUTES, entry.getValue());
       }
       if (entry.getKey().getInterval() == CandlestickInterval.FIFTEEN_MINUTES
-          && entry.getKey().getTicker().equals("BTCUSDT")) {
+              && entry.getKey().getTicker().equals("BTCUSDT")) {
         candleMap.put(CandlestickInterval.FIFTEEN_MINUTES, entry.getValue());
       }
     }
@@ -54,9 +56,9 @@ public class PredictionEngine {
     }
     for (AverageData avg : averageData) {
       Double target =
-          Math.max(
-              Math.max(Math.max(avg.getLowAvg(), avg.getOpenAvg()), avg.getHighAvg()),
-              avg.getCloseAvg());
+              Math.max(
+                      Math.max(Math.max(avg.getLowAvg(), avg.getOpenAvg()), avg.getHighAvg()),
+                      avg.getCloseAvg());
       targetPrices.add(target);
     }
     targetPrice = Math.floor(maxTarget(targetPrices) * 100.9) / 100.0;
@@ -70,7 +72,7 @@ public class PredictionEngine {
    * @return The AverageData object
    */
   private AverageData calculateAverageData(
-      HashMap.Entry<CandlestickInterval, List<Candlestick>> entry) {
+          HashMap.Entry<CandlestickInterval, List<Candlestick>> entry) {
     AverageData averageData = new AverageData();
     Double low = 0.0;
     Double open = 0.0;
