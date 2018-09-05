@@ -80,7 +80,7 @@ public class WyattController {
             + ".....YP.......YP..........M.....`YMMM9'Yb.YMMM9..YMMM9<br>"
             + ".........................d'...........................<br>"
             + ".....................C3P,O............................<br>"
-            + "......................YMM.....................(v" + wyatt.getVersion() + ")<br>";
+            + "......................YMM....................v" + wyatt.getVersion() + "...<br>";
 
     if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
     response += "<br>--- Status report ---";
