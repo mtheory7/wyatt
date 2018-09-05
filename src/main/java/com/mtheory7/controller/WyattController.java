@@ -68,19 +68,21 @@ public class WyattController {
     balanceDiffUSD = Math.round(balanceDiffUSD * 100.0) / 100.0;
     logger.trace(PATH_STATUS + RESPONSE_SUFFIX);
     String response =
-        "`Mb(......db......)d'.................................<br>"
-            + ".YM......,PM......,P....................../....../....<br>"
-            + ".`Mb.....d'Mb.....d'.____....___...___.../M...../M....<br>"
-            + "..YM....,P.YM....,P..`MM(....)M'.6MMMMb./MMMMM./MMMMMM<br>"
-            + "..`Mb...d'.`Mb...d'...`Mb....d'.8M'..`Mb.MM.....MM....<br>"
-            + "...YM..,P...YM..,P.....YM...,P......,oMM.MM.....MM....<br>"
-            + "...`Mb.d'...`Mb.d'......MM..M...,6MM9'MM.MM.....MM....<br>"
-            + "....YM,P.....YM,P.......`Mbd'...MM'...MM.MM.....MM....<br>"
-            + "....`MM'.....`MM'........YMP....MM...,MM.YM...,.YM...,<br>"
-            + ".....YP.......YP..........M.....`YMMM9'Yb.YMMM9..YMMM9<br>"
-            + ".........................d'...........................<br>"
-            + ".....................C3P,O............................<br>"
-            + "......................YMM....................v" + wyatt.getVersion() + "...<br>";
+        "`Mb(<m>......</m>db<m>......</m></custom1>)d'<m>.................................</m></custom1><br>"
+            + "<m>.</m>YM<m>......</m>,PM<m>......</m>,P<m>......................</m>/<m>......</m>/<m>....</m><br>"
+            + "<m>.</m>`Mb<m>.....</m>d'Mb<m>.....</m>d'<m>.</m>____<m>....</m>___<m>...</m>___<m>...</m>/M<m>.....</m>/M<m>....</m><br>"
+            + "<m>..</m>YM<m>....</m>,P<m>.</m>YM<m>....</m>,P<m>..</m>`MM(<m>....</m>)M'<m>.</m>6MMMMb<m>.</m>/MMMMM<m>.</m>/MMMMMM<br>"
+            + "<m>..</m>`Mb<m>...</m>d'<m>.</m>`Mb<m>...</m>d'<m>...</m>`Mb<m>....</m>d'<m>.</m>8M'<m>..</m>`Mb<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
+            + "<m>...</m>YM<m>..</m>,P<m>...</m>YM<m>..</m>,P<m>.....</m>YM<m>...</m>,P<m>......</m>,oMM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
+            + "<m>...</m>`Mb<m>.</m>d'<m>...</m>`Mb<m>.</m>d'<m>......</m>MM<m>..</m>M<m>...</m>,6MM9'MM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
+            + "<m>....</m>YM,P<m>.....</m>YM,P<m>.......</m>`Mbd'<m>...</m>MM'<m>...</m>MM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
+            + "<m>....</m>`MM'<m>.....</m>`MM'<m>........</m>YMP<m>....</m>MM<m>...</m>,MM<m>.</m>YM<m>...</m>,<m>.</m>YM<m>...</m>,<br>"
+            + "<m>.....</m>YP<m>.......</m>YP<m>..........</m>M<m>.....</m>`YMMM9'Yb<m>.</m>YMMM9<m>..</m>YMMM9<br>"
+            + "<m>.........................</m>d'<m>...........................</m><br>"
+            + "<m>.....................</m>C3P,O<m>............................</m><br>"
+            + "<m>......................</m>YMM<m>....................</m>v"
+            + wyatt.getVersion()
+            + "<m>...</m><br>";
 
     if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
     response += "<br>--- Status report ---";
@@ -151,10 +153,18 @@ public class WyattController {
             + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">"
             + "<meta name=\"theme-color\" content=\"#ffffff\">"
             + "<meta http-equiv=\"refresh\" content=\"25\" />"
+            + "<style>"
+            + "body {"
+            + "  color: #F7931A;"
+            + "}"
+            + "m {"
+            + "  color: #404040;"
+            + "}"
+            + "</style>"
             + "</head>"
             + "<title>Wyatt</title>"
             + "<body bgcolor=\"#000000\">"
-            + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">"
+            + "<font face=\"Courier\" size=\"3\">"
             + response
             + "</font>"
             + "</body>"
