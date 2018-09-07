@@ -1,6 +1,6 @@
 [1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
 [1]: https://twitter.com/WestworldWyatt
-# [Wyatt](https://www.mtheory7.com/)
+# [Wyatt](mtheory7.com)
 [![alt text][1.1]][1]
 
 Above is a link to the current status of Wyatt running connected to my personal Binance account.
