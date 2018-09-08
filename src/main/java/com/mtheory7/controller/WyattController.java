@@ -58,6 +58,7 @@ public class WyattController {
 
   @GetMapping(path = PATH_STATUS)
   public ResponseEntity getState() {
+    logger.trace("*** ENTERING getState() ...");
     Double currentPrice = wyatt.getCurrentPrice();
     Double initialInvestment = wyatt.getInitialInvestment();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
@@ -142,6 +143,7 @@ public class WyattController {
     response +=
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
             + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
+    logger.trace("*** EXITING getState() ...");
     return new ResponseEntity<>(
         "<html>"
             + "<head>"
