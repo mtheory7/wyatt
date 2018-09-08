@@ -58,7 +58,7 @@ public class WyattController {
 
   @GetMapping(path = PATH_STATUS)
   public ResponseEntity getState() {
-    long startTime = System.nanoTime();
+    Double startTime = (double)System.nanoTime();
     Double currentPrice = wyatt.getCurrentPrice();
     Double initialInvestment = wyatt.getInitialInvestment();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
@@ -142,8 +142,8 @@ public class WyattController {
     response +=
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
             + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
-    long duration = (System.nanoTime() - startTime);
-    logger.debug("Execution of /status endpoint took " + duration/1000000000 + " seconds");
+    Double duration = (System.nanoTime() - startTime);
+    logger.debug("Execution of /status endpoint took " + String.format("%.5f", duration/1000000000) + " seconds");
     return new ResponseEntity<>(
         "<html>"
             + "<head>"
