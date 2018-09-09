@@ -210,6 +210,7 @@ public class WyattController {
     if (queue.size() == 0) {
       return null;
     }
+    logger.debug("QUEUE SIZE: " + queue.size());
     Double average = 0.0;
     for(Double num : queue) {
       average += num / queue.size();
