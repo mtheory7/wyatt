@@ -30,7 +30,7 @@ public class WyattController {
   @Autowired
   public WyattController(Wyatt wyatt) {
     this.wyatt = wyatt;
-    queue = EvictingQueue.create(100);
+    queue = EvictingQueue.create(1000);
   }
 
   @GetMapping(path = PATH_BALANCE)
