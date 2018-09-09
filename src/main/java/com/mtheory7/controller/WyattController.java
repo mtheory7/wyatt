@@ -218,6 +218,7 @@ public class WyattController {
     for (Double num : queue) {
       average += num / queue.size();
     }
+    logger.debug("Average: " + average + " queue size: " + queue.size());
     return average;
   }
 }
