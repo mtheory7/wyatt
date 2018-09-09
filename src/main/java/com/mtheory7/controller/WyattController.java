@@ -1,5 +1,6 @@
 package com.mtheory7.controller;
 
+import com.google.common.collect.EvictingQueue;
 import com.google.common.hash.Hashing;
 import com.mtheory7.wyatt.mind.Wyatt;
 import org.apache.log4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.util.Queue;
 
 @RestController
 public class WyattController {
@@ -23,10 +25,12 @@ public class WyattController {
   private static final String PATH_ORDER_HISTORY = "/orders";
   private static final String RESPONSE_SUFFIX = " endpoint hit";
   private final Wyatt wyatt;
+  private Queue<Double> queue;
 
   @Autowired
   public WyattController(Wyatt wyatt) {
     this.wyatt = wyatt;
+    queue = EvictingQueue.create(10);
   }
 
   @GetMapping(path = PATH_BALANCE)
@@ -142,8 +146,9 @@ public class WyattController {
     response +=
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
             + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
-    Double duration = (System.nanoTime() - startTime);
-    logger.debug("took " + String.format("%.5f", duration/1000000000) + " seconds");
+    Double duration = (System.nanoTime() - startTime)/1000000000;
+    queue.add(duration);
+    response += "<br><br><m>" + String.format("%.5f", getAverageStatusLoadTime()) + "</m>";
     return new ResponseEntity<>(
         "<html>"
             + "<head>"
@@ -199,5 +204,16 @@ public class WyattController {
             + "</body>"
             + "</html>",
         HttpStatus.OK);
+  }
+
+  private Double getAverageStatusLoadTime() {
+    if (queue.size() == 0) {
+      return null;
+    }
+    Double average = 0.0;
+    for(Double num : queue) {
+      average += num / queue.size();
+    }
+    return average;
   }
 }
