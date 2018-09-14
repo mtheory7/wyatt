@@ -72,10 +72,10 @@ public class WyattController {
     balanceDiff = Math.round(balanceDiff * 100000000.0) / 100000000.0;
     balanceDiffUSD = Math.round(balanceDiffUSD * 100.0) / 100.0;
     String response =
-        "`Mb(<m>......</m>db<m>......</m></custom1>)d'<m>.................................</m></custom1><br>"
+        "`Mb(<m>......</m>db<m>......</m>)d'<m>.................................</m><br>"
             + "<m>.</m>YM<m>......</m>,PM<m>......</m>,P<m>......................</m>/<m>......</m>/<m>....</m><br>"
             + "<m>.</m>`Mb<m>.....</m>d'Mb<m>.....</m>d'<m>.</m>____<m>....</m>___<m>...</m>___<m>...</m>/M<m>.....</m>/M<m>....</m><br>"
-            + "<m>..</m>YM<m>....</m>,P<m>.</m>YM<m>....</m>,P<m>..</m>`MM(<m>....</m>)M'<m>.</m>6MMMMb<m>.</m>/MMMMM<m>.</m>/MMMMMM<br>"
+            + "<m>..</m>YM<m>....</m>,P<m>.</m>YM<m>....</m>,P<m>..</m>`MM(<m>....</m>)M'<m>.</m>6MMMMb<m>.</m>/RNP<3<m>.</m>/MMMMMM<br>"
             + "<m>..</m>`Mb<m>...</m>d'<m>.</m>`Mb<m>...</m>d'<m>...</m>`Mb<m>....</m>d'<m>.</m>8M'<m>..</m>`Mb<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
             + "<m>...</m>YM<m>..</m>,P<m>...</m>YM<m>..</m>,P<m>.....</m>YM<m>...</m>,P<m>......</m>,oMM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
             + "<m>...</m>`Mb<m>.</m>d'<m>...</m>`Mb<m>.</m>d'<m>......</m>MM<m>..</m>M<m>...</m>,6MM9'MM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
@@ -218,7 +218,6 @@ public class WyattController {
     for (Double num : queue) {
       average += num / queue.size();
     }
-    logger.debug("Average: " + average + " queue size: " + queue.size());
     return average;
   }
 }
