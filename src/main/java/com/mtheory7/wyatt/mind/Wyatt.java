@@ -492,6 +492,7 @@ public class Wyatt {
     Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
     // Loop until above 10.0 USDT
     while (freeUSDT < 10.0) {
+      account = client.getAccount();
       logger.trace("Looping because we currently have less than 10 USDT. Waiting 15 seconds...");
       new CalcUtils().sleeper(15000);
       freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
