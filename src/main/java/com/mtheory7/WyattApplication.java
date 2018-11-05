@@ -20,11 +20,11 @@ public class WyattApplication {
       System.exit(-1);
     }
     if (args.length == 6) {
-      logger.error("6 arguments provided. Proceeding to set Binance and Twitter credentials");
+      logger.info("6 arguments provided. Proceeding to set Binance and Twitter credentials");
       dolores.setBinanceCreds(args[0], args[1]);
       dolores.setTwitterCreds(args[2], args[3], args[4], args[5]);
     } else if (args.length == 2) {
-      logger.error("2 arguments provided. Proceeding to set Binance credentials");
+      logger.info("2 arguments provided. Proceeding to set Binance credentials");
       dolores.setBinanceCreds(args[0], args[1]);
     } else {
       logger.error("Incorrect number of arguments given!");
@@ -36,11 +36,16 @@ public class WyattApplication {
 
   private static void runWyatt(Wyatt dolores) {
     for (; ; ) {
-      dolores.gatherMindData();
-      dolores.predictAndTrade();
-      dolores.printBalances();
-      dolores.reset();
-      new CalcUtils().sleeper(25000);
+      try {
+        dolores.gatherMindData();
+        dolores.predictAndTrade();
+      } catch (Exception e) {
+        logger.error("There was an error during the main trading loop! {}", e);
+      } finally {
+        //dolores.printBalances();
+        dolores.reset();
+        new CalcUtils().sleeper(25000);
+      }
     }
   }
 }

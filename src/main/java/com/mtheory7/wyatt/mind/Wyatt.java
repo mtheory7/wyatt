@@ -295,7 +295,7 @@ public class Wyatt {
    * Logs the latest balances of the Binance account. This is useful when diagnosing trading
    * patterns and trade logic.
    */
-  public void printBalances() {
+/*  public void printBalances() {
     Account account = client.getAccount();
     // Pull the latest account balance info from Binance
     List<AssetBalance> balances = account.getBalances();
@@ -319,7 +319,7 @@ public class Wyatt {
     logger.trace("Estimated total account value: " + estimatedBalance + " BTC");
     logger.trace(
         "Profit since starting (" + INITIAL_INVESTMENT + " BTC): " + percentOnInvenstment + "%");
-  }
+  }*/
 
   /**
    * Estimate the value of a given amount/ticker in BTC
