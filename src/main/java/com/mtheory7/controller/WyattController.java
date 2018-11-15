@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.nio.charset.StandardCharsets;
 import java.util.Queue;
 
@@ -61,6 +63,12 @@ public class WyattController {
 
   @GetMapping(path = PATH_STATUS)
   public ResponseEntity getState() {
+    RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
+    long seconds = rb.getUptime() / 1000;
+    long minutes = seconds / 60;
+    long hours = minutes / 60;
+    long days = hours / 24;
+    String upTime = days + "d " + hours % 24 + "h " + minutes % 60 + "m " + seconds % 60 + "s";
     double startTime = (double) System.nanoTime();
     Double currentPrice = wyatt.getCurrentPrice();
     Double initialInvestment = wyatt.getInitialInvestment();
@@ -144,7 +152,8 @@ public class WyattController {
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
             + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
     queue.add((System.nanoTime() - startTime) / 1000000000);
-    response += "<br><br><m>" + String.format("%.4f", getAverageStatusLoadTime()) + "s</m>";
+    response += "<g><br><br>Avg load time: " + String.format("%.4f", getAverageStatusLoadTime()) + "s";
+    response += "<br>Uptime: " + upTime + "</g>";
     return new ResponseEntity<>(
         "<html>"
             + "<head>"
@@ -162,6 +171,9 @@ public class WyattController {
             + "}"
             + "m {"
             + "  color: #000000;"
+            + "}"
+            + "g {"
+            + "  color: #222222;"
             + "}"
             + "</style>"
             + "</head>"
