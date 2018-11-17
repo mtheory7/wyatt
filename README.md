@@ -3,9 +3,7 @@
 # [Wyatt](https://mtheory7.com)
 [![alt text][1.1]][1]
 
-Above is a link to the current status of Wyatt running connected to my personal Binance account.
-
-Another link to the full log (all levels) is available [here](https://www.mtheory7.com/full.php)
+Wyatt is a Java & Spring based cryptocurrency trading bot that uses the public Binance API. It is run by providing it with API keys generated at binance.com (Also provide Wyatt with Twitter API keys if tweet alerts are desired). The bot then will pull recent trade candlestick data for the last 125 hours (5.2 days) and calculate a target price. If the target price is above the current price, a sell is executed and a buy back is placed. If not, Wyatt will wait 25 seconds before repeating the prediction/trading process. Above is a link to the current status of Wyatt running connected to my personal Binance account.
 ### Architecture
 The bot itself is kicked off by a Spring Boot Application. The Spring App also exposes some endpoints that can interact and use the bot's functions. The available endpoints will be described in the API section. These endpoints will then be used for a web UI showing more informative feedback about the bot's operation and status. 
 ### API
