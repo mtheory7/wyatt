@@ -173,7 +173,7 @@ public class WyattController {
             + "  color: #000000;"
             + "}"
             + "g {"
-            + "  color: #222222;"
+            + "  color: #999999;"
             + "}"
             + "</style>"
             + "</head>"
