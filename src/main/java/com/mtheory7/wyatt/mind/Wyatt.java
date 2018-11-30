@@ -421,7 +421,8 @@ public class Wyatt {
     sendTweet(message);
     Account account = client.getAccount();
     // Find out how much free asset there is to trade
-    Double freeBTCFloored = CalcUtils.floorTo(Double.valueOf(account.getAssetBalance("BTC").getFree()), 4);
+    Double freeBTCFloored =
+        CalcUtils.floorTo(Double.valueOf(account.getAssetBalance("BTC").getFree()), 4);
     logger.info("Amount of BTC to trade: " + freeBTCFloored);
     try {
       logger.info("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
