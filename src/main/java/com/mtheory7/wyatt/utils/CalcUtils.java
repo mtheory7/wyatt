@@ -5,11 +5,11 @@ import com.binance.api.client.domain.market.Candlestick;
 import java.util.List;
 
 public class CalcUtils {
-  public static double roundToThe(double num, int places) {
+  public static double roundTo(double num, int places) {
     return Math.round(num * Math.pow(10, places)) / Math.pow(10, places);
   }
 
-  public static double floorToThe(double num, int places) {
+  public static double floorTo(double num, int places) {
     return Math.floor(num * Math.pow(10, places)) / Math.pow(10, places);
   }
 
