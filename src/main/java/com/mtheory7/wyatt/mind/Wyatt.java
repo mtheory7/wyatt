@@ -30,7 +30,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  public static final boolean DEVELOPMENT_MODE = false;
+  public static final boolean DEVELOPMENT_MODE = true;
   private static final String BTCUSDT_TICKER = "BTCUSDT";
   private static final Double INITIAL_INVESTMENT = 0.01;
   private static final Logger logger = Logger.getLogger(Wyatt.class);
@@ -45,8 +45,8 @@ public class Wyatt {
   @Value("${versionValue}")
   private String VERSION;
 
-  private Double lastTargetPrice = 10000.0;
-  private Double lastBuyBackPrice = 0.0;
+  private Double lastTargetPrice = 1000000.0;
+  private Double buyBackPrice = 0.0;
   private Double openBuyBackPrice = 0.0;
   private Double openBuyBackAmt = 0.0;
   private MindData mindData;
@@ -120,7 +120,7 @@ public class Wyatt {
    * @return Latest buy back price
    */
   public Double getCurrentBuyBackPrice() {
-    return lastBuyBackPrice;
+    return buyBackPrice;
   }
 
   /**
@@ -202,9 +202,7 @@ public class Wyatt {
    * @return Open buy back percentage
    */
   public Double getOpenBuyBackPercentage() {
-    Double currentMargin = getCurrentPrice() / openBuyBackPrice;
-    double currentMarginPercent = (currentMargin - 1) * 100;
-    return Math.round(currentMarginPercent * 1000.0) / 1000.0;
+    return CalcUtils.roundToThe((getCurrentPrice() / openBuyBackPrice - 1) * 100, 3);
   }
 
   /**
@@ -213,7 +211,7 @@ public class Wyatt {
    * @return Current sell confidence (%)
    */
   public Double getCurrentSellConfidence() {
-    return Math.round((getCurrentPrice() / getCurrentTargetPrice() * 100) * 1000.0) / 1000.0;
+    return CalcUtils.roundToThe((getCurrentPrice() / getCurrentTargetPrice() * 100), 3);
   }
 
   /**
@@ -252,15 +250,6 @@ public class Wyatt {
   }
 
   /**
-   * Returns the list of open orders. Uses the com.binance.api.client.domain.account.Order
-   *
-   * @return List of open orders
-   */
-  public List<Order> getOpenOrders() {
-    return client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
-  }
-
-  /**
    * Returns the total balance of the account in current estimated BTC
    *
    * @return Balance in BTC
@@ -280,46 +269,16 @@ public class Wyatt {
         }
       }
     }
-    estimatedBalance = Math.round(estimatedBalance * 100000000.0) / 100000000.0;
+    estimatedBalance = CalcUtils.roundToThe(estimatedBalance, 8);
     return estimatedBalance.toString();
   }
 
   public String getCurrentProfit() {
-    Double estimatedBalance = Double.valueOf(getCurrentBalance());
-    Double percentOnInvenstment = ((estimatedBalance / INITIAL_INVESTMENT) * 100) - 100;
-    percentOnInvenstment = Math.round(percentOnInvenstment * 1000.0) / 1000.0;
+    Double percentOnInvenstment =
+        CalcUtils.roundToThe(
+            (((Double.valueOf(getCurrentBalance()) / INITIAL_INVESTMENT) * 100) - 100), 3);
     return percentOnInvenstment.toString();
   }
-
-  /**
-   * Logs the latest balances of the Binance account. This is useful when diagnosing trading
-   * patterns and trade logic.
-   */
-/*  public void printBalances() {
-    Account account = client.getAccount();
-    // Pull the latest account balance info from Binance
-    List<AssetBalance> balances = account.getBalances();
-    Double estimatedBalance = 0.0;
-    for (AssetBalance balance : balances) {
-      // Combine the amount of idle assets, and the amount in trade currently
-      Double amount = Double.valueOf(balance.getFree()) + Double.valueOf(balance.getLocked());
-      if (amount > 0.0) {
-        logger.trace("Asset: " + balance.getAsset() + " - Balance: " + amount);
-        if (balance.getAsset().equals("BTC")) {
-          estimatedBalance += amount;
-        } else {
-          estimatedBalance += valueInBTC(amount, balance.getAsset());
-        }
-      }
-    }
-    estimatedBalance = Math.round(estimatedBalance * 100000000.0) / 100000000.0;
-    Double percentOnInvenstment = ((estimatedBalance / INITIAL_INVESTMENT) * 100) - 100;
-
-    percentOnInvenstment = Math.round(percentOnInvenstment * 100.0) / 100.0;
-    logger.trace("Estimated total account value: " + estimatedBalance + " BTC");
-    logger.trace(
-        "Profit since starting (" + INITIAL_INVESTMENT + " BTC): " + percentOnInvenstment + "%");
-  }*/
 
   /**
    * Estimate the value of a given amount/ticker in BTC
@@ -332,9 +291,7 @@ public class Wyatt {
       TickerStatistics tickerStatistics = client.get24HrPriceStatistics(BTCUSDT_TICKER);
       return amount / Double.valueOf(tickerStatistics.getLastPrice());
     } else {
-      ticker = ticker + "BTC";
-      TickerStatistics tickerStatistics = client.get24HrPriceStatistics(ticker);
-      return Double.valueOf(tickerStatistics.getLastPrice()) * amount;
+      return Double.valueOf(client.get24HrPriceStatistics(ticker + "BTC").getLastPrice()) * amount;
     }
   }
 
@@ -360,10 +317,11 @@ public class Wyatt {
     if (DEVELOPMENT_MODE) {
       reportDevMode();
     }
+    // Gather data calculate, and update Wyatt's target price and buy back
     predictionEngine.executeThoughtProcess(mindData);
-    Double target = predictionEngine.targetPrice;
-    Double buyBack =
-        Math.round(target * PredictionEngine.buyBackAfterThisPercentage * 100.0) / 100.0;
+    lastTargetPrice = predictionEngine.targetPrice;
+    buyBackPrice = CalcUtils.roundToThe(predictionEngine.targetPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
+
     TickerStatistics lastPrice = null;
     for (HashMap.Entry<DataIdentifier, TickerStatistics> entry :
         mindData.getLastPriceData().entrySet()) {
@@ -374,13 +332,11 @@ public class Wyatt {
     }
     Double lastPriceFloored = 0.0;
     if (lastPrice != null && lastPrice.getLastPrice() != null) {
-      lastPriceFloored = Math.round(Double.valueOf(lastPrice.getLastPrice()) * 100.0) / 100.0;
+      lastPriceFloored = CalcUtils.roundToThe(Double.valueOf(lastPrice.getLastPrice()), 2);
     }
-    Double sellConfidence = Math.round((lastPriceFloored / target * 100) * 1000.0) / 1000.0;
-    lastBuyBackPrice = buyBack;
-    lastTargetPrice = target;
+    double sellConfidence = CalcUtils.roundToThe((lastPriceFloored / predictionEngine.targetPrice * 100), 3);
     logger.trace(
-        "Current: $" + lastPriceFloored + " Target: $" + target + " Buy back: $" + buyBack);
+        "Current: $" + lastPriceFloored + " Target: $" + predictionEngine.targetPrice + " Buy back: $" + buyBackPrice);
     logger.trace("Sell confidence: " + sellConfidence + "%");
     boolean trade = true;
     List<Order> openOrders = client.getOpenOrders(new OrderRequest(BTCUSDT_TICKER));
@@ -394,9 +350,9 @@ public class Wyatt {
         openBuyBackPrice = Double.valueOf(openOrder.getPrice());
         Double currentMargin = lastPriceFloored / Double.valueOf(openOrder.getPrice());
         Double currentMarginPercent = (currentMargin - 1) * 100;
-        currentMarginPercent = Math.round(currentMarginPercent * 100.0) / 100.0;
+        currentMarginPercent = CalcUtils.roundToThe(currentMarginPercent, 2);
         Double buyBackDifference = (lastPriceFloored - Double.valueOf(openOrder.getPrice()));
-        buyBackDifference = Math.round(buyBackDifference * 100.0) / 100.0;
+        buyBackDifference = CalcUtils.roundToThe(buyBackDifference, 2);
         logger.trace(
             "Current buy back: " + currentMarginPercent + "% ($" + buyBackDifference + ")");
         if (currentMarginPercent > 10.0) {
@@ -414,17 +370,17 @@ public class Wyatt {
     } else {
       currentState = true;
     }
-    if ((lastPriceFloored > target) && trade) {
+    if ((lastPriceFloored > predictionEngine.targetPrice) && trade) {
       String message =
           "Deciding to sell! Current: $"
               + lastPriceFloored
               + " Target: $"
-              + target
+              + predictionEngine.targetPrice
               + " Buy back: $"
-              + buyBack;
+              + buyBackPrice;
       logger.info(message);
       if (!DEVELOPMENT_MODE) {
-        performSellAndBuyBack(lastPriceFloored, buyBack, message);
+        performSellAndBuyBack(lastPriceFloored, buyBackPrice, message);
       } else {
         reportDevMode();
       }
@@ -470,7 +426,7 @@ public class Wyatt {
     Account account = client.getAccount();
     // Find out how much free asset there is to trade
     Double freeBTC = Double.valueOf(account.getAssetBalance("BTC").getFree());
-    Double freeBTCFloored = Math.floor(freeBTC * 10000.0) / 10000.0;
+    Double freeBTCFloored = CalcUtils.floorToThe(freeBTC, 4);
     logger.info("Amount of BTC to trade: " + freeBTCFloored);
     try {
       logger.info("Executing sell of: " + freeBTCFloored + " BTC @ $" + sellPrice);
@@ -509,9 +465,9 @@ public class Wyatt {
       freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
     }
     // Calculate and round the values in preparation for buying back
-    Double freeUSDTFloored = Math.floor(freeUSDT * 100.0) / 100.0;
+    Double freeUSDTFloored = CalcUtils.floorToThe(freeUSDT, 2);
     Double btcToBuy = freeUSDTFloored / buyPrice;
-    Double btcToBuyFloored = Math.floor(btcToBuy * 10000.0) / 10000.0;
+    Double btcToBuyFloored = CalcUtils.floorToThe(btcToBuy, 4);
     try {
       logger.info(
           "Executing buy with: "
@@ -549,13 +505,13 @@ public class Wyatt {
     Account account = client.getAccount();
     // Find out how much free asset there is to trade
     Double freeUSDT = Double.valueOf(account.getAssetBalance("USDT").getFree());
-    Double freeUSDTFloored = Math.floor(freeUSDT * 100.0) / 100.0;
+    Double freeUSDTFloored = CalcUtils.floorToThe(freeUSDT, 2);
 
     TickerStatistics tickerStatistics = client.get24HrPriceStatistics(BTCUSDT_TICKER);
     Double lastPrice = Double.valueOf(tickerStatistics.getLastPrice());
 
     Double btcToBuy = freeUSDTFloored / lastPrice;
-    Double btcToBuyFloored = Math.floor(btcToBuy * 10000.0) / 10000.0;
+    Double btcToBuyFloored = CalcUtils.floorToThe(btcToBuy, 4);
 
     String message = "Executing market buy back of " + btcToBuyFloored + " BTC @ $" + lastPrice;
     logger.info(message);

@@ -152,7 +152,8 @@ public class WyattController {
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
             + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
     queue.add((System.nanoTime() - startTime) / 1000000000);
-    response += "<g><br><br>Avg load time: " + String.format("%.4f", getAverageStatusLoadTime()) + "s";
+    response +=
+        "<g><br><br>Avg load time: " + String.format("%.4f", getAverageStatusLoadTime()) + "s";
     response += "<br>Uptime: " + upTime + "</g>";
     return new ResponseEntity<>(
         "<html>"

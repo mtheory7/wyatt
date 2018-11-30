@@ -42,7 +42,6 @@ public class WyattApplication {
       } catch (Exception e) {
         logger.error("There was an error during the main trading loop! {}", e);
       } finally {
-        //dolores.printBalances();
         dolores.reset();
         new CalcUtils().sleeper(25000);
       }
