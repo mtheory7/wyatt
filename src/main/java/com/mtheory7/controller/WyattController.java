@@ -3,6 +3,7 @@ package com.mtheory7.controller;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.hash.Hashing;
 import com.mtheory7.wyatt.mind.Wyatt;
+import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
 import java.nio.charset.StandardCharsets;
 import java.util.Queue;
 
@@ -63,21 +62,13 @@ public class WyattController {
 
   @GetMapping(path = PATH_STATUS)
   public ResponseEntity getState() {
-    RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
-    long seconds = rb.getUptime() / 1000;
-    long minutes = seconds / 60;
-    long hours = minutes / 60;
-    long days = hours / 24;
-    String upTime = days + "d " + hours % 24 + "h " + minutes % 60 + "m " + seconds % 60 + "s";
     double startTime = (double) System.nanoTime();
     Double currentPrice = wyatt.getCurrentPrice();
     Double initialInvestment = wyatt.getInitialInvestment();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
     Double portfolioValue = currentBalance * currentPrice;
-    double balanceDiff = currentBalance - initialInvestment;
-    double balanceDiffUSD = balanceDiff * currentPrice;
-    balanceDiff = Math.round(balanceDiff * 100000000.0) / 100000000.0;
-    balanceDiffUSD = Math.round(balanceDiffUSD * 100.0) / 100.0;
+      double balanceDiff = CalcUtils.roundTo(currentBalance - initialInvestment, 8);
+      double balanceDiffUSD = CalcUtils.roundTo(balanceDiff * currentPrice, 2);
     String response =
         "`Mb(<m>......</m>db<m>......</m>)d'<m>.................................</m><br>"
             + "<m>.</m>YM<m>......</m>,PM<m>......</m>,P<m>......................</m>/<m>......</m>/<m>....</m><br>"
@@ -94,8 +85,9 @@ public class WyattController {
             + "<m>......................</m>YMM<m>....................</m>v"
             + wyatt.getVersion()
             + "<m>...</m><br>";
-
-    if (Wyatt.DEVELOPMENT_MODE) response += "<br>### DEVELOPMENT MODE ###";
+      if (Wyatt.DEVELOPMENT_MODE) {
+          response += "<br>### DEVELOPMENT MODE ###";
+      }
     response += "<br>--- Status report ---";
     response += "<br>Status: " + wyatt.getCurrentStateString();
     response += "<br>Investment: " + initialInvestment + " BTC";
@@ -154,7 +146,7 @@ public class WyattController {
     queue.add((System.nanoTime() - startTime) / 1000000000);
     response +=
         "<g><br><br>Avg load time: " + String.format("%.4f", getAverageStatusLoadTime()) + "s";
-    response += "<br>Uptime: " + upTime + "</g>";
+      response += "<br>Uptime: " + CalcUtils.getUpTimeString() + "</g>";
     return new ResponseEntity<>(
         "<html>"
             + "<head>"
