@@ -3,6 +3,7 @@ package com.mtheory7.wyatt.model.data;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.mtheory7.wyatt.model.DataIdentifier;
+import com.mtheory7.wyatt.utils.CalcUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +59,8 @@ public class PredictionEngine {
               avg.getCloseAvg());
       targetPrices.add(target);
     }
-    targetPrice = Math.floor(maxTarget(targetPrices) * 100.9) / 100.0;
+      // Calculate target price by maxing the targetPrices and add a small percentage
+      targetPrice = CalcUtils.floorTo(maxTarget(targetPrices), 2) * 1.0125;
   }
 
   /**
