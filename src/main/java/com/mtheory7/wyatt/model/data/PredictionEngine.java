@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PredictionEngine {
-    public static Double buyBackAfterThisPercentage = 0.98;
+  public static Double buyBackAfterThisPercentage = 0.98;
   public Double targetPrice;
   private List<AverageData> averageData;
   private List<Double> targetPrices;
@@ -59,8 +59,8 @@ public class PredictionEngine {
               avg.getCloseAvg());
       targetPrices.add(target);
     }
-      // Calculate target price by maxing the targetPrices and add a small percentage
-      targetPrice = CalcUtils.floorTo(maxTarget(targetPrices), 2) * 1.0125;
+    // Calculate target price by maxing the targetPrices and add a small percentage
+    targetPrice = CalcUtils.floorTo(maxTarget(targetPrices), 2) * 1.0125;
   }
 
   /**
