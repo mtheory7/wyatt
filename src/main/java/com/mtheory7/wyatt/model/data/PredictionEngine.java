@@ -60,7 +60,7 @@ public class PredictionEngine {
       targetPrices.add(target);
     }
     // Calculate target price by maxing the targetPrices and add a small percentage
-    targetPrice = CalcUtils.floorTo(maxTarget(targetPrices), 2) * 1.0125;
+    targetPrice = CalcUtils.floorTo(maxTarget(targetPrices) * 1.0125, 2);
   }
 
   /**
