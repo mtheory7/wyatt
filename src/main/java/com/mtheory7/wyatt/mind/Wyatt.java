@@ -272,17 +272,17 @@ public class Wyatt {
     return estimatedBalance.toString();
   }
 
-    /**
-     * Return the current profit from the starting investment
-     *
-     * @return The current profit
-     */
-    public String getCurrentProfit() {
-        Double percentOnInvenstment =
-                CalcUtils.roundTo(
-                        (((Double.valueOf(getCurrentBalance()) / INITIAL_INVESTMENT) * 100) - 100), 3);
-        return percentOnInvenstment.toString();
-    }
+  /**
+   * Return the current profit from the starting investment
+   *
+   * @return The current profit
+   */
+  public String getCurrentProfit() {
+    Double percentOnInvenstment =
+        CalcUtils.roundTo(
+            (((Double.valueOf(getCurrentBalance()) / INITIAL_INVESTMENT) * 100) - 100), 3);
+    return percentOnInvenstment.toString();
+  }
 
   /**
    * Estimate the value of a given amount/ticker in BTC
@@ -504,10 +504,10 @@ public class Wyatt {
     new CalcUtils().sleeper(3000);
     Account account = client.getAccount();
     // Find out how much free asset there is to trade
-      Double freeUSDTFloored =
-              CalcUtils.floorTo(Double.valueOf(account.getAssetBalance("USDT").getFree()), 2);
-      Double lastPrice = getCurrentPrice();
-      Double btcToBuyFloored = CalcUtils.floorTo(freeUSDTFloored / lastPrice, 4);
+    Double freeUSDTFloored =
+        CalcUtils.floorTo(Double.valueOf(account.getAssetBalance("USDT").getFree()), 2);
+    Double lastPrice = getCurrentPrice();
+    Double btcToBuyFloored = CalcUtils.floorTo(freeUSDTFloored / lastPrice, 4);
     String message = "Executing market buy back of " + btcToBuyFloored + " BTC @ $" + lastPrice;
     logger.info(message);
     sendTweet(message);

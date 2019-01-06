@@ -15,15 +15,7 @@ public class DataIdentifier {
     return interval;
   }
 
-  public void setInterval(CandlestickInterval interval) {
-    this.interval = interval;
-  }
-
   public String getTicker() {
     return ticker;
-  }
-
-  public void setTicker(String ticker) {
-    this.ticker = ticker;
   }
 }

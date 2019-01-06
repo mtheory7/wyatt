@@ -21,24 +21,4 @@ public class MindData {
   public HashMap<DataIdentifier, List<Candlestick>> getCandlestickData() {
     return candlestickData;
   }
-
-  public void setCandlestickData(HashMap<DataIdentifier, List<Candlestick>> candlestickData) {
-    this.candlestickData = candlestickData;
-  }
-
-  public HashMap<DataIdentifier, TickerStatistics> getLastPriceData() {
-    return lastPriceData;
-  }
-
-  public void setLastPriceData(HashMap<DataIdentifier, TickerStatistics> lastPriceData) {
-    this.lastPriceData = lastPriceData;
-  }
-
-  public HashMap<DataIdentifier, Double> getCandlestickIntAvgData() {
-    return candlestickIntAvgData;
-  }
-
-  public void setCandlestickIntAvgData(HashMap<DataIdentifier, Double> candlestickIntAvgData) {
-    this.candlestickIntAvgData = candlestickIntAvgData;
-  }
 }
