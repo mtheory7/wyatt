@@ -67,27 +67,14 @@ public class WyattController {
     Double initialInvestment = wyatt.getInitialInvestment();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
     Double portfolioValue = currentBalance * currentPrice;
-      double balanceDiff = CalcUtils.roundTo(currentBalance - initialInvestment, 8);
-      double balanceDiffUSD = CalcUtils.roundTo(balanceDiff * currentPrice, 2);
+    double balanceDiff = CalcUtils.roundTo(currentBalance - initialInvestment, 8);
+    double balanceDiffUSD = CalcUtils.roundTo(balanceDiff * currentPrice, 2);
     String response =
-        "`Mb(<m>......</m>db<m>......</m>)d'<m>.................................</m><br>"
-            + "<m>.</m>YM<m>......</m>,PM<m>......</m>,P<m>......................</m>/<m>......</m>/<m>....</m><br>"
-            + "<m>.</m>`Mb<m>.....</m>d'Mb<m>.....</m>d'<m>.</m>____<m>....</m>___<m>...</m>___<m>...</m>/M<m>.....</m>/M<m>....</m><br>"
-            + "<m>..</m>YM<m>....</m>,P<m>.</m>YM<m>....</m>,P<m>..</m>`MM(<m>....</m>)M'<m>.</m>6MMMMb<m>.</m>/RNP<3<m>.</m>/MMMMMM<br>"
-            + "<m>..</m>`Mb<m>...</m>d'<m>.</m>`Mb<m>...</m>d'<m>...</m>`Mb<m>....</m>d'<m>.</m>8M'<m>..</m>`Mb<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
-            + "<m>...</m>YM<m>..</m>,P<m>...</m>YM<m>..</m>,P<m>.....</m>YM<m>...</m>,P<m>......</m>,oMM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
-            + "<m>...</m>`Mb<m>.</m>d'<m>...</m>`Mb<m>.</m>d'<m>......</m>MM<m>..</m>M<m>...</m>,6MM9'MM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
-            + "<m>....</m>YM,P<m>.....</m>YM,P<m>.......</m>`Mbd'<m>...</m>MM'<m>...</m>MM<m>.</m>MM<m>.....</m>MM<m>....</m><br>"
-            + "<m>....</m>`MM'<m>.....</m>`MM'<m>........</m>YMP<m>....</m>MM<m>...</m>,MM<m>.</m>YM<m>...</m>,<m>.</m>YM<m>...</m>,<br>"
-            + "<m>.....</m>YP<m>.......</m>YP<m>..........</m>M<m>.....</m>`YMMM9'Yb<m>.</m>YMMM9<m>..</m>YMMM9<br>"
-            + "<m>.........................</m>d'<m>...........................</m><br>"
-            + "<m>.....................</m>C3P,O<m>............................</m><br>"
-            + "<m>......................</m>YMM<m>....................</m>v"
-            + wyatt.getVersion()
-            + "<m>...</m><br>";
-      if (Wyatt.DEVELOPMENT_MODE) {
-          response += "<br>### DEVELOPMENT MODE ###";
-      }
+        "M\"\"MMM\"\"MMM\"\"M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>M&nbsp;&nbsp;MMM&nbsp;&nbsp;MMM&nbsp;&nbsp;M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;MMP&nbsp;&nbsp;MMP&nbsp;&nbsp;M&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;.d8888b.&nbsp;d8888P&nbsp;d8888P<br>M&nbsp;&nbsp;MM'&nbsp;&nbsp;MM'&nbsp;.M&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;88'&nbsp;&nbsp;`88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;`'&nbsp;.&nbsp;''&nbsp;.MM&nbsp;88.&nbsp;&nbsp;.88&nbsp;88.&nbsp;&nbsp;.88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;&nbsp;&nbsp;.d&nbsp;&nbsp;.dMMM&nbsp;`8888P88&nbsp;`88888P8&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>MMMMMMMMMMMMMM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.88<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d8888P<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    response += "<m>version&nbsp;" + wyatt.getVersion() + "</m><br>";
+    if (Wyatt.DEVELOPMENT_MODE) {
+      response += "<br>### DEVELOPMENT MODE ###";
+    }
     response += "<br>--- Status report ---";
     response += "<br>Status: " + wyatt.getCurrentStateString();
     response += "<br>Investment: " + initialInvestment + " BTC";
@@ -146,7 +133,7 @@ public class WyattController {
     queue.add((System.nanoTime() - startTime) / 1000000000);
     response +=
         "<g><br><br>Avg load time: " + String.format("%.4f", getAverageStatusLoadTime()) + "s";
-      response += "<br>Uptime: " + CalcUtils.getUpTimeString() + "</g>";
+    response += "<br>Uptime: " + CalcUtils.getUpTimeString() + "</g>";
     return new ResponseEntity<>(
         "<html>"
             + "<head>"
@@ -163,7 +150,7 @@ public class WyattController {
             + "  color: #F7931A;"
             + "}"
             + "m {"
-            + "  color: #000000;"
+            + "  color: #A9A9A9;"
             + "}"
             + "g {"
             + "  color: #999999;"
