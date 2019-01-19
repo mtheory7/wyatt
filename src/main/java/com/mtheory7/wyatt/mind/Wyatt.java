@@ -372,13 +372,17 @@ public class Wyatt {
       currentState = true;
     }
     if ((currentPrice > predictionEngine.targetPrice) && currentState) {
+      // Find out how much free asset there is to trade
+      Account account = client.getAccount();
+      Double freeBTCFloored =
+          CalcUtils.floorTo(Double.valueOf(account.getAssetBalance("BTC").getFree()), 4);
       String message =
-          "Deciding to sell! Current: $"
-              + currentPrice
-              + " Target: $"
-              + predictionEngine.targetPrice
-              + " Buy back: $"
-              + buyBackPrice;
+          "Selling "
+              + freeBTCFloored
+              + " BTC at $"
+              + String.format("%.2f", currentPrice)
+              + " and buying back at $"
+              + String.format("%.2f", buyBackPrice);
       logger.info(message);
       if (!DEVELOPMENT_MODE) {
         performSellAndBuyBack(currentPrice, buyBackPrice, message);
