@@ -30,7 +30,7 @@ public class WyattApplication {
       logger.error("Incorrect number of arguments given!");
       System.exit(-1);
     }
-    logger.info("Starting WYATT...");
+    logger.info("Starting Wyatt_v" + dolores.getVersion() + "...");
     runWyatt(dolores);
   }
 

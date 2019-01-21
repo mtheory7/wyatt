@@ -407,9 +407,9 @@ public class Wyatt {
     } catch (Exception e) {
       logger.info("There was an exception while pulling interval data!");
       logger.trace("Interval: " + interval + " Ticker: " + ticker);
+      logger.error("Error: ", e);
       logger.trace("Waiting for 120 seconds ...");
       new CalcUtils().sleeper(120000);
-      logger.error("Error: ", e);
     }
     // Save the pulled data to the passed in data structure
     mindData.candlestickData.put(new DataIdentifier(interval, ticker), candlesticks);
