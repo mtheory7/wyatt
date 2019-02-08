@@ -69,101 +69,81 @@ public class WyattController {
     Double portfolioValue = currentBalance * currentPrice;
     double balanceDiff = CalcUtils.roundTo(currentBalance - initialInvestment, 8);
     double balanceDiffUSD = CalcUtils.roundTo(balanceDiff * currentPrice, 2);
-    String response =
-        "M\"\"MMM\"\"MMM\"\"M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>M&nbsp;&nbsp;MMM&nbsp;&nbsp;MMM&nbsp;&nbsp;M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;MMP&nbsp;&nbsp;MMP&nbsp;&nbsp;M&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;.d8888b.&nbsp;d8888P&nbsp;d8888P<br>M&nbsp;&nbsp;MM'&nbsp;&nbsp;MM'&nbsp;.M&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;88'&nbsp;&nbsp;`88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;`'&nbsp;.&nbsp;''&nbsp;.MM&nbsp;88.&nbsp;&nbsp;.88&nbsp;88.&nbsp;&nbsp;.88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;&nbsp;&nbsp;.d&nbsp;&nbsp;.dMMM&nbsp;`8888P88&nbsp;`88888P8&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>MMMMMMMMMMMMMM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.88<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d8888P<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    response += "<m>Version&nbsp;" + wyatt.getVersion() + "</m><br>";
+    StringBuilder response =
+        new StringBuilder(
+            "M\"\"MMM\"\"MMM\"\"M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>M&nbsp;&nbsp;MMM&nbsp;&nbsp;MMM&nbsp;&nbsp;M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;MMP&nbsp;&nbsp;MMP&nbsp;&nbsp;M&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;.d8888b.&nbsp;d8888P&nbsp;d8888P<br>M&nbsp;&nbsp;MM'&nbsp;&nbsp;MM'&nbsp;.M&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;88'&nbsp;&nbsp;`88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;`'&nbsp;.&nbsp;''&nbsp;.MM&nbsp;88.&nbsp;&nbsp;.88&nbsp;88.&nbsp;&nbsp;.88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;&nbsp;&nbsp;.d&nbsp;&nbsp;.dMMM&nbsp;`8888P88&nbsp;`88888P8&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>MMMMMMMMMMMMMM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.88<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d8888P<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    response.append("<m>Version&nbsp;").append(wyatt.getVersion()).append("</m><br>");
     if (Wyatt.DEVELOPMENT_MODE) {
-      response += "<br>### DEVELOPMENT MODE ###";
+      response.append("<br>### DEVELOPMENT MODE ###");
     }
-    response += "<br>--- Status report ---";
-    response += "<br>Status: " + wyatt.getCurrentStateString();
-    response += "<br>Investment: " + initialInvestment + " BTC";
-    response +=
-        "<br>Portfolio  ≈ "
-            + currentBalance
-            + " BTC ($"
-            + String.format("%.2f", portfolioValue)
-            + ")";
-    response += wyatt.getBalances();
-    response +=
-        "<br>Profit: "
-            + wyatt.getCurrentProfit()
-            + "% ("
-            + String.format("%.8f", balanceDiff)
-            + " BTC ≈ $"
-            + String.format("%.2f", balanceDiffUSD)
-            + ")";
+    response.append("<br>--- Status report ---");
+    response.append("<br>Status: ").append(wyatt.getCurrentStateString());
+    response.append("<br>Investment: ").append(initialInvestment).append(" BTC");
+    response
+        .append("<br>Portfolio  ≈ ")
+        .append(currentBalance)
+        .append(" BTC ($")
+        .append(String.format("%.2f", portfolioValue))
+        .append(")");
+    response.append(wyatt.getBalances());
+    response
+        .append("<br>Profit: ")
+        .append(wyatt.getCurrentProfit())
+        .append("% (")
+        .append(String.format("%.8f", balanceDiff))
+        .append(" BTC ≈ $")
+        .append(String.format("%.2f", balanceDiffUSD))
+        .append(")");
     if (!wyatt.isEXECUTE_TWEETS()) {
-      response += "<br>Tweeting: DISABLED";
+      response.append("<br>Tweeting: DISABLED");
     }
-    response += "<br><br>--- Market ---";
-    response += "<br>BTC Price: $" + String.format("%.2f", currentPrice);
-    response += "<br>Target: $" + String.format("%.2f", wyatt.getCurrentTargetPrice());
-    response += "<br>Buy back: $" + String.format("%.2f", wyatt.getCurrentBuyBackPrice());
-    response += "<br>Sell confidence: " + wyatt.getCurrentSellConfidence() + "%";
+    response.append("<br><br>--- Market ---");
+    response.append("<br>BTC Price: $").append(String.format("%.2f", currentPrice));
+    response.append("<br>Target: $").append(String.format("%.2f", wyatt.getCurrentTargetPrice()));
+    response
+        .append("<br>Buy back: $")
+        .append(String.format("%.2f", wyatt.getCurrentBuyBackPrice()));
+    response.append("<br>Sell confidence: ").append(wyatt.getCurrentSellConfidence()).append("%");
     if (!wyatt.currentState) {
       Double diff = wyatt.getCurrentPrice() - wyatt.getOpenBuyBackPrice();
-      response += "<br><br>--- Open buy back ---";
-      response +=
-          "<br>Amount: "
-              + wyatt.getOpenBuyBackAmt()
-              + " BTC @ $"
-              + String.format("%.2f", wyatt.getOpenBuyBackPrice());
-      response +=
-          "<br>Difference: $"
-              + String.format("%.2f", diff)
-              + " ("
-              + wyatt.getOpenBuyBackPercentage()
-              + "%)";
+      response.append("<br><br>--- Open buy back ---");
+      response
+          .append("<br>Amount: ")
+          .append(wyatt.getOpenBuyBackAmt())
+          .append(" BTC @ $")
+          .append(String.format("%.2f", wyatt.getOpenBuyBackPrice()));
+      response
+          .append("<br>Difference: $")
+          .append(String.format("%.2f", diff))
+          .append(" (")
+          .append(wyatt.getOpenBuyBackPercentage())
+          .append("%)");
     }
-    response += "<br><br>--- Links ---";
-    response +=
-        "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:#F7931A\">Source Code</a>";
-    response +=
-        "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Twitter</a>";
-    response +=
-        "<br><a href=\"http://www.mtheory7.com:17071/orders\" style=\"color:#F7931A\">Order History</a>";
-    response += "<br><br>--- Donate ---";
-    response +=
+    response.append("<br><br>--- Links ---");
+    response.append(
+        "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:#F7931A\">Source Code</a>");
+    response.append(
+        "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Twitter</a>");
+    response.append(
+        "<br><a href=\"http://www.mtheory7.com:17071/orders\" style=\"color:#F7931A\">Order History</a>");
+    response.append("<br><br>--- Donate ---");
+    response.append(
         "<br>Personal: <a href=\"https://www.blockchain.com/btc/address/"
-            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">14X...4yj</a>";
-    response +=
+            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">14X...4yj</a>");
+    response.append(
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
-            + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>";
+            + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>");
     queue.add((System.nanoTime() - startTime) / 1000000000);
-    response +=
-        "<g><br><br>Avg load time: " + String.format("%.4f", getAverageStatusLoadTime()) + "s";
-    response += "<br>Uptime: " + CalcUtils.getUpTimeString() + "</g>";
+    response
+        .append("<g><br><br>Avg load time: ")
+        .append(String.format("%.4f", getAverageStatusLoadTime()))
+        .append("s");
+    response.append("<br>Uptime: ").append(CalcUtils.getUpTimeString()).append("</g>");
     return new ResponseEntity<>(
-        "<html>"
-            + "<head>"
-            + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\">"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\">"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\">"
-            + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">"
-            + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">"
-            + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">"
-            + "<meta name=\"theme-color\" content=\"#ffffff\">"
-            + "<meta http-equiv=\"refresh\" content=\"25\" />"
-            + "<style>"
-            + "body {"
-            + "  color: #F7931A;"
-            + "}"
-            + "m {"
-            + "  color: #A9A9A9;"
-            + "}"
-            + "g {"
-            + "  color: #999999;"
-            + "}"
-            + "</style>"
-            + "</head>"
-            + "<title>Wyatt</title>"
-            + "<body bgcolor=\"#000000\">"
-            + "<font face=\"Courier\" size=\"3\">"
-            + response
-            + "</font>"
-            + "</body>"
-            + "</html>",
+        new StringBuilder(
+                "<html><head><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\"><link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\"><link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\"><meta name=\"msapplication-TileColor\" content=\"#da532c\"><meta name=\"theme-color\" content=\"#ffffff\"><meta http-equiv=\"refresh\" content=\"25\" /><style>body {  color: #F7931A;}m {  color: #A9A9A9;}g {  color: #999999;}</style></head><title>Wyatt</title><body bgcolor=\"#000000\"><font face=\"Courier\" size=\"3\">")
+            .append(response)
+            .append("</font></body></html>"),
         HttpStatus.OK);
   }
 
