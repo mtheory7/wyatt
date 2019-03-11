@@ -6,6 +6,7 @@ import com.mtheory7.wyatt.mind.Wyatt;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.devtools.restart.Restarter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,11 @@ public class WyattController {
   @Autowired
   public WyattController(Wyatt wyatt) {
     this.wyatt = wyatt;
+  }
+
+  @GetMapping(path = "/restart")
+  public void restart() {
+    Restarter.getInstance().restart();
   }
 
   @GetMapping(path = PATH_BALANCE)
