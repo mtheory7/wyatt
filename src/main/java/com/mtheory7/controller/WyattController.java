@@ -24,6 +24,7 @@ public class WyattController {
   private static final String PATH_PROFIT = "/balance/profit";
   private static final String PATH_SHUTDOWN = "/seppuku";
   private static final String PATH_STATUS = "/status";
+  private static final String PATH_RESTART = "/restart";
   private static final String PATH_ORDER_HISTORY = "/orders";
   private static final String RESPONSE_SUFFIX = " endpoint hit";
   private final Wyatt wyatt;
@@ -34,9 +35,17 @@ public class WyattController {
     this.wyatt = wyatt;
   }
 
-  @GetMapping(path = "/restart")
-  public void restart() {
-    Restarter.getInstance().restart();
+  @GetMapping(
+      path = PATH_RESTART,
+      params = {"pass"})
+  public void restart(@RequestParam("pass") String pass, HttpServletRequest request) {
+    logger.trace(PATH_RESTART + RESPONSE_SUFFIX);
+    if (confirmPassword(pass)) {
+      logger.info("Restart received from IP-address: " + request.getRemoteUser());
+      Restarter.getInstance().restart();
+    } else {
+      logger.info("Restart shutdown code from IP-address: " + request.getRemoteAddr());
+    }
   }
 
   @GetMapping(path = PATH_BALANCE)
@@ -56,9 +65,7 @@ public class WyattController {
       params = {"pass"})
   public void seppuku(@RequestParam("pass") String pass, HttpServletRequest request) {
     logger.trace(PATH_SHUTDOWN + RESPONSE_SUFFIX);
-    // Verify the password provided...
-    String sha256hex = Hashing.sha256().hashString(pass, StandardCharsets.UTF_8).toString();
-    if (sha256hex.equals("bc159b2d00a17af10d15f85c0fc3050626a9de62ddada278c086b5a53c883464")) {
+    if (confirmPassword(pass)) {
       logger.info("Shutdown received from IP-address: " + request.getRemoteUser());
       System.exit(-1);
     } else {
@@ -194,5 +201,18 @@ public class WyattController {
       average += num / queue.size();
     }
     return average;
+  }
+
+  /**
+   * Returns the result of comparing the password with the supplied key
+   *
+   * @param pass The user supplied password to check
+   * @return Whether or not the user's password was correct
+   */
+  private boolean confirmPassword(String pass) {
+    return Hashing.sha256()
+        .hashString(pass, StandardCharsets.UTF_8)
+        .toString()
+        .equals("bc159b2d00a17af10d15f85c0fc3050626a9de62ddada278c086b5a53c883464");
   }
 }
