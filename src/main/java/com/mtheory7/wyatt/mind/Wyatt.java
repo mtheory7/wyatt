@@ -29,7 +29,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  public static final boolean DEVELOPMENT_MODE = true;
+  public static final boolean DEVELOPMENT_MODE = false;
   private static final String BTCUSDT_TICKER = "BTCUSDT";
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static final CandlestickInterval[] intervalList = {
