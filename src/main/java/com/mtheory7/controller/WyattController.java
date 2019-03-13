@@ -44,7 +44,7 @@ public class WyattController {
       logger.info("Restart received from IP-address: " + request.getRemoteUser());
       Restarter.getInstance().restart();
     } else {
-      logger.info("Restart shutdown code from IP-address: " + request.getRemoteAddr());
+      logger.info("Incorrect restart code from IP-address: " + request.getRemoteAddr());
     }
   }
 
