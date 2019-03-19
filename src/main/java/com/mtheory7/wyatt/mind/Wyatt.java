@@ -29,7 +29,7 @@ import static com.binance.api.client.domain.account.NewOrder.*;
 
 @Service
 public class Wyatt {
-  public static final boolean DEVELOPMENT_MODE = false;
+
   private static final String BTCUSDT_TICKER = "BTCUSDT";
   private static final Logger logger = Logger.getLogger(Wyatt.class);
   private static final CandlestickInterval[] intervalList = {
@@ -37,16 +37,9 @@ public class Wyatt {
     CandlestickInterval.FIVE_MINUTES, CandlestickInterval.FIFTEEN_MINUTES
   };
   private static final String[] tickers = {BTCUSDT_TICKER};
+  public static boolean DEVELOPMENT_MODE;
   public boolean currentState = true;
-
-  @Value("${initialInvestment}")
-  private Double INITIAL_INVESTMENT;
-
   private boolean EXECUTE_TWEETS = false;
-
-  @Value("${versionValue}")
-  private String VERSION;
-
   private Double lastTargetPrice = 1000000.0;
   private Double buyBackPrice = 0.0;
   private Double openBuyBackPrice = 0.0;
@@ -58,6 +51,15 @@ public class Wyatt {
   private String consumerSecret;
   private String accessToken;
   private String accessTokenSecret;
+
+  @Value("${initialInvestment}")
+  private Double INITIAL_INVESTMENT;
+  @Value("${versionValue}")
+  private String VERSION;
+  @Value("${developmentMode}")
+  public void setDevelopmentMode(boolean mode) {
+    DEVELOPMENT_MODE = mode;
+  }
 
   /** Resets Wyatt's memory. This is necessary to do or memory leaks will be possible */
   public void reset() {
