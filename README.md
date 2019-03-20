@@ -28,12 +28,7 @@ To shutdown the bot:
 GET: http://host-ip:port/seppuku?pass={password}
 ```
 ### Logic
-  * Gather recent data using [Binance-API](https://github.com/binance-exchange/binance-java-api)
-  * Use data to find averages for various time intervals
-  * Predict the next selling price using calculated targets
-  * When current price is above target sell price, execute sell
-  * Then, execute buy back immediately after for a configured percentage below the targeted sell price
-  * Once decided, Wyatt sells at the current price not the target sell price
+![Wyatt trade logic](https://github.com/mtheory7/wyatt/blob/master/src/main/resources/Wyatt_trade_logic.jpg)
 ### Building
 First clone and build the [Binance-API](https://github.com/binance-exchange/binance-java-api) repository to install the necessary packages into your local Maven repository (it is needed to build Wyatt)
   
