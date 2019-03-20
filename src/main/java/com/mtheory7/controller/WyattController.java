@@ -6,6 +6,7 @@ import com.mtheory7.wyatt.mind.Wyatt;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import java.util.Queue;
 
 @RestController
 public class WyattController {
+
   private static final Logger logger = Logger.getLogger(WyattController.class);
   private static final String PATH_BALANCE = "/balance/btc";
   private static final String PATH_PROFIT = "/balance/profit";
@@ -26,11 +28,35 @@ public class WyattController {
   private static final String PATH_ORDER_HISTORY = "/orders";
   private static final String RESPONSE_SUFFIX = " endpoint hit";
   private final Wyatt wyatt;
+  public int serverPort;
+  public String wyattBTCAddress;
+  public String donateBTCAddress;
+  public String hostIP;
   private Queue<Double> queue = EvictingQueue.create(100);
 
   @Autowired
   public WyattController(Wyatt wyatt) {
     this.wyatt = wyatt;
+  }
+
+  @Value("${server.port}")
+  public void getServerPort(int port) {
+    this.serverPort = port;
+  }
+
+  @Value("${hostIP}")
+  public void getHostIP(String ip) {
+    this.hostIP = ip;
+  }
+
+  @Value("${wyattBTCAddress}")
+  public void getWyattBTCAddress(String address) {
+    this.wyattBTCAddress = address;
+  }
+
+  @Value("${donateBTCAddress}")
+  public void getDonateBTCAddress(String address) {
+    this.donateBTCAddress = address;
   }
 
   @GetMapping(path = PATH_BALANCE)
@@ -123,14 +149,24 @@ public class WyattController {
     response.append(
         "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Twitter</a>");
     response.append(
-        "<br><a href=\"http://www.mtheory7.com:17071/orders\" style=\"color:#F7931A\">Order History</a>");
+        "<br><a href=\"http://"
+            + this.hostIP
+            + ":"
+            + this.serverPort
+            + "/orders\" style=\"color:#F7931A\">Order History</a>");
     response.append("<br><br>--- Donate ---");
     response.append(
         "<br>Personal: <a href=\"https://www.blockchain.com/btc/address/"
-            + "14Xqn75eLQVZEgjFgrQzF8C2PxNDf894yj\" style=\"color:#F7931A\">14X...4yj</a>");
+            + this.donateBTCAddress
+            + "\" style=\"color:#F7931A\">"
+            + this.donateBTCAddress
+            + "</a>");
     response.append(
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
-            + "1BWu4LtW1swREcDWffFHZSuK3VTT1iWuba\" style=\"color:#F7931A\">1BW...uba</a>");
+            + this.wyattBTCAddress
+            + "\" style=\"color:#F7931A\">"
+            + this.wyattBTCAddress
+            + "</a>");
     queue.add((System.nanoTime() - startTime) / 1000000000);
     response
         .append("<g><br><br>Avg load time: ")
@@ -139,7 +175,17 @@ public class WyattController {
     response.append("<br>Uptime: ").append(CalcUtils.getUpTimeString()).append("</g>");
     return new ResponseEntity<>(
         new StringBuilder(
-                "<html><head><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\"><link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\"><link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\"><meta name=\"msapplication-TileColor\" content=\"#da532c\"><meta name=\"theme-color\" content=\"#ffffff\"><meta http-equiv=\"refresh\" content=\"25\" /><style>body {  color: #F7931A;}m {  color: #A9A9A9;}g {  color: #999999;}</style></head><title>Wyatt</title><body bgcolor=\"#000000\"><font face=\"Courier\" size=\"3\">")
+                "<html><head><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://"
+                    + this.hostIP
+                    + "/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://"
+                    + this.hostIP
+                    + "/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://"
+                    + this.hostIP
+                    + "/favicon-16x16.png\"><link rel=\"manifest\" href=\"https://"
+                    + this.hostIP
+                    + "/site.webmanifest\"><link rel=\"mask-icon\" href=\"https://"
+                    + this.hostIP
+                    + "/safari-pinned-tab.svg\" color=\"#5bbad5\"><meta name=\"msapplication-TileColor\" content=\"#da532c\"><meta name=\"theme-color\" content=\"#ffffff\"><meta http-equiv=\"refresh\" content=\"25\" /><style>body {  color: #F7931A;}m {  color: #A9A9A9;}g {  color: #999999;}</style></head><title>Wyatt</title><body bgcolor=\"#000000\"><font face=\"Courier\" size=\"3\">")
             .append(response)
             .append("</font></body></html>"),
         HttpStatus.OK);
@@ -152,11 +198,21 @@ public class WyattController {
     return new ResponseEntity<>(
         "<html>"
             + "<head>"
-            + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://www.mtheory7.com/apple-touch-icon.png\">"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://www.mtheory7.com/favicon-32x32.png\">"
-            + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://www.mtheory7.com/favicon-16x16.png\">"
-            + "<link rel=\"manifest\" href=\"https://www.mtheory7.com/site.webmanifest\">"
-            + "<link rel=\"mask-icon\" href=\"https://www.mtheory7.com/safari-pinned-tab.svg\" color=\"#5bbad5\">"
+            + "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://"
+            + this.hostIP
+            + "/apple-touch-icon.png\">"
+            + "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://"
+            + this.hostIP
+            + "/favicon-32x32.png\">"
+            + "<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://"
+            + this.hostIP
+            + "/favicon-16x16.png\">"
+            + "<link rel=\"manifest\" href=\"https://"
+            + this.hostIP
+            + "/site.webmanifest\">"
+            + "<link rel=\"mask-icon\" href=\"https://"
+            + this.hostIP
+            + "/safari-pinned-tab.svg\" color=\"#5bbad5\">"
             + "<meta name=\"msapplication-TileColor\" content=\"#da532c\">"
             + "<meta name=\"theme-color\" content=\"#ffffff\">"
             + "<meta http-equiv=\"refresh\" content=\"25\" />"
@@ -164,7 +220,11 @@ public class WyattController {
             + "<title>Wyatt</title>"
             + "<body bgcolor=\"#000000\">"
             + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">"
-            + "<a href=\"http://www.mtheory7.com:17071/status\" style=\"color:#F7931A\">Back</a>"
+            + "<a href=\"http://"
+            + this.hostIP
+            + ":"
+            + this.serverPort
+            + "/status\" style=\"color:#F7931A\">Back</a>"
             + response
             + "</font>"
             + "</body>"
