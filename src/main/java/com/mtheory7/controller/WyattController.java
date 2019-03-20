@@ -32,11 +32,17 @@ public class WyattController {
   public String wyattBTCAddress;
   public String donateBTCAddress;
   public String hostIP;
+  public String mainColor;
   private Queue<Double> queue = EvictingQueue.create(100);
 
   @Autowired
   public WyattController(Wyatt wyatt) {
     this.wyatt = wyatt;
+  }
+
+  @Value("${mainColor}")
+  public void getMainColor(String color) {
+    this.mainColor = color;
   }
 
   @Value("${server.port}")
@@ -145,26 +151,26 @@ public class WyattController {
     }
     response.append("<br><br>--- Links ---");
     response.append(
-        "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:#F7931A\">Source Code</a>");
+        "<br><a href=\"https://github.com/mtheory7/wyatt\" style=\"color:" + this.mainColor + "\">Source Code</a>");
     response.append(
-        "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:#F7931A\">Twitter</a>");
+        "<br><a href=\"https://twitter.com/WestworldWyatt\" style=\"color:" + this.mainColor + "\">Twitter</a>");
     response.append(
         "<br><a href=\"http://"
             + this.hostIP
             + ":"
             + this.serverPort
-            + "/orders\" style=\"color:#F7931A\">Order History</a>");
+            + "/orders\" style=\"color:" + this.mainColor + "\">Order History</a>");
     response.append("<br><br>--- Donate ---");
     response.append(
         "<br>Personal: <a href=\"https://www.blockchain.com/btc/address/"
             + this.donateBTCAddress
-            + "\" style=\"color:#F7931A\">"
+            + "\" style=\"color:" + this.mainColor + "\">"
             + this.donateBTCAddress
             + "</a>");
     response.append(
         "<br>Wyatt: <a href=\"https://www.blockchain.com/btc/address/"
             + this.wyattBTCAddress
-            + "\" style=\"color:#F7931A\">"
+            + "\" style=\"color:" + this.mainColor + "\">"
             + this.wyattBTCAddress
             + "</a>");
     queue.add((System.nanoTime() - startTime) / 1000000000);
@@ -185,7 +191,7 @@ public class WyattController {
                     + this.hostIP
                     + "/site.webmanifest\"><link rel=\"mask-icon\" href=\"https://"
                     + this.hostIP
-                    + "/safari-pinned-tab.svg\" color=\"#5bbad5\"><meta name=\"msapplication-TileColor\" content=\"#da532c\"><meta name=\"theme-color\" content=\"#ffffff\"><meta http-equiv=\"refresh\" content=\"25\" /><style>body {  color: #F7931A;}m {  color: #A9A9A9;}g {  color: #999999;}</style></head><title>Wyatt</title><body bgcolor=\"#000000\"><font face=\"Courier\" size=\"3\">")
+                    + "/safari-pinned-tab.svg\" color=\"#5bbad5\"><meta name=\"msapplication-TileColor\" content=\"#da532c\"><meta name=\"theme-color\" content=\"#ffffff\"><meta http-equiv=\"refresh\" content=\"25\" /><style>body {  color: " + this.mainColor + ";}m {  color: #A9A9A9;}g {  color: #999999;}</style></head><title>Wyatt</title><body bgcolor=\"#000000\"><font face=\"Courier\" size=\"3\">")
             .append(response)
             .append("</font></body></html>"),
         HttpStatus.OK);
@@ -219,12 +225,12 @@ public class WyattController {
             + "</head>"
             + "<title>Wyatt</title>"
             + "<body bgcolor=\"#000000\">"
-            + "<font face=\"Courier\" size=\"3\" color=\"#F7931A\">"
+            + "<font face=\"Courier\" size=\"3\" color=\"" + this.mainColor + "\">"
             + "<a href=\"http://"
             + this.hostIP
             + ":"
             + this.serverPort
-            + "/status\" style=\"color:#F7931A\">Back</a>"
+            + "/status\" style=\"color:" + this.mainColor + "\">Back</a>"
             + response
             + "</font>"
             + "</body>"
