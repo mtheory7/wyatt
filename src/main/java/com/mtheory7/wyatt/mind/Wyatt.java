@@ -167,15 +167,20 @@ public class Wyatt {
     for (Trade trade : trades) {
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy' 'HH:mm:ss:S");
       response =
-          "<br>"
-              + trade.getOrderId()
-              + ": Date/Time: "
-              + simpleDateFormat.format(trade.getTime())
-              + ": "
-              + trade.getQty()
-              + " BTC @ $"
-              + String.format("%.2f", Double.valueOf(trade.getPrice()))
-              + response;
+          new StringBuilder()
+              .append("<br><font color=\"")
+              .append(trade.isBuyer() ? "green" : "red")
+              .append("\">")
+              .append(trade.getOrderId())
+              .append(": Date/Time: ")
+              .append(simpleDateFormat.format(trade.getTime()))
+              .append(": ")
+              .append(trade.getQty())
+              .append(" BTC @ $")
+              .append(String.format("%.2f", Double.valueOf(trade.getPrice())))
+              .append("</font>")
+              .append(response)
+              .toString();
     }
     return response;
   }
