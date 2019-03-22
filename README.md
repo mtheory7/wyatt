@@ -29,6 +29,32 @@ To shutdown the bot:
 ```$xslt
 GET: http://host-ip:port/seppuku?pass={password}
 ```
+### Install
+Some example commands to run before attempting to build or run
+```$xslt
+# Install necessary commands/software
+sudo apt update
+sudo apt upgrade
+sudo apt install apache2 default-jdk maven cloc
+
+# Clone the necessary repos
+git clone https://github.com/mtheory7/wyatt.git
+git clone https://github.com/binance-exchange/binance-java-api.git
+
+# Move the example start script to the root directory
+# Make sure to edit the sh file to fill in password and api keys
+cp wyatt/src/main/resources/examples/bringYourselfBackOnline.sh bringYourselfBackOnline.sh
+# Make the script executable
+chmod +x bringYourselfBackOnline.sh
+
+# Remove and replace index with example
+# Make sure to edit the index.php file to point to the correct place, i.e. replace host and port number
+sudo rm /var/www/html/index.*
+sudo cp wyatt/src/main/resources/examples/index.php /var/www/html/index.php
+
+# Execute start script to rebuild Binance-API, Wyatt, and start the program
+./bringYourselfBackOnline.sh
+```
 ### Building
 First clone and build the [Binance-API](https://github.com/binance-exchange/binance-java-api) repository to install the necessary packages into your local Maven repository (it is needed to build Wyatt)
   
