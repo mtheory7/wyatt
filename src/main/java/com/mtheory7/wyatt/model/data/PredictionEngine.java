@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class PredictionEngine {
   public static Double buyBackAfterThisPercentage = 0.98;
+  public static Double sellPriceMultiplier = 1.0075;
   public Double targetPrice;
   private List<AverageData> averageData;
   private List<Double> targetPrices;
@@ -60,7 +61,7 @@ public class PredictionEngine {
       targetPrices.add(target);
     }
     // Calculate target price by maxing the targetPrices and add a small percentage
-    targetPrice = CalcUtils.floorTo(maxTarget(targetPrices) * 1.0125, 2);
+    targetPrice = CalcUtils.floorTo(maxTarget(targetPrices) * sellPriceMultiplier, 2);
   }
 
   /**
