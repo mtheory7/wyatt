@@ -94,11 +94,12 @@ public class WyattController {
   public ResponseEntity getState() {
     double startTime = (double) System.nanoTime();
     Double currentPrice = wyatt.getCurrentPrice();
-    Double initialInvestment = wyatt.getInitialInvestment();
+    Double initialBTC = wyatt.getInitialBTC();
+    Double initialUSD = wyatt.getInitialUSD();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
     Double portfolioValue = currentBalance * currentPrice;
-    double balanceDiff = CalcUtils.roundTo(currentBalance - initialInvestment, 8);
-    double balanceDiffUSD = CalcUtils.roundTo(balanceDiff * currentPrice, 2);
+    double balanceDiffBTC = CalcUtils.roundTo(currentBalance - initialBTC, 8);
+    double balanceDiffUSD = CalcUtils.roundTo(balanceDiffBTC * currentPrice, 2);
     StringBuilder response =
         new StringBuilder(
             "M\"\"MMM\"\"MMM\"\"M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>M&nbsp;&nbsp;MMM&nbsp;&nbsp;MMM&nbsp;&nbsp;M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;MMP&nbsp;&nbsp;MMP&nbsp;&nbsp;M&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;dP&nbsp;.d8888b.&nbsp;d8888P&nbsp;d8888P<br>M&nbsp;&nbsp;MM'&nbsp;&nbsp;MM'&nbsp;.M&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;88'&nbsp;&nbsp;`88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;`'&nbsp;.&nbsp;''&nbsp;.MM&nbsp;88.&nbsp;&nbsp;.88&nbsp;88.&nbsp;&nbsp;.88&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88<br>M&nbsp;&nbsp;&nbsp;&nbsp;.d&nbsp;&nbsp;.dMMM&nbsp;`8888P88&nbsp;`88888P8&nbsp;&nbsp;&nbsp;dP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dP<br>MMMMMMMMMMMMMM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.88<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d8888P<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -108,7 +109,8 @@ public class WyattController {
     }
     response.append("<br>--- Status report ---");
     response.append("<br>Status: ").append(wyatt.getCurrentStateString());
-    response.append("<br>Investment: ").append(initialInvestment).append(" BTC");
+    response.append("<br>Starting BTC: ").append(initialBTC);
+    response.append("<br>Starting USD: ").append(initialUSD);
     response
         .append("<br>Portfolio  ≈ ")
         .append(currentBalance)
@@ -120,7 +122,7 @@ public class WyattController {
         .append("<br>Profit: ")
         .append(wyatt.getCurrentProfit())
         .append("% (")
-        .append(String.format("%.8f", balanceDiff))
+        .append(String.format("%.8f", balanceDiffBTC))
         .append(" BTC ≈ $")
         .append(String.format("%.2f", balanceDiffUSD))
         .append(")");

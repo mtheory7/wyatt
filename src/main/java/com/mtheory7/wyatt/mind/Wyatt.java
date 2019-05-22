@@ -52,8 +52,11 @@ public class Wyatt {
   private String accessToken;
   private String accessTokenSecret;
 
-  @Value("${initialInvestment}")
-  private Double INITIAL_INVESTMENT;
+  @Value("${initialBTC}")
+  private Double INITIAL_BTC;
+
+  @Value("${initialUSD}")
+  private Double INITIAL_USD;
 
   @Value("${versionValue}")
   private String VERSION;
@@ -103,12 +106,21 @@ public class Wyatt {
   }
 
   /**
-   * Returns the initial investment amount
+   * Returns the initial investment amount in BTC
    *
    * @return Amount that was initially invested
    */
-  public Double getInitialInvestment() {
-    return INITIAL_INVESTMENT;
+  public Double getInitialBTC() {
+    return INITIAL_BTC;
+  }
+
+  /**
+   * Returns the initial investment amount in USD
+   *
+   * @return Amount that was initially invested
+   */
+  public Double getInitialUSD() {
+    return INITIAL_USD;
   }
 
   /**
@@ -292,7 +304,7 @@ public class Wyatt {
   public String getCurrentProfit() {
     Double percentOnInvenstment =
         CalcUtils.roundTo(
-            (((Double.valueOf(getCurrentBalance()) / INITIAL_INVESTMENT) * 100) - 100), 3);
+            (((Double.valueOf(getCurrentBalance()) / INITIAL_BTC) * 100) - 100), 3);
     return percentOnInvenstment.toString();
   }
 
