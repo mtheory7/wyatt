@@ -336,12 +336,14 @@ public class Wyatt {
     // Gather data calculate, and update Wyatt's target price and buy back
     predictionEngine.executeThoughtProcess(mindData);
     lastTargetPrice = predictionEngine.targetPrice;
-    buyBackPrice =
-        CalcUtils.roundTo(
-            predictionEngine.targetPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
-
     // Find current price and decide to sell
     Double currentPrice = CalcUtils.roundTo(getCurrentPrice(), 2);
+    buyBackPrice = CalcUtils.roundTo(predictionEngine.targetPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
+    if (currentPrice > lastTargetPrice) {
+      lastTargetPrice = currentPrice;
+      predictionEngine.targetPrice = currentPrice;
+      buyBackPrice = CalcUtils.roundTo(currentPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
+    }
     double sellConfidence =
         CalcUtils.roundTo((currentPrice / predictionEngine.targetPrice * 100), 3);
     logger.trace(
