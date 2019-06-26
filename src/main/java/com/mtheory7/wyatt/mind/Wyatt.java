@@ -386,7 +386,7 @@ public class Wyatt {
     } else {
       currentState = true;
     }
-    if ((currentPrice > predictionEngine.targetPrice) && currentState) {
+    if ((currentPrice >= predictionEngine.targetPrice) && currentState) {
       // Find out how much free asset there is to trade
       Account account = client.getAccount();
       Double freeBTCFloored =
