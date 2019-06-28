@@ -185,7 +185,7 @@ public class WyattController {
         .append(String.format("%.4f", getAverageStatusLoadTime()))
         .append("s");
     response.append("<br>Uptime: ").append(CalcUtils.getUpTimeString()).append("</g>");
-    response.append("<a href=\"http://bitcoinity.org/markets/coinbase/USD\" target=\"_blank\" style=\"display: flex; padding-left: 100px; padding-top: 4px;\"><img src=\"http://bitcoinity.org/markets/image?span=7d&size=small&currency=USD&exchange=coinbase\" alt=\"bitcoin price chart\"/></a>");
+    //response.append("<a href=\"http://bitcoinity.org/markets/coinbase/USD\" target=\"_blank\" style=\"display: flex; padding-left: 100px; padding-top: 4px;\"><img src=\"http://bitcoinity.org/markets/image?span=7d&size=small&currency=USD&exchange=coinbase\" alt=\"bitcoin price chart\"/></a>");
     return new ResponseEntity<>(
         new StringBuilder(
                 "<html><head><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://"
