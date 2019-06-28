@@ -95,8 +95,10 @@ public class WyattController {
     double startTime = (double) System.nanoTime();
     Double currentPrice = wyatt.getCurrentPrice();
     Double initialInvestment = wyatt.getInitialInvestment();
+    Double initialUSD = wyatt.getInitialInvestmentUSD();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
     Double portfolioValue = currentBalance * currentPrice;
+    Double USDProfit = portfolioValue - initialUSD;
     double balanceDiff = CalcUtils.roundTo(currentBalance - initialInvestment, 8);
     double balanceDiffUSD = CalcUtils.roundTo(balanceDiff * currentPrice, 2);
     StringBuilder response =
@@ -108,7 +110,7 @@ public class WyattController {
     }
     response.append("<br>--- Status report ---");
     response.append("<br>Status: ").append(wyatt.getCurrentStateString());
-    response.append("<br>Investment: ").append(initialInvestment).append(" BTC");
+    //response.append("<br>Investment: ").append(initialInvestment).append(" BTC");
     response
         .append("<br>Portfolio  ≈ ")
         .append(currentBalance)
@@ -117,13 +119,17 @@ public class WyattController {
         .append(")");
     response.append(wyatt.getBalances());
     response
-        .append("<br>Profit: ")
-        .append(wyatt.getCurrentProfit())
-        .append("% (")
+        .append("<br>Profit(BTC): ")
         .append(String.format("%.8f", balanceDiff))
-        .append(" BTC ≈ $")
-        .append(String.format("%.2f", balanceDiffUSD))
-        .append(")");
+        .append(" BTC (")
+        .append(wyatt.getCurrentProfit())
+        .append("%)");
+    response
+        .append("<br>Profit(USD): $")
+        .append(String.format("%.2f", USDProfit))
+        .append(" (")
+        .append(String.format("%.3f", (USDProfit / initialUSD * 100)))
+        .append("%)");
     if (!wyatt.isEXECUTE_TWEETS()) {
       response.append("<br>Tweeting: DISABLED");
     }
