@@ -95,8 +95,10 @@ public class WyattController {
     double startTime = (double) System.nanoTime();
     Double currentPrice = wyatt.getCurrentPrice();
     Double initialInvestment = wyatt.getInitialInvestment();
+    Double initialUSD = wyatt.getInitialInvestmentUSD();
     Double currentBalance = Double.valueOf(wyatt.getCurrentBalance());
     Double portfolioValue = currentBalance * currentPrice;
+    Double USDProfit = portfolioValue - initialUSD;
     double balanceDiff = CalcUtils.roundTo(currentBalance - initialInvestment, 8);
     double balanceDiffUSD = CalcUtils.roundTo(balanceDiff * currentPrice, 2);
     StringBuilder response =
@@ -108,7 +110,7 @@ public class WyattController {
     }
     response.append("<br>--- Status report ---");
     response.append("<br>Status: ").append(wyatt.getCurrentStateString());
-    response.append("<br>Investment: ").append(initialInvestment).append(" BTC");
+    //response.append("<br>Investment: ").append(initialInvestment).append(" BTC");
     response
         .append("<br>Portfolio  ≈ ")
         .append(currentBalance)
@@ -117,13 +119,17 @@ public class WyattController {
         .append(")");
     response.append(wyatt.getBalances());
     response
-        .append("<br>Profit: ")
-        .append(wyatt.getCurrentProfit())
-        .append("% (")
+        .append("<br>Profit(BTC): ")
         .append(String.format("%.8f", balanceDiff))
-        .append(" BTC ≈ $")
-        .append(String.format("%.2f", balanceDiffUSD))
-        .append(")");
+        .append(" BTC (")
+        .append(wyatt.getCurrentProfit())
+        .append("%)");
+    response
+        .append("<br>Profit(USD): $")
+        .append(String.format("%.2f", USDProfit))
+        .append(" (")
+        .append(String.format("%.3f", (USDProfit / initialUSD * 100)))
+        .append("%)");
     if (!wyatt.isEXECUTE_TWEETS()) {
       response.append("<br>Tweeting: DISABLED");
     }
@@ -179,6 +185,7 @@ public class WyattController {
         .append(String.format("%.4f", getAverageStatusLoadTime()))
         .append("s");
     response.append("<br>Uptime: ").append(CalcUtils.getUpTimeString()).append("</g>");
+    //response.append("<a href=\"http://bitcoinity.org/markets/coinbase/USD\" target=\"_blank\" style=\"display: flex; padding-left: 100px; padding-top: 4px;\"><img src=\"http://bitcoinity.org/markets/image?span=7d&size=small&currency=USD&exchange=coinbase\" alt=\"bitcoin price chart\"/></a>");
     return new ResponseEntity<>(
         new StringBuilder(
                 "<html><head><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://"
