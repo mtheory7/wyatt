@@ -377,7 +377,7 @@ public class Wyatt {
             CalcUtils.roundTo((currentPrice - Double.valueOf(openOrder.getPrice())), 2);
         logger.trace(
             "Current buy back: " + currentMarginPercent + "% ($" + buyBackDifference + ")");
-        if (currentMarginPercent > 2.5
+        if (currentMarginPercent > 10
             || (System.currentTimeMillis() - openOrder.getTime()) > 432000000) {
           logger.trace("Deciding to submit a market buy back at $" + currentPrice);
           if (!DEVELOPMENT_MODE) {
