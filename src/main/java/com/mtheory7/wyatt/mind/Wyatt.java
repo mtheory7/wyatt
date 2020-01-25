@@ -105,6 +105,11 @@ public class Wyatt {
     return Double.valueOf(tickerStatistics.getLastPrice());
   }
 
+  public Double getCurrentPrice(String ticker) {
+    TickerStatistics tickerStatistics = client.get24HrPriceStatistics(ticker);
+    return Double.valueOf(tickerStatistics.getLastPrice());
+  }
+
   /**
    * Returns the initial investment amount
    *
