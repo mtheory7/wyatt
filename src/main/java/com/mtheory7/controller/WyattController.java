@@ -212,7 +212,7 @@ public class WyattController {
     PriceData priceData = new PriceData();
     priceData.setBtc(wyatt.getCurrentPrice());
     priceData.setEth(wyatt.getCurrentPrice("ETHUSDT"));
-    priceData.setDoge(wyatt.getCurrentPrice("DOGE_USDT"));
+    priceData.setDoge(wyatt.getCurrentPrice("DOGEUSDT"));
     priceData.setGold(1571.45);
     priceData.setSilver(18.09);
     priceData.setPlatinum(1005.0);
