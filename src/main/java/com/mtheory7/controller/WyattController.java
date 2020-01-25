@@ -3,6 +3,7 @@ package com.mtheory7.controller;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.hash.Hashing;
 import com.mtheory7.wyatt.mind.Wyatt;
+import com.mtheory7.wyatt.model.PriceData;
 import com.mtheory7.wyatt.utils.CalcUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,9 +209,14 @@ public class WyattController {
   @CrossOrigin(origins = "*", allowedHeaders = "*")
   @GetMapping(path = PATH_PRICE_DATA)
   public ResponseEntity getPriceData() {
-    return new ResponseEntity<>(
-        "{\"btc\":8300.08,\"eth\":162.05,\"doge\":0.002285,\"gold\":1570.15,\"silver\":18.056,\"platinum\":1002.54}",
-        HttpStatus.OK);
+    PriceData priceData = new PriceData();
+    priceData.setBtc(8350.05);
+    priceData.setEth(162.55);
+    priceData.setDoge(0.00258587);
+    priceData.setGold(1572.85);
+    priceData.setSilver(18.054);
+    priceData.setPlatinum(1002.51);
+    return new ResponseEntity<>(priceData.toString(), HttpStatus.OK);
   }
 
   @GetMapping(path = PATH_ORDER_HISTORY)
