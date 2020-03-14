@@ -350,7 +350,7 @@ public class Wyatt {
     lastTargetPrice = predictionEngine.targetPrice;
     // Find current price and decide to sell
     Double currentPrice = CalcUtils.roundTo(getCurrentPrice(), 2);
-    buyBackPrice = CalcUtils.roundTo(predictionEngine.targetPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
+    buyBackPrice = CalcUtils.roundTo(lastTargetPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
     if (currentPrice > lastTargetPrice) {
       lastTargetPrice = currentPrice;
       predictionEngine.targetPrice = currentPrice;
@@ -398,7 +398,7 @@ public class Wyatt {
     } else {
       currentState = true;
     }
-    if ((currentPrice >= predictionEngine.targetPrice) && currentState) {
+    if (((currentPrice >= lastTargetPrice) || ((currentPrice / lastTargetPrice) < 0.80)) && currentState) {
       // Find out how much free asset there is to trade
       Account account = client.getAccount();
       Double freeBTCFloored =

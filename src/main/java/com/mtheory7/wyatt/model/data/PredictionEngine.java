@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PredictionEngine {
-  public static Double buyBackAfterThisPercentage = 0.994;
+  public static Double buyBackAfterThisPercentage = 0.993;
   public static Double sellPriceMultiplier = 1.025;
   public Double targetPrice;
   private List<AverageData> averageData;
