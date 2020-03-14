@@ -354,7 +354,6 @@ public class Wyatt {
     if (currentPrice > lastTargetPrice) {
       lastTargetPrice = currentPrice;
       predictionEngine.targetPrice = currentPrice;
-      buyBackPrice = CalcUtils.roundTo(currentPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
     }
     double sellConfidence =
         CalcUtils.roundTo((currentPrice / predictionEngine.targetPrice * 100), 3);
