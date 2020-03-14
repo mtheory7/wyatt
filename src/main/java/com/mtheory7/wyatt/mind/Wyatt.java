@@ -350,7 +350,7 @@ public class Wyatt {
     lastTargetPrice = predictionEngine.targetPrice;
     // Find current price and decide to sell
     Double currentPrice = CalcUtils.roundTo(getCurrentPrice(), 2);
-    buyBackPrice = CalcUtils.roundTo(lastTargetPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
+    buyBackPrice = CalcUtils.roundTo(currentPrice * PredictionEngine.buyBackAfterThisPercentage, 2);
     if (currentPrice > lastTargetPrice) {
       lastTargetPrice = currentPrice;
       predictionEngine.targetPrice = currentPrice;
